@@ -1,0 +1,6 @@
+{
+  "name": "Auto Forensic",
+  "description": "Evaluate cars, bikes, and trucks to protect users from workshop fraud, bad purchases, or mechanic overpricing.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
