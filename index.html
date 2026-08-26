@@ -1,13 +1,29 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Auto Forensic -- Fraud Sentinel</title>
+    <title>Auto Forensic Platform</title>
+        <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://w3.org' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' fill='%2306b6d4'/></svg>" />
+
+                <link rel="manifest" href="/manifest.json" />
+
+
+
+  
   </head>
-  <body>
+  <body class="bg-[#050608]">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+        <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then(reg => console.log('🚀 Service Worker Registration Active:', reg.scope))
+            .catch(err => console.warn('Service Worker registration bypassed:', err));
+        });
+      }
+    </script>
+
   </body>
 </html>
-
