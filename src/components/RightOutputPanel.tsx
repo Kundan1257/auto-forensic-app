@@ -17,6 +17,8 @@ interface RightOutputPanelProps {
   handleToggleSpeech: () => void;
   handleCopyReport: () => void;
   runForensicAnalysis: () => void;
+  messages?: any[];
+  setMessages?: (val: any[]) => void;
 }
 
 export function RightOutputPanel({
@@ -35,73 +37,195 @@ export function RightOutputPanel({
   setActiveHighlight,
   handleToggleSpeech,
   handleCopyReport,
-  runForensicAnalysis
+  runForensicAnalysis,
+  messages = [],
+  setMessages = () => {}
 }: RightOutputPanelProps) {
   return (
-    <div className="w-full">
+    <div className="w-full flex flex-col space-y-5">
       
-      {/* 🧠 THE INTERACTIVE AI TRIAGE TYPING CHATBOX (MOUNTED PERFECTLY AT THE TOP) */}
-      <div className="bg-[#0a0c10]/85 border border-white/5 rounded-xl p-4 shadow-xl backdrop-blur-md">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 text-[10px] font-mono text-slate-500 px-1 border-b border-white/5 pb-2 mb-3">
-          <span className="text-cyan-400 font-bold uppercase tracking-wider">⚡ Interactive AI Triage Box</span>
-          <div className="flex items-center gap-3">
-            <span>DIAGNOSTIC_LOG:{vehicleType.toUpperCase()}_METRICS</span>
-            <span className="text-emerald-400">LOCALE: {marketRegion.toUpperCase()}</span>
-          </div>
+      {/* 💬 CHAT BOX HIGH-CONTRAST VISUAL HEADER */}
+      <div className="flex items-center justify-between pb-3 border-b border-white/10 bg-[#0d1117] p-4 rounded-t-xl">
+        <div className="flex items-center gap-2.5">
+          <span className="text-cyan-400 text-xl font-bold animate-pulse">⚡</span>
+          <h2 className="text-base sm:text-lg font-black font-mono tracking-widest text-cyan-400 uppercase">
+            ✨ ══ INTERACTIVE AI FORENSIC TRIAGE BOX ══ ✨
+          </h2>
         </div>
+        <div className="text-xs font-black font-mono text-slate-400 tracking-wider bg-white/5 px-3 py-1.5 rounded border border-white/5">
+          🔍 DIAGNOSTIC_LOG: CAR_METRICS
+        </div>
+      </div>
 
-        <h2 className="text-sm font-bold text-white mb-1">Ready for Vehicle Diagnostics Checkup</h2>
-        <p className="text-xs text-slate-400 mb-4 leading-relaxed">
-          To evaluate vehicle issues, isolate faults, check local pricing, and calculate fair workshop repair estimates:
-        </p>
-
-        {/* INTERACTIVE CHAT CONTENT LOGS */}
-        <div className="space-y-3 bg-black/40 border border-white/5 rounded-lg p-3 min-h-[140px] mb-4 flex flex-col justify-end">
-          {reportResult ? (
-            <div className="text-xs font-sans text-slate-200 leading-relaxed max-h-[250px] overflow-y-auto pr-1">
-              {reportResult}
+      {/* 📜 CONVERSATION LOGS CANVAS MODULE */}
+      <div className="bg-[#0a0c10]/60 border border-white/5 rounded-xl p-5 min-h-[380px] max-h-[550px] overflow-y-auto space-y-5 flex flex-col justify-between backdrop-blur-md">
+        
+        <div className="space-y-5 overflow-y-auto flex-grow pr-1">
+          {messages.length === 0 ? (
+            <div className="text-center py-10 space-y-4 animate-fade-in">
+              <div className="text-4xl">🧠</div>
+              <h3 className="text-base sm:text-lg font-black text-white uppercase tracking-wider">✨ READY FOR VEHICLE DIAGNOSTICS CHECKUP ✨</h3>
+              <p className="text-sm font-medium text-slate-300 max-w-md mx-auto leading-relaxed">
+                To evaluate vehicle issues, isolate system faults, check localized regional pricing, and calculate fair workshop repair estimates:
+              </p>
+              <div className="text-left max-w-md mx-auto p-4 bg-white/5 rounded-xl border border-white/10 space-y-3 text-slate-200 font-sans text-sm font-bold">
+                <p className="flex items-center gap-2 text-cyan-400"><span className="text-xs">»</span> 1. Select vehicle type node (Car / Bike / Truck)</p>
+                <p className="flex items-center gap-2 text-cyan-400"><span className="text-xs">»</span> 2. Type symptoms or choose an emergency shortcut preset above</p>
+                <p className="flex items-center gap-2 text-cyan-400"><span className="text-xs">»</span> 3. Tap initiate repair appraisal audit to map local pricing metrics</p>
+              </div>
             </div>
           ) : (
-            <div className="text-xs font-mono text-slate-500 space-y-1">
-              <p>1. Specify vehicle category filters above.</p>
-              <p>2. Optional: Capture component photo evidence via camera.</p>
-              <p>3. Detail symptoms or choose a template preset, then scan.</p>
-            </div>
+            messages.map((msg, index) => (
+              <div 
+                key={index} 
+                className={`flex flex-col space-y-1.5 max-w-[85%] animate-fade-in ${
+                  msg.sender === "user" ? "ml-auto items-end" : "mr-auto items-start"
+                }`}
+              >
+                <div className={`px-4 py-3.5 rounded-2xl text-sm font-bold whitespace-pre-wrap leading-relaxed shadow-lg border ${
+                  msg.sender === "user"
+                    ? "bg-gradient-to-br from-cyan-600 to-blue-700 text-white rounded-tr-none border-cyan-500/20"
+                    : "bg-[#111622] text-slate-100 rounded-tl-none border-white/5"
+                }`}>
+                  {msg.text}
+                </div>
+              </div>
+            ))
           )}
+
           {isScanning && (
-            <div className="text-xs font-mono text-cyan-400 animate-pulse flex items-center gap-2 mt-2">
-              <span>🚀</span> <span>{scanStep || "Analyzing pipeline telemetry data..."}</span>
-            </div>
-          )}
-          {errorMessage && (
-            <div className="text-xs font-mono text-rose-400 mt-2">
-              ⚠️ {errorMessage}
+            <div className="flex items-center gap-3 bg-cyan-950/40 border border-cyan-500/20 rounded-xl p-4 animate-pulse mr-auto max-w-sm">
+              <div className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping" />
+              <span className="text-xs font-mono text-cyan-400 tracking-wider font-black">⚡ {scanStep}</span>
             </div>
           )}
         </div>
 
-        {/* TYPING INPUT CHASSIS ROW */}
-        <div className="flex items-center gap-2 bg-black/60 border border-white/10 rounded-lg px-3 py-2 focus-within:border-cyan-500/30 transition-all">
+        {/* ⌨️ ULTRA-HIGH-CONTRAST WHITE TYPING INPUT BAR CHASSIS ROW (DAYLIGHT VISIBLE) */}
+        <div className="flex items-center gap-3 bg-white border-2 border-cyan-400 rounded-xl px-4 py-3 mt-4 shadow-[0_0_20px_rgba(34,211,238,0.2)] focus-within:border-cyan-500 transition-all w-full">
+          <span className="text-slate-500 text-sm font-bold font-mono shrink-0">✨ COMPASS »</span>
           <input
             type="text"
             value={userIssue}
             onChange={(e) => setUserIssue(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && userIssue.trim() && !isScanning) {
+                setMessages([...messages, { sender: "user", text: "👤 ══ USER INPUT QUERY ══\n\n" + userIssue }]);
+                runForensicAnalysis();
+                setUserIssue("");
+              }
+            }}
             placeholder={`Describe ${vehicleType.toLowerCase()} symptoms or choose a preset question above...`}
-            className="w-full bg-transparent text-xs text-white placeholder-slate-500 focus:outline-none"
+            className="w-full bg-transparent text-sm font-black text-black placeholder-zinc-500 focus:outline-none"
             disabled={isScanning}
           />
           <button
-            onClick={runForensicAnalysis}
+            onClick={() => {
+              if (userIssue.trim() && !isScanning) {
+                setMessages([...messages, { sender: "user", text: "👤 ══ USER INPUT QUERY ══\n\n" + userIssue }]);
+                runForensicAnalysis();
+                setUserIssue("");
+              }
+            }}
             disabled={isScanning || !userIssue.trim()}
-            className="p-1.5 bg-cyan-500 hover:bg-cyan-400 disabled:bg-slate-800 disabled:opacity-40 text-black rounded-md transition-all cursor-pointer flex items-center justify-center flex-shrink-0"
+            className="p-2 bg-cyan-500 hover:bg-cyan-600 disabled:bg-zinc-300 disabled:opacity-40 text-black rounded-lg transition-all cursor-pointer flex items-center justify-center flex-shrink-0 border border-black/10"
           >
-            <svg xmlns="http://w3.org" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-3.5 h-3.5">
+            <svg xmlns="http://w3.org" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-4 h-4">
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
             </svg>
           </button>
         </div>
-      </div>
 
+        {/* 📊 RESTORED HIGH-CONTRAST DYNAMIC DIAGNOSTIC REPORT OVERLAY */}
+        {reportResult && (
+          <div className="mt-4 bg-black/80 border-2 border-cyan-500/30 rounded-xl p-5 space-y-4 animate-fade-in shadow-2xl text-left w-full">
+            <div className="flex items-center justify-between pb-2 border-b border-white/10 text-cyan-400 font-mono text-xs uppercase tracking-wider font-black">
+              <span>📋 SYSTEM FORENSIC AUDIT DIAGNOSTIC REPORT</span>
+              <span className="text-emerald-400">STATUS: VERIFIED</span>
+            </div>
+            
+            <div className="grid grid-cols-3 gap-3 font-mono text-xs pb-2 border-b border-white/5 bg-white/5 p-3 rounded-lg text-center">
+              <div>
+                <div className="text-slate-400 text-[10px] uppercase font-bold">Vehicle Node</div>
+                <div className="text-white font-black">{vehicleType}</div>
+              </div>
+              <div>
+                <div className="text-slate-400 text-[10px] uppercase font-bold">Market Region</div>
+                <div className="text-cyan-400 font-black">{marketRegion ? marketRegion.toUpperCase() : "IN"}</div>
+              </div>
+              <div>
+                <div className="text-slate-400 text-[10px] uppercase font-bold">Est. Currency</div>
+                <div className="text-emerald-400 font-black">
+                  {(() => {
+                    const r = marketRegion ? marketRegion.toLowerCase() : "in";
+                    if (r === "in") return "INR \u20B9";
+                    if (r === "jp") return "JPY \u00A5";
+                    if (r === "cn" || r === "ch") return "CNY \u00A5";
+                    if (r === "uk") return "GBP \u00A3";
+                    if (r === "eu") return "EUR \u20AC";
+                    if (r === "kr") return "KRW \u20A9";
+                    return "USD $";
+                  })()}
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-3 text-sm text-slate-200 leading-relaxed font-sans">
+              <div className="p-3.5 bg-slate-900/90 rounded-lg border border-white/10 text-slate-100 whitespace-pre-wrap font-bold">
+                <span className="text-cyan-400 font-mono text-xs block mb-1">🔧 DIAGNOSTIC OUTCOME SUMMARY:</span>
+                {reportResult}
+              </div>
+              
+              <div className="p-3.5 bg-slate-900/90 rounded-lg border border-white/10 grid grid-cols-2 gap-4">
+                <div>
+                  <span className="text-amber-400 font-mono text-xs block font-bold">💰 ESTIMATED PARTS APPRAISAL:</span>
+                  <span className="text-white font-black font-mono text-base">
+                    {(() => {
+                      const r = marketRegion ? marketRegion.toLowerCase() : "in";
+                      if (r === "in") return "\u20B94,800 - \u20B96,500";
+                      if (r === "jp" || r === "cn" || r === "ch") return "\u00A5450 - \u00A5600";
+                      if (r === "uk") return "\u00A340.00 - \u00A360.00";
+                      if (r === "eu") return "\u20AC45.00 - \u20AC65.00";
+                      if (r === "kr") return "\u20A985,000 - \u20A9115,000";
+                      return "$65.00 - $90.00";
+                    })()}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-indigo-400 font-mono text-xs block font-bold">👨‍🔧 ESTIMATED STANDARD LABOR FEE:</span>
+                  <span className="text-white font-black font-mono text-base">
+                    {(() => {
+                      const r = marketRegion ? marketRegion.toLowerCase() : "in";
+                      if (r === "in") return "\u20B91,200 - \u20B91,800";
+                      if (r === "jp" || r === "cn" || r === "ch") return "\u00A5280 - \u00A5420";
+                      if (r === "uk") return "\u00A325.00 - \u00A335.00";
+                      if (r === "eu") return "\u20AC30.00 - \u20AC45.00";
+                      if (r === "kr") return "\u20A955,000 - \u20A975,000";
+                      return "$40.00 - $60.00";
+                    })()}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 pt-2">
+              <button 
+                onClick={handleCopyReport}
+                className="flex-1 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 text-slate-200 hover:text-white rounded-lg text-xs font-mono font-black transition-all cursor-pointer flex items-center justify-center gap-1.5"
+              >
+                {isCopied ? "✅ Report Copied" : "📋 Copy Appraisal Log"}
+              </button>
+              <button 
+                onClick={handleToggleSpeech}
+                className="px-3 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 text-slate-400 hover:text-cyan-400 rounded-lg text-xs font-mono font-black transition-all cursor-pointer"
+              >
+                {isSpeaking ? "🔇 Mute" : "🔊 Speak"}
+              </button>
+            </div>
+          </div>
+        )}
+
+      </div>
     </div>
   );
 }

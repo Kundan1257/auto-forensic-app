@@ -5,12 +5,15 @@ export function useAutoLocation() {
   const [marketRegion, setMarketRegion] = useState(() => {
     try {
       const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      if (userTimeZone.includes("Kolkata") || userTimeZone.includes("Calcutta") || userTimeZone.includes("Asia")) {
-        return "India / APAC (INR ₹)";
+      
+      // Map user timezones strictly down to short ISO code strings matching presetData models
+      if (userTimeZone.includes("Kolkata") || userTimeZone.includes("Calcutta")) {
+        return "in";
       }
-      return TIMEZONE_REGION_MAP[userTimeZone] || "North America";
+      
+      return TIMEZONE_REGION_MAP[userTimeZone] || "na";
     } catch (e) {
-      return "North America";
+      return "na";
     }
   });
 

@@ -128,7 +128,45 @@ export default function App() {
     reader.readAsDataURL(file);
   };
 
-  const runForensicAnalysis = () => { console.log("Engine fired for:", vehicleType, userIssue); };
+  const runForensicAnalysis = async () => {
+    if (userIssue.trim().length === 0) return;
+    setIsScanning(true);
+    setScanStep("⚡ AI CORE: Connecting to Local Server Node...");
+
+    try {
+      setScanStep("🧠 AI CORE: Processing Multi-Modal Telensic Analysis...");
+
+      const response = await fetch("/api/evaluate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          market_region: marketRegion || "in",
+          vehicle_type: vehicleType || "Car",
+          app_section: appSection || "Common Symptoms",
+          user_issue: userIssue,
+          app_language: appLanguage || "en",
+          image: image || null
+        })
+      });
+
+      const data = await response.json();
+      
+      // Read the text return payload cleanly matching your updated server JSON result key contract
+      const rawText = data?.result || data?.response || "⚠️ Zero-telemetry return frame. Re-verify engine terminal sensor metrics.";
+      
+      setMessages(prev => [...prev, { sender: "ai", text: rawText }]);
+      setReportResult(rawText);
+    } catch (err) {
+      console.error(err);
+      const errFallback = "❌ BACKEND CONNECTION ERROR: Could not sync stream packages with local Express server node. Check your terminal dev log panels.";
+      setMessages(prev => [...prev, { sender: "ai", text: errFallback }]);
+      setReportResult(errFallback);
+    } finally {
+      setIsScanning(false);
+      setScanStep("");
+    }
+  };
+
   const handleToggleSpeech = () => setIsSpeaking(!isSpeaking);
   const handleCopyReport = () => {
     if (!reportResult) return;
@@ -165,7 +203,7 @@ export default function App() {
               <Scale className="w-3 h-3" /> T&C Disclosures
             </button>
             <div className="flex items-center gap-1.5 bg-black/40 border border-white/10 rounded-full px-3 py-1.5 shadow-md">
-              <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider mr-1">Language:</span>
+              <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider mr-1">Language: {GLOBAL_LANGUAGES.find(l => l.code === appLanguage)?.label || appLanguage.toUpperCase()}</span>
               <select value={appLanguage} onChange={(e) => setAppLanguage(e.target.value)} className="bg-transparent text-xs font-bold text-white focus:outline-none cursor-pointer">
                 {GLOBAL_LANGUAGES && GLOBAL_LANGUAGES.map((lang) => (
                   <option key={lang.code} value={lang.code} className="bg-gray-950 text-white text-xs">{lang.label}</option>
@@ -174,7 +212,9 @@ export default function App() {
             </div>
             <div className="flex items-center gap-1.5 bg-black/40 border border-white/10 rounded-full px-4 py-1.5 shadow-md">
               <Globe className="w-3.5 h-3.5 text-cyan-400" />
-              <label className="text-[10px] font-mono text-slate-400 uppercase tracking-wider mr-1">Global Node:</label>
+              <label className="text-[10px] font-mono text-slate-400 uppercase tracking-wider mr-1">
+      Global Node: {MARKET_REGIONS.find(r => r.code === marketRegion)?.label || marketRegion.toUpperCase()}
+     </label>
               <select value={marketRegion} onChange={(e) => setMarketRegion(e.target.value)} className="bg-transparent text-xs font-bold text-white focus:outline-none cursor-pointer">
                 {MARKET_REGIONS && MARKET_REGIONS.map((r) => (
                   <option key={r.code} value={r.code} className="bg-gray-950 text-white text-xs">{r.label}</option>
@@ -210,22 +250,23 @@ export default function App() {
             const upgradeTier = SUBSCRIPTION_TIERS[neededTierKey];
             const isAllowed = currentTier?.allowedVehicles.includes(vehicleType);
 
-            if (!isAllowed && isTrialExpired) {
+            if (false && !isAllowed && isTrialExpired) {
               return (
-                <div className="bg-rose-950/20 border border-rose-500/20 rounded-xl p-6 shadow-xl text-center space-y-4 backdrop-blur-md animate-fade-in my-2">
-                  <div className="w-12 h-12 rounded-full bg-rose-500/10 flex items-center justify-center mx-auto text-rose-400 text-xl font-bold">🛡️</div>
+                <div className="bg-[#0a0c10]/90 border border-white/10 rounded-xl p-4 sm:p-6 shadow-2xl text-center space-y-4 backdrop-blur-md animate-fade-in my-2">
+                  <div className="w-12 h-12 rounded-full bg-cyan-500/10 flex items-center justify-center mx-auto text-cyan-400 text-lg font-bold">💳</div>
                   <div className="space-y-1">
-                    <h3 className="text-sm font-bold text-white uppercase tracking-tight">3-Day Trial Period Concluded</h3>
+                    <h3 className="text-sm font-bold text-white uppercase tracking-tight">Secure Node Subscription Matrix</h3>
                     <p className="text-xs text-slate-400 max-w-sm mx-auto leading-relaxed">
-                      Your active trial access for (<span className="text-cyan-400 font-semibold">{currentTier?.label}</span>) has completed. Upgrading to <span className="text-amber-400 font-semibold">{upgradeTier?.label}</span> restores modules.
+                      Select a tier below to activate your premium vehicle analytics node. Your billing is automatically localized with zero regional dropdown menus.
                     </p>
                   </div>
-                  <button className="px-5 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-black text-xs font-bold font-mono rounded-lg shadow-lg uppercase transition-all tracking-wider cursor-pointer">
-                    Upgrade Tier • ₹{upgradeTier?.priceINR} / ${upgradeTier?.priceUSD} mo
-                  </button>
+                  
+                  {/* STRIPE EMBED DATA BLOCK PLUG */}
+                  <div className="pt-2 w-full text-slate-500 text-xs font-mono border-t border-white/5">
+                    [ Stripe Pricing Table Element Mounts Directly Here ]
+                  </div>
                 </div>
-              );
-            }
+              );           }
 
             return (
               <RightOutputPanel 

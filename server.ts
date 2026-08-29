@@ -4,33 +4,27 @@ import { createServer as createViteServer } from "vite";
 import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
 
-// Initialize environment variables
+// Initialize environment variables safely from disk vault files
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 10000;
 
-// High-limit parsing configurations for direct camera snapshot image base64 payloads
+// High-limit parsing configurations for camera snapshot base64 payloads
 app.use(express.json({ limit: "25mb" }));
 app.use(express.urlencoded({ limit: "25mb", extended: true }));
 
-// Loop-Defending Safe Google Gen AI Studio Initialization Client
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 if (!GEMINI_API_KEY) {
   console.error("CRITICAL CONFIGURATION ERROR: GEMINI_API_KEY environment variable is not defined.");
 }
 
-// Single isolated global client instance prevents client recreation loops
 export const aiClient = new GoogleGenAI({ apiKey: GEMINI_API_KEY || "" });
-
-// ==========================================
-// CORE CONSUMER SCANNERS & E20 FUEL DIAGNOSTICS
-// ==========================================
 
 // Evaluation Multi-Modal API Route (Hardened against loops, crashes, and model hallucinations)
 app.post("/api/evaluate", async (req: express.Request, res: express.Response): Promise<any> => {
   try {
-    const { market_region, vehicle_type, app_section, user_issue, image } = req.body;
+    const { market_region, vehicle_type, app_section, user_issue, image, app_language } = req.body;
 
     // Direct Input Field Validation
     if (!market_region || !vehicle_type || !app_section) {
@@ -40,9 +34,9 @@ app.post("/api/evaluate", async (req: express.Request, res: express.Response): P
     }
 
     // Prepare dynamic multimodal payload safely
-    const payloadParts: any[] = [];
+    const payloadParts = [];
 
-    // Optional phone camera base64 snapshot parsing
+    // Camera base64 snapshot parsing
     if (image && typeof image === "string" && image.includes("base64,")) {
       try {
         const mimeType = image.substring(image.indexOf(":") + 1, image.indexOf(";"));
@@ -59,98 +53,39 @@ app.post("/api/evaluate", async (req: express.Request, res: express.Response): P
       }
     }
 
-    // Append context parameters
+    // Append context and strict translation compliance rules straight to the text instructions stream
     payloadParts.push({
-      text: `
---- CONTEXT PARAMETERS ---
-Market Location Region: ${market_region}
-Selected Vehicle Type: ${vehicle_type}
-Current Selected App Section Focus: ${app_section}
+      text: `You are an elite automotive forensic AI expert. Analyze this vehicle issue: "${user_issue}" for vehicle category node: ${vehicle_type}.
+      
+      CRITICAL UNBREAKABLE CONDITION: You MUST write your complete entire response in the native language script corresponding to this short ISO code: ${app_language || 'en'}. Example: if 'hi' write Hindi text script, if 'ja' write Japanese text script, if 'ko' write Korean text script, if 'zh' write Chinese text script. Do not output any English text rows if a non-English ISO code is specified.
+      
+      Structure your response exactly like this template layout:
+      🤖 ══ AI TELEMETRY DISPATCH ══
+      [CRITICAL FAULT DETECTED: FAULT DESCRIPTION HERE]
 
---- USER PROBLEM LOGS / SYMPTOMS ---
-${user_issue || "No diagnostic text provided. Extrapolating issues directly from visual scan snapshot data."}
-`
+      📊 LOGGED TELEMETRY PARAMETERS:
+      • Metric items list here
+
+      🧠 AI FORENSIC CAUSE ANALYSIS:
+      1. Hardware trace breakdown item here
+
+      🛠️ RECOMMENDATION AUDIT SUMMARY:
+      • Engineering remedy list item here
+
+      --- CONTEXT PARAMETERS ---
+      Market Location Region: ${market_region}
+      Selected Vehicle Type: ${vehicle_type}
+      Current Selected App Section Focus: ${app_section}`
     });
 
-    // Hardened System Instructions incorporating Indian E20 Ethanol and Core Summary logic
-    const consumerProtectionInstruction = `
-      You are the core automotive forensic diagnostic engine for the Auto Forensic platform. 
-      Your purpose is to evaluate car or bike mechanical issues for everyday used vehicle owners to save them from workshop fraud.
-      
-      SPECIAL FIELD DIRECTIVE (INDIAN AUTOMOBILE SECTOR - E20 COMPLIANCE):
-      The Society of Indian Automobile Manufacturers (SIAM) has documented massive surges in customer field failures due to E20 fuel contamination (excessive moisture and chloride levels) leading to severe corrosion or wear in parts.
-      If the user is from India ('market_region' indicates India) or explicitly reports E20 symptoms (jerking, rough idling, starting trouble, stalling after immediate refueling), evaluate for E20 Ethanol-related moisture water ingress, phase separation, or high chloride-related fuel system corrosion.
-
-      EXECUTION CORE MATRIX:
-      1. Diagnostic Breakdown: Pinpoint the failing part.
-      2. App Summary Header: Generate a highly punchy, clear 1-sentence headline capturing the CORE issue discovered (e.g., "CORE ISSUE DETECTED: E20 Fuel Contamination & Phase Separation in Fuel Tank"). This must act as the primary visual answer.
-      3. E20 Risk Evaluation: Check if the vehicle components are breaking due to chemical degradation or pre-April 2023 manufacturing.
-      4. Financial Action: Build a hyper-local, realistic repair budget split into parts prices and local labor averages.
-    `;
-
-    // Safe content generation matching the exact production library standards (No 3.5 Hallucinations)
-    const response = await aiClient.models.generateContent({
+    // Upgraded to active production supported Gemini 2.5 Flash model ID to resolve Google Cloud 404 errors permanently
+    const aiResponse = await aiClient.models.generateContent({
       model: "gemini-2.5-flash",
       contents: payloadParts,
-      config: {
-        systemInstruction: consumerProtectionInstruction,
-        temperature: 0.2, // Low temperature forces strict compliance to json matrices
-        responseMimeType: "application/json",
-        responseSchema: {
-          type: "OBJECT",
-          properties: {
-            appSummaryCoreIssue: {
-              type: "STRING",
-              description: "A mandatory, single-sentence, ultra-clear headline capturing the absolute root problem (e.g., 'CORE ISSUE: Faulty Fuel Injectors heavily worn down by E20 Chloride Corrosion')."
-            },
-            diagnosticBreakdown: { 
-              type: "STRING", 
-              description: "Clear non-technical explanation of what component is failing, why it occurs, and immediate vehicle risks." 
-            },
-            severityClassification: { 
-              type: "STRING", 
-              enum: ["CRITICAL", "MONITOR", "MINOR"] 
-            },
-            e20EthanolCompatibilityAlert: {
-              type: "OBJECT",
-              properties: {
-                isAtRiskFromEthanol: { type: "BOOLEAN", description: "True if symptoms point to E20 water-ingress phase separation or chloride corrosion." },
-                componentRiskAnalysis: { type: "STRING", description: "Technical breakdown of how E20 ethanol or chloride presence is corroding fuel injectors, fuel pumps, EGR valves, or degrading gaskets." },
-                preventativeActionTip: { type: "STRING", description: "Indian localized remedy (e.g., using anti-corrosion fuel additives or inspecting fuel lines)." }
-              },
-              required: ["isAtRiskFromEthanol", "componentRiskAnalysis", "preventativeActionTip"]
-            },
-            estimatedExpenses: {
-              type: "OBJECT",
-              properties: {
-                currencySymbol: { type: "STRING", description: "The regional currency symbol based on context parameters (e.g., ₹, $)" },
-                partsLowerEstimate: { type: "NUMBER" },
-                partsUpperEstimate: { type: "NUMBER" },
-                laborFeesCalculation: { type: "STRING", description: "Estimated local mechanic labor charge description." }
-              },
-              required: ["currencySymbol", "partsLowerEstimate", "partsUpperEstimate", "laborFeesCalculation"]
-            },
-            workshopFraudIndicators: { 
-              type: "STRING", 
-              description: "Workshop tricks, overcharging notes, or unneeded add-ons mechanics typically upsell for this error." 
-            },
-            mechanicNegotiationScript: { 
-              type: "STRING", 
-              description: "A short, sharp script the used car owner can quote to the mechanic to show technical expertise." 
-            }
-          },
-          required: ["appSummaryCoreIssue", "diagnosticBreakdown", "severityClassification", "e20EthanolCompatibilityAlert", "estimatedExpenses", "workshopFraudIndicators", "mechanicNegotiationScript"]
-        }
-      },
     });
 
-    const reportTextOutput = response.text || "{}";
-    const parsedStructuredData = JSON.parse(reportTextOutput);
-
-    return res.status(200).json({ 
-      success: true, 
-      report: parsedStructuredData 
-    });
+    const outputText = aiResponse.text || "⚠️ Zero-telemetry return frame from Gemini Core API model loops.";
+    return res.json({ result: outputText });
 
   } catch (error: any) {
     console.error("Evaluation Route Exception Failure:", error);
@@ -163,7 +98,6 @@ ${user_issue || "No diagnostic text provided. Extrapolating issues directly from
 // ==========================================
 // VITE WORKSPACE MIDDLEWARE ENGINE
 // ==========================================
-
 async function bootstrap() {
   if (process.env.NODE_ENV !== "production") {
     console.log("Setting up Express with Vite Development Server Middleware...");
@@ -177,7 +111,7 @@ async function bootstrap() {
     const distPath = path.join(process.cwd(), "dist");
     app.use(express.static(distPath));
     
-    app.get("*", (req, res): any => {
+    app.get("*", (req, res) => {
       return res.sendFile(path.join(distPath, "index.html"));
     });
   }

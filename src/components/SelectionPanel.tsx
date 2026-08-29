@@ -1,68 +1,95 @@
 import React from "react";
-import { Car, Bike, Truck } from "lucide-react";
 
-interface SelectionProps {
-  vehicleType: "Car" | "Bike" | "Truck";
-  appSection: "Invoice Audit" | "Common Symptoms" | "PDI Checklist";
-  setVehicleType: (type: "Car" | "Bike" | "Truck") => void;
-  setAppSection: (section: "Invoice Audit" | "Common Symptoms" | "PDI Checklist") => void;
+interface SelectionPanelProps {
+  vehicleType: string;
+  setVehicleType: (val: string) => void;
+  appSection: string;
+  setAppSection: (val: any) => void;
 }
 
-export const SelectionPanel: React.FC<SelectionProps> = ({
-  vehicleType,
-  appSection,
-  setVehicleType,
-  setAppSection
-}) => {
+export function SelectionPanel({ vehicleType, setVehicleType, appSection, setAppSection }: SelectionPanelProps) {
   return (
-    <div className="bg-[#0a0c10] border border-white/5 rounded-2xl p-5 shadow-2xl relative overflow-hidden" id="card-vehicle-selector">
-      <div className="absolute top-0 right-0 w-24 h-24 bg-cyan-500/5 rounded-full blur-2xl pointer-events-none" />
-      <div className="flex items-center gap-2 mb-4">
-        <span className="text-[10px] bg-cyan-950 text-cyan-400 border border-cyan-800/60 px-2 py-0.5 rounded-full font-mono">01_ASSET</span>
-        <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-widest">Select Vehicle Classification</h2>
-      </div>
-
-      <div className="grid grid-cols-3 gap-1 p-1 bg-black/40 rounded-full border border-white/10 mb-5">
-        <button type="button" onClick={() => setVehicleType("Car")} className={`py-2 rounded-full text-xs font-semibold uppercase transition-all flex items-center justify-center gap-1.5 cursor-pointer ${vehicleType === "Car" ? "bg-cyan-500 text-black shadow-lg shadow-cyan-500/20 font-bold" : "text-slate-400 hover:text-white"}`}>
-          <Car className="w-3.5 h-3.5" />
-          <span>Car</span>
-        </button>
-        <button type="button" onClick={() => setVehicleType("Bike")} className={`py-2 rounded-full text-xs font-semibold uppercase transition-all flex items-center justify-center gap-1.5 cursor-pointer ${vehicleType === "Bike" ? "bg-cyan-500 text-black shadow-lg shadow-cyan-500/20 font-bold" : "text-slate-400 hover:text-white"}`}>
-          <Bike className="w-3.5 h-3.5" />
-          <span>Bike</span>
-        </button>
-        <button type="button" onClick={() => setVehicleType("Truck")} className={`py-2 rounded-full text-xs font-semibold uppercase transition-all flex items-center justify-center gap-1.5 cursor-pointer ${vehicleType === "Truck" ? "bg-cyan-500 text-black shadow-lg shadow-cyan-500/20 font-bold" : "text-slate-400 hover:text-white"}`}>
-          <Truck className="w-3.5 h-3.5" />
-          <span>Truck</span>
-        </button>
-      </div>
-
-      <div className="space-y-1.5">
-        <span className="text-[10px] font-mono text-slate-500 uppercase tracking-wider block">Select Inspection Mode</span>
-        <div className="flex flex-col gap-1 p-1 bg-black/20 rounded-xl border border-white/5">
-          <button type="button" onClick={() => setAppSection("Common Symptoms")} className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-left cursor-pointer ${appSection === "Common Symptoms" ? "bg-white/5 border border-white/10 text-white font-medium" : "text-slate-400 hover:bg-white/5"}`}>
-            <div className={`w-2 h-2 rounded-full ${appSection === "Common Symptoms" ? "bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.8)]" : "bg-slate-600"}`} />
-            <div>
-              <span className="text-sm block">Diagnose Active Symptoms</span>
-              <span className="text-[10px] text-slate-500 block font-normal">Check engine lights, jerking, leaks, or E20 compatibility issues</span>
-            </div>
-          </button>
-          <button type="button" onClick={() => setAppSection("Invoice Audit")} className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-left cursor-pointer ${appSection === "Invoice Audit" ? "bg-white/5 border border-white/10 text-white font-semibold" : "text-slate-400 hover:bg-white/5"}`}>
-            <div className={`w-2 h-2 rounded-full ${appSection === "Invoice Audit" ? "bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.8)]" : "bg-slate-600"}`} />
-            <div>
-              <span className="text-sm block">Verify Workshop Invoice</span>
-              <span className="text-[10px] text-slate-500 block font-normal">Audit garage quotes to detect overcharging & fraud items</span>
-            </div>
-          </button>
-          <button type="button" onClick={() => setAppSection("PDI Checklist")} className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-left cursor-pointer ${appSection === "PDI Checklist" ? "bg-white/5 border border-white/10 text-white font-semibold" : "text-slate-400 hover:bg-white/5"}`}>
-            <div className={`w-2 h-2 rounded-full ${appSection === "PDI Checklist" ? "bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.8)]" : "bg-slate-600"}`} />
-            <div>
-              <span className="text-sm block">Used Car Evaluator Guide</span>
-              <span className="text-[10px] text-slate-500 block font-normal">Visual panel checkbook before buying a second-hand vehicle</span>
-            </div>
-          </button>
+    <div className="w-full space-y-6">
+      
+      {/* 01_ASSET VEHICLE SELECTION PILLS ROW */}
+      <div className="space-y-3">
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] font-mono bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 rounded-full px-2 py-0.5">01_ASSET</span>
+          <h3 className="text-base font-black font-mono text-slate-400 uppercase tracking-wider">Select Vehicle Classification</h3>
+        </div>
+        <div className="grid grid-cols-3 gap-3 bg-black/40 border border-white/10 rounded-2xl p-2">
+          {[ "Car", "Bike", "Truck" ].map((type) => {
+            const isActive = vehicleType === type;
+            return (
+              <button
+                key={type}
+                onClick={() => setVehicleType(type)}
+                className={`px-4 py-2.5 rounded-xl text-xs font-black font-mono uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-2 ${
+                  isActive 
+                    ? "bg-cyan-500 text-black shadow-[0_0_15px_rgba(6,182,212,0.4)]" 
+                    : "bg-transparent text-slate-400 hover:text-white"
+                }`}
+              >
+                <span>{type === "Car" ? "🚗" : type === "Bike" ? "🏍️" : "🚛"}</span> {type}
+              </button>
+            );
+          })}
         </div>
       </div>
+
+      {/* SELECT INSPECTION MODE CARDS (UPGRADED READABILITY TO TEXT-SM) */}
+      <div className="space-y-3">
+        <h3 className="text-xs font-black font-mono text-slate-500 uppercase tracking-wider">Select Inspection Mode</h3>
+        <div className="space-y-3">
+          
+          {/* CARD 01: DIAGNOSE ACTIVE SYMPTOMS */}
+          <div 
+            onClick={() => setAppSection("Common Symptoms")}
+            className={`bg-[#0d1117]/80 border ${appSection === "Common Symptoms" ? "border-cyan-500" : "border-white/5"} rounded-xl p-5 transition-all cursor-pointer flex items-start gap-4`}
+          >
+            <div className="mt-1 relative flex h-3 w-3 items-center justify-center">
+              <div className="w-full h-full rounded-full bg-cyan-400 animate-ping absolute opacity-75" />
+              <div className="w-2.5 h-2.5 rounded-full bg-cyan-400 relative" />
+            </div>
+            <div className="space-y-1">
+              <h4 className="text-base font-bold text-white tracking-tight">Diagnose Active Symptoms</h4>
+              <p className="text-sm font-semibold text-zinc-200 leading-relaxed">
+                Check engine lights, jerking, leaks, or E20 compatibility issues.
+              </p>
+            </div>
+          </div>
+
+          {/* CARD 02: VERIFY WORKSHOP INVOICE */}
+          <div 
+            onClick={() => setAppSection("Invoice Audit")}
+            className={`bg-[#0d1117]/80 border ${appSection === "Invoice Audit" ? "border-cyan-500" : "border-white/5"} rounded-xl p-5 transition-all cursor-pointer flex items-start gap-4`}
+          >
+            <div className="mt-1 w-2.5 h-2.5 rounded-full bg-slate-600" />
+            <div className="space-y-1">
+              <h4 className="text-base font-bold text-white tracking-tight">Verify Workshop Invoice</h4>
+              <p className="text-sm font-semibold text-zinc-200 leading-relaxed">
+                Audit garage quotes to detect overcharging & fraud items.
+              </p>
+            </div>
+          </div>
+
+          {/* CARD 03: USED CAR EVALUATOR GUIDE */}
+          <div 
+            onClick={() => setAppSection("PDI Checklist")}
+            className={`bg-[#0d1117]/80 border ${appSection === "PDI Checklist" ? "border-cyan-500" : "border-white/5"} rounded-xl p-5 transition-all cursor-pointer flex items-start gap-4`}
+          >
+            <div className="mt-1 w-2.5 h-2.5 rounded-full bg-slate-600" />
+            <div className="space-y-1">
+              <h4 className="text-base font-bold text-white tracking-tight">Used Car Evaluator Guide</h4>
+              <p className="text-sm font-semibold text-zinc-200 leading-relaxed">
+                Visual panel checkbook before buying a second-hand vehicle.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
     </div>
   );
-};
+}
