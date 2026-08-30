@@ -15,7 +15,7 @@ import { useTrialGate } from "./useTrialGate";
 
 export default function App() {
   // 🧠 MASTER VARIABLE STATES
-  const [vehicleType, setVehicleType] = useState<"Car" | "Bike" | "Truck">("Car");
+  const [vehicleType, setVehicleType] = useState<"Car" | "Bike" | "Truck" | "EV">("Car");
   const [appSection, setAppSection] = useState<"Invoice Audit" | "Common Symptoms" | "PDI Checklist">("Common Symptoms");
   const [marketRegion, setMarketRegion] = useAutoLocation();
   const [userIssue, setUserIssue] = useState("");
@@ -248,7 +248,7 @@ export default function App() {
             let neededTierKey = "car_tier";
             if (vehicleType === "Truck") neededTierKey = "truck_tier";
             const upgradeTier = SUBSCRIPTION_TIERS[neededTierKey];
-            const isAllowed = currentTier?.allowedVehicles.includes(vehicleType);
+            const isAllowed = currentTier?.allowedVehicles.includes(vehicleType as any);
 
             if (false && !isAllowed && isTrialExpired) {
               return (

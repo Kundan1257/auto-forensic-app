@@ -71,6 +71,9 @@ app.post("/api/evaluate", async (req: express.Request, res: express.Response): P
 
       🛠️ RECOMMENDATION AUDIT SUMMARY:
       • Engineering remedy list item here
+      
+      SPECIAL FIELD DIRECTIVE (ELECTRIC VEHICLE NODE SELECTION):
+      If the vehicle_type is explicitly specified as 'EV', completely skip internal combustion mechanisms (like spark plugs, fuel line contamination, or exhaust smoke logs). Instead, focus your forensic analysis explicitly on high-voltage battery cell impedance delta variations, thermal coolant circulation loop leaks, regenerative braking pressure drops, or inverter gate driver board fault alerts.
 
       --- CONTEXT PARAMETERS ---
       Market Location Region: ${market_region}

@@ -18,7 +18,7 @@ export function SelectionPanel({ vehicleType, setVehicleType, appSection, setApp
           <h3 className="text-base font-black font-mono text-slate-400 uppercase tracking-wider">Select Vehicle Classification</h3>
         </div>
         <div className="grid grid-cols-3 gap-3 bg-black/40 border border-white/10 rounded-2xl p-2">
-          {[ "Car", "Bike", "Truck" ].map((type) => {
+          {[ "Car", "Bike", "Truck", "EV" ].map((type) => {
             const isActive = vehicleType === type;
             return (
               <button
