@@ -31,6 +31,8 @@ export default function App() {
   // ⏳ NATIVE 3-DAY AUTOMATED EVALUATION TIMER GATE HOOK
   const { isTrialExpired, daysRemaining } = useTrialGate();
 
+
+
   // 💬 CHAT TELEMETRY MATRICES
   const [messages, setMessages] = useState<Array<{ sender: "user" | "ai"; text: string }>>([]);
 
@@ -226,7 +228,7 @@ export default function App() {
       </header>
       <main className="max-w-7xl mx-auto w-full flex-grow p-2 sm:p-4 flex flex-col lg:flex-row gap-4 lg:gap-8 items-start max-w-full overflow-x-hidden">
         <div className="w-full lg:w-[38%] flex flex-col space-y-6 flex-shrink-0">
-          <SelectionPanel vehicleType={vehicleType} setVehicleType={handleSetVehicleType} appSection={appSection} setAppSection={setAppSection} />
+          <SelectionPanel vehicleType={vehicleType} setVehicleType={(val) => setVehicleType(val as any)} appSection={appSection} setAppSection={setAppSection} />
           <ViewfinderCard image={image} isCameraActive={isCameraActive} isCameraLoading={isCameraLoading} cameraError={cameraError} videoRef={videoRef} fileInputRef={fileInputRef} startCamera={startCamera} stopCamera={stopCamera} captureSnapshot={captureSnapshot} clearCapturedImage={clearCapturedImage} handleFileUpload={handleFileUpload} handleDragOver={handleDragOver} handleDrop={handleDrop} />
           <UserManual />
         </div>

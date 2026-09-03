@@ -1,9 +1,35 @@
-import React from "react";
-import { BookOpen, ShieldCheck, Car, Bike, Truck, ArrowRight, Camera, FileText } from "lucide-react";
+import React, { useState } from "react";
+import { BookOpen, ShieldCheck, Car, Bike, Truck, ArrowRight, Camera, FileText, ChevronLeft, ChevronRight } from "lucide-react";
 
 export const UserManual: React.FC = () => {
+  const [activeSlide, setActiveSlide] = useState(0);
+
+  const slides = [
+    {
+      step: "01",
+      title: "Select Your Asset Node",
+      desc: "Tap Car, Bike, Truck, or ⚡ EV at the top. The AI instantly configures its diagnostic rules specifically for that vehicle type.",
+      icon: <Car className="w-8 h-8 text-cyan-400" />,
+      badge: "Step 1 of 3"
+    },
+    {
+      step: "02",
+      title: "Capture Photo or Type OBD2 Code",
+      desc: "Snap a photo of the leaking part or frayed belt under the hood, or simply type the code flashing on your scanner (e.g., P0300).",
+      icon: <Camera className="w-8 h-8 text-emerald-400" />,
+      badge: "Step 2 of 3"
+    },
+    {
+      step: "03",
+      title: "Get Your Anti-Fraud Shield",
+      desc: "Hit send to generate a localized, translated breakdown of exact parts prices and fair labor costs before talking to a mechanic.",
+      icon: <ShieldCheck className="w-8 h-8 text-blue-400" />,
+      badge: "Step 3 of 3"
+    }
+  ];
+
   return (
-    <div className="bg-[#0a0c10] border border-white/5 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-8 mt-6 animate-fade-in text-left">
+    <div className="bg-[#0a0c10] border border-white/5 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-8 mt-6 text-left">
       {/* 📱 1. MASTER HEADER LAYER */}
       <div className="flex items-center gap-3 border-b border-white/5 pb-4">
         <BookOpen className="w-6 h-6 text-cyan-400" />
@@ -12,6 +38,56 @@ export const UserManual: React.FC = () => {
         </h2>
       </div>
 
+      {/* 🎬 2. SECURE INTERACTIVE VISUAL SLIDESHOW (FOR NON-TECH USERS WORLDWIDE) */}
+      <div className="p-6 bg-gradient-to-br from-cyan-950/30 to-slate-950 border border-cyan-500/30 rounded-2xl space-y-6 relative overflow-hidden shadow-2xl">
+        <div className="flex items-center justify-between">
+          <span className="text-[10px] font-mono font-black tracking-widest uppercase bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 px-3 py-1 rounded-full">
+            VISUAL USER GUIDE • {slides[activeSlide].badge}
+          </span>
+          <div className="flex gap-1">
+            {slides.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => setActiveSlide(idx)}
+                className={`h-1.5 rounded-full transition-all ${idx === activeSlide ? "w-6 bg-cyan-400" : "w-2 bg-white/20"}`}
+              />
+            ))}
+          </div>
+        </div>
+
+        <div className="min-h-[110px] flex items-start gap-4 py-2">
+          <div className="p-3.5 bg-black/60 border border-white/10 rounded-2xl shrink-0 shadow-inner">
+            {slides[activeSlide].icon}
+          </div>
+          <div className="space-y-1.5">
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-mono font-bold text-cyan-400">[{slides[activeSlide].step}]</span>
+              <h4 className="text-base font-bold text-white tracking-wide">{slides[activeSlide].title}</h4>
+            </div>
+            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-sans">
+              {slides[activeSlide].desc}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between pt-2 border-t border-white/5">
+          <button
+            onClick={() => setActiveSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1))}
+            className="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-1.5 transition-all cursor-pointer"
+          >
+            <ChevronLeft className="w-4 h-4" /> Prev Step
+          </button>
+
+          <span className="text-[11px] font-mono text-slate-500">Tap cards or arrows to navigate</span>
+
+          <button
+            onClick={() => setActiveSlide((prev) => (prev === slides.length - 1 ? 0 : prev + 1))}
+            className="px-3.5 py-2 rounded-xl bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/30 text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-1.5 transition-all cursor-pointer"
+          >
+            Next Step <ChevronRight className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
       {/* 🔧 FLOW 1: ENGINE PART COMPONENT SCAN */}
       <div className="p-5 bg-white/5 border border-white/5 rounded-xl space-y-3.5">
         <h3 className="text-sm font-black text-cyan-400 uppercase tracking-wide font-mono flex items-center gap-2">
@@ -45,10 +121,6 @@ export const UserManual: React.FC = () => {
           <div className="p-3.5 bg-black/60 border border-emerald-900/30 rounded-xl space-y-2">
             <span className="font-bold text-emerald-400 uppercase flex items-center gap-1">⚡ Electric Vehicles (EV)</span>
             <p className="leading-relaxed">Access the standard port below your center media screen panel row, or hook directly to the terminal bulkhead link block inside your front frunk chassis.</p>
-          </div>
-          <div className="p-3.5 bg-black/60 border border-cyan-900/30 rounded-xl space-y-2">
-            <span className="font-bold text-white uppercase flex items-center gap-1"><Bike className="w-3.5 h-3.5 text-cyan-400" /> Bikes & Scooters</span>
-            <p className="leading-relaxed">Unlock your main mechanical lock and lift your rider seat cushion. Locate the diagnostic data port tether right next to the battery core.</p>
           </div>
           <div className="p-3.5 bg-black/60 border border-white/5 rounded-xl space-y-2">
             <span className="font-bold text-white uppercase flex items-center gap-1"><Truck className="w-3.5 h-3.5 text-slate-400" /> Heavy Trucks</span>
