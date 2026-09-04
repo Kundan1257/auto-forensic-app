@@ -1,23 +1,23 @@
-import React from "react";
+import React, { RefObject, DragEvent } from "react";
+import { Camera, Upload, X, RefreshCw, AlertCircle, CheckCircle2 } from "lucide-react";
 
 interface ViewfinderCardProps {
-  image: any;
+  image: string | null;
   isCameraActive: boolean;
   isCameraLoading: boolean;
-  cameraError: string;
-  videoRef: React.RefObject<HTMLVideoElement>;
-  fileInputRef: React.RefObject<HTMLInputElement>;
+  cameraError: string | null;
+  videoRef: RefObject<HTMLVideoElement | null>;
+  fileInputRef: RefObject<HTMLInputElement | null>;
   startCamera: () => void;
   stopCamera: () => void;
   captureSnapshot: () => void;
   clearCapturedImage: () => void;
   handleFileUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleDragOver: (e: React.DragEvent<HTMLDivElement>) => void;
-  handleDrop: (e: React.DragEvent<HTMLDivElement>) => void;
-  clearScan?: () => void;
+  handleDragOver: (e: DragEvent<HTMLDivElement>) => void;
+  handleDrop: (e: DragEvent<HTMLDivElement>) => void;
 }
 
-export function ViewfinderCard({
+export const ViewfinderCard: React.FC<ViewfinderCardProps> = ({
   image,
   isCameraActive,
   isCameraLoading,
@@ -30,80 +30,118 @@ export function ViewfinderCard({
   clearCapturedImage,
   handleFileUpload,
   handleDragOver,
-  handleDrop
-}: ViewfinderCardProps) {
+  handleDrop,
+}) => {
   return (
-    <div className="bg-[#0d1117]/80 border border-white/5 rounded-2xl shadow-xl max-w-4xl mx-auto">
-      
-      {/* 📸 LENS CARD HEADER ROW WITH HIGH-CONTRAST VISUAL ANCHORS */}
-      <div className="flex items-center justify-between pb-3 border-b border-white/10 bg-[#0d1117] p-4 rounded-t-2xl">
-        <div className="flex items-center gap-2.5">
-          <span className="text-cyan-400 text-lg sm:text-xl">📸</span>
-          <h3 className="text-xs sm:text-sm font-black font-mono text-cyan-400 uppercase tracking-widest">
-            🛑 ══ MOBILE CAMERA SCAN VIEWFINDER ══ 🛑
+    <div className="bg-[#0a0c10] border border-cyan-500/30 rounded-2xl p-5 sm:p-6 shadow-2xl space-y-4 text-left animate-fade-in relative z-50 my-4">
+      {/* HEADER */}
+      <div className="flex items-center justify-between border-b border-white/5 pb-3">
+        <div className="flex items-center gap-2">
+          <Camera className="w-5 h-5 text-cyan-400" />
+          <h3 className="text-sm font-black uppercase tracking-widest text-cyan-400 font-mono">
+            Optical Multi-Modal Vision & File Scanner
           </h3>
         </div>
-        {isCameraActive && (
-          <span className="flex h-3 w-3 relative">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
-          </span>
-        )}
+        <button 
+          onClick={stopCamera}
+          className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors cursor-pointer"
+        >
+          <X className="w-4 h-4" />
+        </button>
       </div>
 
-      <div className="p-4 sm:p-6 space-y-4">
-        <div className="relative aspect-video bg-black/90 rounded-xl border border-white/5 flex flex-col items-center justify-center overflow-hidden">
-          {isCameraActive ? (
-            <div className="w-full h-full relative flex items-center justify-center bg-black">
-              <video ref={videoRef} autoPlay playsInline className="w-full h-full object-cover transform scale-x-[-1]" />
-              <button 
-                onClick={captureSnapshot}
-                className="absolute bottom-4 px-6 py-2.5 bg-cyan-400 hover:bg-cyan-300 text-black font-mono text-xs font-black uppercase tracking-widest rounded-xl shadow-2xl border border-white/20 cursor-pointer animate-pulse z-20"
-              >
-                📸 ⚡ SNAPSHOT NOW ⚡ 📸
-              </button>
-              <button 
-                onClick={stopCamera}
-                className="absolute top-4 right-4 px-3 py-1.5 bg-black/60 hover:bg-red-500/20 border border-white/10 hover:border-red-500/40 text-slate-400 hover:text-red-400 font-mono text-[10px] uppercase rounded-lg cursor-pointer z-20"
-              >
-                🛑 CLOSE
-              </button>
-            </div>
-          ) : image ? (
-            <img src={image} alt="Captured evidence" className="w-full h-full object-contain animate-fade-in" />
-          ) : (
-            <div className="text-center space-y-3 p-4" onDragOver={handleDragOver} onDrop={handleDrop}>
-              <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mx-auto border border-white/10">
-                <svg xmlns="http://w3.org" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5 text-slate-500">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6.827 6.175A2.31 2.31 0 0110 3h4a2.31 2.31 0 013.173 3.175m-6.346 0A2.31 2.31 0 0010 6h4a2.31 2.31 0 003.173-2.825M6 9h12a3 3 0 013 3v6a3 3 0 01-3 3H6a3 3 0 01-3-3v-6a3 3 0 013-3z" />
-                </svg>
-              </div>
-              <h3 className="text-xs sm:text-sm font-bold text-slate-300 uppercase tracking-wider">Capture visual component evidence or upload document logs</h3>
-              <p className="text-[11px] font-mono text-slate-500">PNG, JPG up to 10MB</p>
-            </div>
-          )}
+      {/* ERROR BANNER IF ANY */}
+      {cameraError && (
+        <div className="p-3 bg-red-950/30 border border-red-500/30 rounded-xl flex items-center gap-2.5 text-red-400 text-xs font-mono">
+          <AlertCircle className="w-4 h-4 shrink-0" />
+          <span>{cameraError}</span>
         </div>
+      )}
 
-        {/* 📸 HIGH-CONTRAST OPEN LIVE DEVICE CAMERA LENS BUTTON */}
-        {!isCameraActive && !image && (
-          <button
-            onClick={startCamera}
-            className="w-full py-3.5 bg-cyan-400 hover:bg-cyan-300 text-black font-mono text-xs sm:text-sm font-black uppercase tracking-widest rounded-xl shadow-2xl transition-all duration-200 transform hover:scale-[1.01] flex items-center justify-center gap-2.5 border-2 border-cyan-300/40 cursor-pointer"
+      {/* CAPTURED OR UPLOADED IMAGE PREVIEW */}
+      {image ? (
+        <div className="space-y-3">
+          <div className="relative aspect-video rounded-xl overflow-hidden border border-emerald-500/30 bg-black/60">
+            <img src={image} alt="Captured specimen" className="w-full h-full object-cover" />
+            <div className="absolute top-2 left-2 px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[10px] font-mono font-bold flex items-center gap-1">
+              <CheckCircle2 className="w-3.5 h-3.5" /> SPECIMEN LOCKED
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={clearCapturedImage}
+              className="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-mono font-bold uppercase transition-all cursor-pointer flex items-center gap-1.5"
+            >
+              <RefreshCw className="w-3.5 h-3.5" /> Retake / Upload New
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* OPTION 1: LIVE HARDWARE CAMERA STREAM */}
+          <div className="p-4 bg-black/40 border border-white/5 rounded-xl flex flex-col items-center justify-center text-center space-y-3 relative overflow-hidden group">
+            {isCameraActive ? (
+              <div className="w-full space-y-3">
+                <div className="relative aspect-video rounded-lg overflow-hidden bg-black border border-cyan-500/30">
+                  <video ref={videoRef} autoPlay playsInline muted className="w-full h-full object-cover" />
+                </div>
+                <div className="flex gap-2 justify-center">
+                  <button
+                    onClick={captureSnapshot}
+                    className="px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-mono font-black text-xs uppercase tracking-wider transition-all cursor-pointer shadow-lg"
+                  >
+                    Capture Frame
+                  </button>
+                  <button
+                    onClick={stopCamera}
+                    className="px-3 py-2 rounded-xl bg-white/10 text-slate-300 font-mono text-xs uppercase hover:bg-white/20 transition-all cursor-pointer"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div 
+                onClick={startCamera}
+                className="w-full h-full py-6 flex flex-col items-center justify-center space-y-3 cursor-pointer group"
+              >
+                <div className="w-12 h-12 rounded-full bg-cyan-500/10 group-hover:bg-cyan-500/20 flex items-center justify-center border border-cyan-500/20 transition-all">
+                  <Camera className="w-6 h-6 text-cyan-400 group-hover:scale-110 transition-transform" />
+                </div>
+                <div>
+                  <h4 className="text-xs font-bold text-white uppercase tracking-wide">
+                    {isCameraLoading ? "Initializing Lens..." : "Live Camera Viewport"}
+                  </h4>
+                  <p className="text-[11px] text-slate-400 mt-0.5">Click to activate hardware camera lens.</p>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* OPTION 2: DIRECT GALLERY / DESKTOP PHOTO UPLOAD */}
+          <div 
+            onClick={() => fileInputRef.current?.click()}
+            onDragOver={handleDragOver}
+            onDrop={handleDrop}
+            className="p-4 bg-cyan-950/20 border border-dashed border-cyan-500/30 hover:border-cyan-400 rounded-xl flex flex-col items-center justify-center text-center space-y-3 cursor-pointer transition-all group shadow-inner"
           >
-            📸 🟢 CLICK TO ACTIVATE LIVE DEVICE CAMERA LENS LOOP 🟢 📸
-          </button>
-        )}
-
-        {image && (
-          <button
-            onClick={clearCapturedImage}
-            className="w-full py-3 bg-rose-950/40 border border-rose-500/30 text-rose-400 hover:bg-rose-500 hover:text-black font-mono text-xs font-black uppercase tracking-widest rounded-xl cursor-pointer transition-all"
-          >
-            ❌ CLEAR CAPTURED LENS SCAN
-          </button>
-        )}
-
-      </div>
+            <div className="w-12 h-12 rounded-full bg-cyan-500/10 group-hover:bg-cyan-500/20 flex items-center justify-center border border-cyan-500/30 transition-all">
+              <Upload className="w-6 h-6 text-cyan-400 group-hover:scale-110 transition-transform" />
+            </div>
+            <div>
+              <h4 className="text-xs font-bold text-cyan-300 uppercase tracking-wide">Upload Part Photo</h4>
+              <p className="text-[11px] text-slate-400 mt-0.5">Click or drag & drop image file from gallery.</p>
+            </div>
+            <input 
+              ref={fileInputRef}
+              type="file" 
+              accept="image/*" 
+              className="hidden" 
+              onChange={handleFileUpload}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
-}
+};

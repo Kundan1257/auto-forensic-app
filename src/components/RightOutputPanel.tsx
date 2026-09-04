@@ -1,4 +1,5 @@
 import React from "react";
+import { TriageInputBar } from "./TriageInputBar";
 
 interface RightOutputPanelProps {
   vehicleType: string;
@@ -17,6 +18,8 @@ interface RightOutputPanelProps {
   handleToggleSpeech: () => void;
   handleCopyReport: () => void;
   runForensicAnalysis: () => void;
+  onOpenScanner: () => void;
+  hasImage: boolean;
   messages?: any[];
   setMessages?: (val: any[]) => void;
 }
@@ -38,6 +41,8 @@ export function RightOutputPanel({
   handleToggleSpeech,
   handleCopyReport,
   runForensicAnalysis,
+  onOpenScanner,
+  hasImage,
   messages = [],
   setMessages = () => {}
 }: RightOutputPanelProps) {
@@ -101,40 +106,21 @@ export function RightOutputPanel({
           )}
         </div>
 
-        {/* ⌨️ ULTRA-HIGH-CONTRAST WHITE TYPING INPUT BAR CHASSIS ROW (DAYLIGHT VISIBLE) */}
-        <div className="flex items-center gap-3 bg-white border-2 border-cyan-400 rounded-xl px-4 py-3 mt-4 shadow-[0_0_20px_rgba(34,211,238,0.2)] focus-within:border-cyan-500 transition-all w-full">
-          <span className="text-slate-500 text-sm font-bold font-mono shrink-0">✨ COMPASS »</span>
-          <input
-            type="text"
-            value={userIssue}
-            onChange={(e) => setUserIssue(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && userIssue.trim() && !isScanning) {
-                setMessages([...messages, { sender: "user", text: "👤 ══ USER INPUT QUERY ══\n\n" + userIssue }]);
-                runForensicAnalysis();
-                setUserIssue("");
-              }
-            }}
-            placeholder={`Describe ${vehicleType.toLowerCase()} symptoms or choose a preset question above...`}
-            className="w-full bg-transparent text-sm font-black text-black placeholder-zinc-500 focus:outline-none"
-            disabled={isScanning}
-          />
-          <button
-            onClick={() => {
-              if (userIssue.trim() && !isScanning) {
-                setMessages([...messages, { sender: "user", text: "👤 ══ USER INPUT QUERY ══\n\n" + userIssue }]);
-                runForensicAnalysis();
-                setUserIssue("");
-              }
-            }}
-            disabled={isScanning || !userIssue.trim()}
-            className="p-2 bg-cyan-500 hover:bg-cyan-600 disabled:bg-zinc-300 disabled:opacity-40 text-black rounded-lg transition-all cursor-pointer flex items-center justify-center flex-shrink-0 border border-black/10"
-          >
-            <svg xmlns="http://w3.org" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-4 h-4">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
-            </svg>
-          </button>
-        </div>
+        <TriageInputBar
+          prompt={userIssue}
+          setPrompt={setUserIssue}
+          onSubmit={() => {
+            if (userIssue.trim() && !isScanning) {
+              setMessages([...messages, { sender: "user", text: "👤 ══ USER INPUT QUERY ══\n\n" + userIssue }]);
+              runForensicAnalysis();
+              setUserIssue("");
+            }
+          }}
+          onOpenScanner={onOpenScanner}
+          isLoading={isScanning}
+          hasImage={hasImage}
+          onAudioRecorded={() => {}}
+        />
 
         {/* 📊 RESTORED HIGH-CONTRAST DYNAMIC DIAGNOSTIC REPORT OVERLAY */}
         {reportResult && (

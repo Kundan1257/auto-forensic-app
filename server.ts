@@ -81,13 +81,13 @@ app.post("/api/evaluate", async (req: express.Request, res: express.Response): P
       Current Selected App Section Focus: ${app_section}`
     });
 
-    // Upgraded to active production supported Gemini 2.5 Flash model ID to resolve Google Cloud 404 errors permanently
+    // Use the active production model ID required by the proprietary AI engine route.
     const aiResponse = await aiClient.models.generateContent({
       model: "gemini-2.5-flash",
       contents: payloadParts,
     });
 
-    const outputText = aiResponse.text || "⚠️ Zero-telemetry return frame from Gemini Core API model loops.";
+    const outputText = aiResponse.text || "⚠️ Zero-telemetry return frame from the Proprietary AI Engine model loop.";
     return res.json({ result: outputText });
 
   } catch (error: any) {

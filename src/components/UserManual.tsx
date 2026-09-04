@@ -151,7 +151,7 @@ export const UserManual: React.FC = () => {
           <span>3. Fetch Real-Time Report</span>
         </div>
         <p className="text-sm text-slate-300 leading-relaxed font-sans pt-1">
-          Click the search dispatch arrow button (<code className="text-cyan-400 font-mono bg-cyan-950/20 px-1.5 py-0.5 rounded border border-cyan-500/20">&gt;</code>). The server connects to your live Gemini 2.5 Flash node, generating a complete diagnostic audit sheet translated natively into your dropdown language selection, split into <strong>Fair Replacement Parts Values</strong> and <strong>Standard Local Labor Fee Brackets</strong> to shield you from repair garage exploitation.
+          Click the search dispatch arrow button (<code className="text-cyan-400 font-mono bg-cyan-950/20 px-1.5 py-0.5 rounded border border-cyan-500/20">&gt;</code>). The server connects to your live Auto Forensic Telemetry Core, generating a complete diagnostic audit sheet translated natively into your dropdown language selection, split into <strong>Fair Replacement Parts Values</strong> and <strong>Standard Local Labor Fee Brackets</strong> to shield you from repair garage exploitation.
         </p>
       </div>
 

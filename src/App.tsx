@@ -272,7 +272,7 @@ export default function App() {
 
             return (
               <RightOutputPanel 
-                vehicleType={vehicleType} userIssue={userIssue} setUserIssue={setUserIssue} appLanguage={appLanguage} marketRegion={marketRegion} reportResult={reportResult} isScanning={isScanning} errorMessage={errorMessage} scanStep={scanStep} activeHighlight={activeHighlight} isSpeaking={isSpeaking} isCopied={isCopied} setActiveHighlight={setActiveHighlight} handleToggleSpeech={handleToggleSpeech} handleCopyReport={handleCopyReport} runForensicAnalysis={runForensicAnalysis}
+                vehicleType={vehicleType} userIssue={userIssue} setUserIssue={setUserIssue} appLanguage={appLanguage} marketRegion={marketRegion} reportResult={reportResult} isScanning={isScanning} errorMessage={errorMessage} scanStep={scanStep} activeHighlight={activeHighlight} isSpeaking={isSpeaking} isCopied={isCopied} setActiveHighlight={setActiveHighlight} handleToggleSpeech={handleToggleSpeech} handleCopyReport={handleCopyReport} runForensicAnalysis={runForensicAnalysis} onOpenScanner={startCamera} hasImage={Boolean(image)}
               />
             );
           })()}
