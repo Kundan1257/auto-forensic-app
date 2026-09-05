@@ -22,6 +22,11 @@ export default function App() {
   const [userIssue, setUserIssue] = useState("");
   const [image, setImage] = useState<string | null>(null);
   const [appLanguage, setAppLanguage] = useState("en");
+  const [isSystemUnlocked, setIsSystemUnlocked] = useState(() => {
+    return localStorage.getItem("auto_forensic_stealth_unlocked") === "true";
+  });
+  const [systemPassword, setSystemPassword] = useState("");
+  const [isPasswordInvalid, setIsPasswordInvalid] = useState(false);
 
   // ⚖️ LEGAL DISCLAIMER MODAL STATE CONTROL LOCK
   const [showLegalModal, setShowLegalModal] = useState(false);
@@ -187,6 +192,59 @@ export default function App() {
     setHasAcceptedTerms(true);
     setShowLegalModal(false);
   };
+
+  const handleSystemUnlock = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (systemPassword === "ForensicGuard2026") {
+      localStorage.setItem("auto_forensic_stealth_unlocked", "true");
+      setIsSystemUnlocked(true);
+      setSystemPassword("");
+      setIsPasswordInvalid(false);
+      return;
+    }
+
+    setIsPasswordInvalid(true);
+  };
+
+  if (!isSystemUnlocked) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-[#050608] px-4 text-slate-100">
+        <section className="w-full max-w-md rounded-2xl border border-white/10 bg-[#0a0c10] p-8 shadow-2xl">
+          <div className="mb-6 text-center">
+            <p className="text-[10px] font-mono uppercase tracking-[0.24em] text-cyan-400">Auto Forensic</p>
+            <h1 className="mt-3 text-2xl font-bold uppercase tracking-tight text-white">System Access</h1>
+            <p className="mt-2 text-sm text-slate-400">Enter the authorized access password to continue.</p>
+          </div>
+          <form onSubmit={handleSystemUnlock} className="space-y-4">
+            <label htmlFor="system-password" className="sr-only">System password</label>
+            <input
+              id="system-password"
+              type="password"
+              value={systemPassword}
+              onChange={(event) => {
+                setSystemPassword(event.target.value);
+                setIsPasswordInvalid(false);
+              }}
+              placeholder="Access password"
+              autoComplete="current-password"
+              autoFocus
+              className="w-full rounded-lg border border-white/10 bg-black/40 px-4 py-3 text-sm text-white outline-none transition focus:border-cyan-400"
+            />
+            {isPasswordInvalid && (
+              <p className="text-xs text-rose-400" role="alert">Access denied. Verify the password and try again.</p>
+            )}
+            <button
+              type="submit"
+              className="w-full rounded-lg bg-cyan-500 px-4 py-3 text-xs font-bold uppercase tracking-wider text-black transition hover:bg-cyan-400"
+            >
+              Unlock System
+            </button>
+          </form>
+        </section>
+      </main>
+    );
+  }
 
   return (
     <div className="w-full min-h-screen bg-[#050608] text-slate-100 flex flex-col justify-between font-sans overflow-x-hidden max-w-full relative">
