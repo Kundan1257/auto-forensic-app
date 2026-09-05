@@ -6,6 +6,7 @@ import { SelectionPanel } from "./components/SelectionPanel";
 import { ViewfinderCard } from "./components/ViewfinderCard";
 import { RightOutputPanel } from "./components/RightOutputPanel";
 import { UserManual } from "./components/UserManual";
+import { SubscriptionModal } from "./components/SubscriptionModal";
 
 // 🧠 IMPORT GLOBAL UTILITY ASSETS
 import { ROADSIDE_HACK_QUESTIONS } from "./data/hacks";
@@ -30,6 +31,10 @@ export default function App() {
 
   // ⏳ NATIVE 3-DAY AUTOMATED EVALUATION TIMER GATE HOOK
   const { isTrialExpired, daysRemaining } = useTrialGate();
+  const [isPremium, setIsPremium] = useState(() => {
+    return localStorage.getItem("auto_forensic_is_premium") === "true";
+  });
+  const [isSubscriptionModalDismissed, setIsSubscriptionModalDismissed] = useState(false);
 
 
 
@@ -304,6 +309,17 @@ export default function App() {
           </div>
         </div>
       )}
+
+      <SubscriptionModal
+        isOpen={daysRemaining === 0 && !isPremium && !isSubscriptionModalDismissed}
+        onClose={() => setIsSubscriptionModalDismissed(true)}
+        onSubscribeSuccess={(tier) => {
+          localStorage.setItem("auto_forensic_subscription_tier", tier);
+          localStorage.setItem("auto_forensic_is_premium", "true");
+          setIsPremium(true);
+          setIsSubscriptionModalDismissed(true);
+        }}
+      />
 
       <footer className="border-t border-white/5 py-4 bg-[#0a0c10]/40 text-center text-xs text-slate-500 font-mono">
         <p className="max-w-2xl mx-auto">Auto Forensic v4.5 • AI-Powered Telemetry Diagnostic Suite</p>

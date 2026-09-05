@@ -5,32 +5,28 @@ export function useTrialGate() {
   const [daysRemaining, setDaysRemaining] = useState(3);
 
   useEffect(() => {
-    // ⏰ 3-DAY TIMESTAMP CALCULATION LOGIC
-    const localSignupKey = "auto_forensic_signup_date";
-    let signupTimestamp = localStorage.getItem(localSignupKey);
+    const localCreatedAtKey = "auto_forensic_created_at";
+    let createdAtTimestamp = localStorage.getItem(localCreatedAtKey);
 
-    if (!signupTimestamp) {
-      // First time opening the app? Start their 3-day clock right now
+    if (!createdAtTimestamp) {
       const now = new Date().toISOString();
-      localStorage.setItem(localSignupKey, now);
-      signupTimestamp = now;
+      localStorage.setItem(localCreatedAtKey, now);
+      createdAtTimestamp = now;
     }
 
-    const signupDate = new Date(signupTimestamp);
-    const currentDate = new Date();
-    
-    // Calculate the difference in total days
-    const differenceInTime = currentDate.getTime() - signupDate.getTime();
-    const differenceInDays = differenceInTime / (1000 * 3600 * 24);
+    const updateTrialState = () => {
+      const createdAt = new Date(createdAtTimestamp as string).getTime();
+      const elapsedDays = (Date.now() - createdAt) / (1000 * 60 * 60 * 24);
+      const remaining = Math.max(0, Math.ceil(3 - elapsedDays));
 
-    const remaining = Math.max(0, Math.ceil(3 - differenceInDays));
-    setDaysRemaining(remaining);
+      setDaysRemaining(remaining);
+      setIsTrialExpired(remaining === 0);
+    };
 
-    if (differenceInDays > 3) {
-      setIsTrialExpired(true);
-    } else {
-      setIsTrialExpired(false);
-    }
+    updateTrialState();
+    const intervalId = window.setInterval(updateTrialState, 1000);
+
+    return () => window.clearInterval(intervalId);
   }, []);
 
   return { isTrialExpired, daysRemaining };
