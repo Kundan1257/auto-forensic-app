@@ -14,6 +14,31 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
 }) => {
   if (!isOpen) return null;
 
+  // 💳 SECURE EXPLICIT DISCRETE PRODUCTION DIRECT ROUTING ENGINE
+  const handlePassPurchaseRedirect = (tier: "Bike" | "Car" | "AllAccess") => {
+    // Lock the targeted clearance tier parameter into context memory maps
+    localStorage.setItem("auto_forensic_pending_tier", tier);
+    
+    let targetCheckoutUrl = "";
+    
+    switch (tier) {
+      case "Bike":
+        targetCheckoutUrl = "https://rzp.io";
+        break;
+      case "Car":
+        targetCheckoutUrl = "https://rzp.io";
+        break;
+      case "AllAccess":
+        targetCheckoutUrl = "https://rzp.io";
+        break;
+      default:
+        targetCheckoutUrl = "https://rzp.io";
+    }
+
+    // Force seamless web view redirection out to Razorpay high-speed cloud clusters
+    window.location.href = targetCheckoutUrl;
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
       <div className="bg-[#0a0c10] border border-cyan-500/30 rounded-3xl max-w-4xl w-full p-6 sm:p-8 shadow-2xl relative flex flex-col md:flex-row gap-6 sm:gap-8 overflow-hidden">
@@ -31,7 +56,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
         {/* VALUE PROPOSITION PROMPT */}
         <div className="flex-1 space-y-4 md:border-r md:border-white/5 md:pr-6 flex flex-col justify-center">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-[10px] font-mono font-black uppercase tracking-widest w-fit">
-            <Sparkles className="w-3.5 h-3.5" /> FAIR-PLAY BILLING INTERFACE
+            <Sparkles className="w-3.5 h-3.5" /> PRISTINE BUSINESS LEDGER ROUTING
           </div>
           <h2 className="text-xl sm:text-2xl font-black uppercase tracking-wide text-white font-mono leading-none">
             ACTIVATE YOUR <span className="text-cyan-400">FAIR SHIELD</span>
@@ -65,7 +90,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
               <p className="text-[10px] text-slate-400 font-sans mt-2">Up to 3 multi-modal evaluation scans for a single motorcycle or scooter service event.</p>
             </div>
             <button
-              onClick={() => onSubscribeSuccess("Bike")}
+              onClick={() => handlePassPurchaseRedirect("Bike")}
               className="w-full py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white font-mono font-bold text-[10px] uppercase border border-white/10 transition-all cursor-pointer"
             >
               Get Bike Pass
@@ -85,7 +110,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
               <p className="text-[10px] text-slate-400 font-sans mt-2">Up to 3 comprehensive component photography audits and garage invoice validations.</p>
             </div>
             <button
-              onClick={() => onSubscribeSuccess("Car")}
+              onClick={() => handlePassPurchaseRedirect("Car")}
               className="w-full py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white font-mono font-bold text-[10px] uppercase border border-white/10 transition-all cursor-pointer"
             >
               Get Car Pass
@@ -108,7 +133,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
               <p className="text-[10px] text-slate-300 font-sans mt-2">Completely unlimited diagnostic scans and attempts across all vehicles for 24 full hours.</p>
             </div>
             <button
-              onClick={() => onSubscribeSuccess("AllAccess")}
+              onClick={() => handlePassPurchaseRedirect("AllAccess")}
               className="w-full py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-mono font-black text-[10px] uppercase tracking-wider transition-all cursor-pointer shadow-md"
             >
               Unlock 24H Pass
