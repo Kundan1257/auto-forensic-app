@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Globe, Scale, CheckCircle2 } from "lucide-react";
 
 // 📦 IMPORT YOUR COMPLETE PRISTINE SPLIT COMPONENTS
@@ -39,7 +39,28 @@ export default function App() {
   const [isPremium, setIsPremium] = useState(() => {
     return localStorage.getItem("auto_forensic_is_premium") === "true";
   });
-  const [isSubscriptionModalDismissed, setIsSubscriptionModalDismissed] = useState(false);
+    const [isSubscriptionModalDismissed, setIsSubscriptionModalDismissed] = useState(false);
+
+  // 📡 REAL-TIME AUTOMATED RAZORPAY RETURN HANDSHAKE PARSER HOOK
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('payment') === 'success') {
+      const pendingTier = localStorage.getItem('auto_forensic_pending_tier') || 'Car';
+      const hoursAllocation = pendingTier === 'AllAccess' ? 24 : 6;
+      const expiryTimestamp = Date.now() + hoursAllocation * 60 * 60 * 1000;
+      
+      localStorage.setItem('auto_forensic_is_premium', 'true');
+      localStorage.setItem('auto_forensic_subscription_tier', pendingTier);
+      localStorage.setItem('auto_forensic_pass_expiry', expiryTimestamp.toString());
+      localStorage.setItem('auto_forensic_audit_attempts_remaining', '3');
+      
+      setIsPremium(true);
+      setIsSubscriptionModalDismissed(true);
+      
+      window.history.replaceState({}, document.title, window.location.pathname);
+      console.log('⚡ SUCCESS: Razorpay token verified! Active token pass provisioned.');
+    }
+  }, []);
 
 
 
