@@ -40,6 +40,7 @@ export default function App() {
     return localStorage.getItem("auto_forensic_is_premium") === "true";
   });
     const [isSubscriptionModalDismissed, setIsSubscriptionModalDismissed] = useState(false);
+  const [showPricingModal, setShowPricingModal] = useState(false);
 
   // 📡 REAL-TIME AUTOMATED RAZORPAY RETURN HANDSHAKE PARSER HOOK
   useEffect(() => {
@@ -56,6 +57,7 @@ export default function App() {
       
       setIsPremium(true);
       setIsSubscriptionModalDismissed(true);
+      setShowPricingModal(false);
       
       window.history.replaceState({}, document.title, window.location.pathname);
       console.log('⚡ SUCCESS: Razorpay token verified! Active token pass provisioned.');
@@ -389,8 +391,18 @@ export default function App() {
         </div>
       )}
 
+            {/* 🚀 FLOAT ACTIVE PREMIUM UPGRADE TOGGLE OVERRIDE FOR TESTING & ON-DEMAND PURCHASES */}
+      {!isPremium && (
+        <button
+          onClick={() => { setIsSubscriptionModalDismissed(false); setShowPricingModal(true); }}
+          className="fixed bottom-6 right-6 z-40 bg-gradient-to-r from-amber-500 to-orange-600 text-slate-950 px-4 py-2.5 rounded-xl font-mono font-black text-xs uppercase tracking-widest shadow-2xl border border-amber-400/40 hover:from-amber-400 hover:to-orange-500 transition-all cursor-pointer transform active:scale-95"
+        >
+          💎 Upgrade Node Tiers
+        </button>
+      )}
+
       <SubscriptionModal
-        isOpen={daysRemaining === 0 && !isPremium && !isSubscriptionModalDismissed}
+        isOpen={(daysRemaining === 0 || showPricingModal) && !isPremium && !isSubscriptionModalDismissed}
         onClose={() => setIsSubscriptionModalDismissed(true)}
         onSubscribeSuccess={(tier) => {
           localStorage.setItem("auto_forensic_subscription_tier", tier);
