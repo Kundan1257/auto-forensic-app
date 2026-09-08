@@ -1,4 +1,23 @@
 import React, { useState, useRef, useEffect } from "react";
+import * as Sentry from "@sentry/react";
+import { createClient } from "@supabase/supabase-js";
+
+// 📡 INITIALIZE SECURE CLOUD INFRASTRUCTURE CONNECTIONS
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "";
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || "";
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+// 🛡️ INITIATE SENTRY PRODUCTION ERROR WRAPPER COCKPIT
+const sentryDsn = import.meta.env.VITE_SENTRY_DSN || "";
+if (sentryDsn) {
+  Sentry.init({
+    dsn: sentryDsn,
+    integrations: [Sentry.browserTracingIntegration(), Sentry.replayIntegration()],
+    tracesSampleRate: 1.0,
+    replaysSessionSampleRate: 0.1,
+    replaysOnErrorSampleRate: 1.0,
+  });
+}
 import { Globe, Scale, CheckCircle2 } from "lucide-react";
 
 // 📦 IMPORT YOUR COMPLETE PRISTINE SPLIT COMPONENTS
