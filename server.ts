@@ -4,13 +4,11 @@ import { createServer as createViteServer } from "vite";
 import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
 
-// Initialize environment variables safely from disk vault files
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 10000;
 
-// High-limit parsing configurations for camera snapshot base64 payloads
 app.use(express.json({ limit: "25mb" }));
 app.use(express.urlencoded({ limit: "25mb", extended: true }));
 
@@ -21,22 +19,19 @@ if (!GEMINI_API_KEY) {
 
 export const aiClient = new GoogleGenAI({ apiKey: GEMINI_API_KEY || "" });
 
-// Evaluation Multi-Modal API Route (Hardened against loops, crashes, and model hallucinations)
 app.post("/api/evaluate", async (req: express.Request, res: express.Response): Promise<any> => {
   try {
-    const { market_region, vehicle_type, app_section, user_issue, image, app_language } = req.body;
+    const { market_region, vehicle_type, app_section, user_issue, image, audio, app_language } = req.body;
 
-    // Direct Input Field Validation
     if (!market_region || !vehicle_type || !app_section) {
       return res.status(400).json({ 
         error: "Missing required parameters: market_region, vehicle_type, and app_section are mandatory fields." 
       });
     }
 
-    // Prepare dynamic multimodal payload safely
     const payloadParts = [];
 
-    // Camera base64 snapshot parsing
+    // 📸 CAMERA BASE64 SNAPSHOT PARSING
     if (image && typeof image === "string" && image.includes("base64,")) {
       try {
         const mimeType = image.substring(image.indexOf(":") + 1, image.indexOf(";"));
@@ -53,9 +48,28 @@ app.post("/api/evaluate", async (req: express.Request, res: express.Response): P
       }
     }
 
-    // Append context and strict translation compliance rules straight to the text instructions stream
+    // 🎙️ MULTI-MODAL ACOUSTIC AUDIO TELEMETRY BASE64 PARSING
+    if (audio && typeof audio === "string" && audio.includes("base64,")) {
+      try {
+        const mimeType = audio.substring(audio.indexOf(":") + 1, audio.indexOf(";"));
+        const base64Data = audio.substring(audio.indexOf("base64,") + 7);
+        
+        payloadParts.push({
+          inlineData: {
+            mimeType: mimeType || "audio/mp3",
+            data: base64Data,
+          },
+        });
+        console.log("⚡ Success: Embedded localized audio stream chunk securely into Gemini payload matrix.");
+      } catch (audErr: any) {
+        console.error("Failed to parse inline base64 audio data payload:", audErr.message);
+      }
+    }
+
     payloadParts.push({
-      text: `You are an elite automotive forensic AI expert. Analyze this vehicle issue: "${user_issue}" for vehicle category node: ${vehicle_type}.
+      text: `You are an elite automotive forensic AI expert. Analyze this vehicle issue description: "${user_issue}" for vehicle category node: ${vehicle_type}.
+      
+      If an audio file data chunk is present inside this multimodal package, listen to the acoustic parameters (knocks, screeching, ticking, grinding) with absolute precision. Differentiate structural engine knocks from light top-end valvetrain noises.
       
       CRITICAL UNBREAKABLE CONDITION: You MUST write your complete entire response in the native language script corresponding to this short ISO code: ${app_language || 'en'}. Example: if 'hi' write Hindi text script, if 'ja' write Japanese text script, if 'ko' write Korean text script, if 'zh' write Chinese text script. Do not output any English text rows if a non-English ISO code is specified.
       
@@ -81,7 +95,6 @@ app.post("/api/evaluate", async (req: express.Request, res: express.Response): P
       Current Selected App Section Focus: ${app_section}`
     });
 
-    // Use the active production model ID required by the proprietary AI engine route.
     const aiResponse = await aiClient.models.generateContent({
       model: "gemini-2.5-flash",
       contents: payloadParts,
@@ -98,9 +111,6 @@ app.post("/api/evaluate", async (req: express.Request, res: express.Response): P
   }
 });
 
-// ==========================================
-// VITE WORKSPACE MIDDLEWARE ENGINE
-// ==========================================
 async function bootstrap() {
   if (process.env.NODE_ENV !== "production") {
     console.log("Setting up Express with Vite Development Server Middleware...");

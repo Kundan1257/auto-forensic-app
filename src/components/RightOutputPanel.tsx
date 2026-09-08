@@ -20,6 +20,8 @@ interface RightOutputPanelProps {
   runForensicAnalysis: () => void;
   onOpenScanner: () => void;
   hasImage: boolean;
+  audio?: string | null;
+  setAudio?: (val: string | null) => void;
   messages?: any[];
   setMessages?: (val: any[]) => void;
 }
@@ -42,6 +44,8 @@ export function RightOutputPanel({
   handleCopyReport,
   runForensicAnalysis,
   onOpenScanner,
+  audio,
+  setAudio,
   hasImage,
   messages = [],
   setMessages = () => {}
@@ -119,7 +123,7 @@ export function RightOutputPanel({
           onOpenScanner={onOpenScanner}
           isLoading={isScanning}
           hasImage={hasImage}
-          onAudioRecorded={() => {}}
+          onAudioRecorded={(base64Audio) => { if (setAudio) setAudio(base64Audio); }}
         />
 
         {/* 📊 RESTORED HIGH-CONTRAST DYNAMIC DIAGNOSTIC REPORT OVERLAY */}

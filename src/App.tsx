@@ -21,6 +21,7 @@ export default function App() {
   const [marketRegion, setMarketRegion] = useAutoLocation();
   const [userIssue, setUserIssue] = useState("");
   const [image, setImage] = useState<string | null>(null);
+  const [audio, setAudio] = useState<string | null>(null);
   const [appLanguage, setAppLanguage] = useState("en");
   const [isSystemUnlocked, setIsSystemUnlocked] = useState(() => {
     return localStorage.getItem("auto_forensic_stealth_unlocked") === "true";
@@ -180,7 +181,8 @@ export default function App() {
           app_section: appSection || "Common Symptoms",
           user_issue: userIssue,
           app_language: appLanguage || "en",
-          image: image || null
+          image: image || null,
+          audio: audio || null
         })
       });
 
@@ -358,7 +360,7 @@ export default function App() {
 
             return (
               <RightOutputPanel 
-                vehicleType={vehicleType} userIssue={userIssue} setUserIssue={setUserIssue} appLanguage={appLanguage} marketRegion={marketRegion} reportResult={reportResult} isScanning={isScanning} errorMessage={errorMessage} scanStep={scanStep} activeHighlight={activeHighlight} isSpeaking={isSpeaking} isCopied={isCopied} setActiveHighlight={setActiveHighlight} handleToggleSpeech={handleToggleSpeech} handleCopyReport={handleCopyReport} runForensicAnalysis={runForensicAnalysis} onOpenScanner={startCamera} hasImage={Boolean(image)}
+                vehicleType={vehicleType} userIssue={userIssue} setUserIssue={setUserIssue} appLanguage={appLanguage} marketRegion={marketRegion} reportResult={reportResult} isScanning={isScanning} errorMessage={errorMessage} scanStep={scanStep} activeHighlight={activeHighlight} isSpeaking={isSpeaking} isCopied={isCopied} setActiveHighlight={setActiveHighlight} handleToggleSpeech={handleToggleSpeech} handleCopyReport={handleCopyReport} runForensicAnalysis={runForensicAnalysis} onOpenScanner={startCamera} hasImage={Boolean(image)} messages={messages} setMessages={setMessages} audio={audio} setAudio={setAudio}
               />
             );
           })()}
