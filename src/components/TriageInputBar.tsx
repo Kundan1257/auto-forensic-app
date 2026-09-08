@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Camera, Mic, Square, Send, Image as ImageIcon, Volume2, VideoOff } from "lucide-react";
+import { Camera, Mic, Square, Send, Image as ImageIcon, Volume2 } from "lucide-react";
 
 interface TriageInputBarProps {
   prompt: string;
@@ -72,11 +72,7 @@ export const TriageInputBar: React.FC<TriageInputBarProps> = ({
       ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
       const dataUrl = canvas.toDataURL("image/jpeg", 0.85);
       setCapturedImageLocal(dataUrl);
-      
-      // Mirror the file capture state locally inside parent storage parameters
       localStorage.setItem("auto_forensic_appraisal_snapshot", dataUrl);
-      
-      // Simulate programmatic click hook updates smoothly
       onOpenScanner(); 
       stopInlineCamera();
     }
@@ -98,6 +94,9 @@ export const TriageInputBar: React.FC<TriageInputBarProps> = ({
           if (typeof reader.result === "string") {
             onAudioRecorded(reader.result);
             setAudioBlobUrl(URL.createObjectURL(audioBlob));
+            
+            // 📡 AUTO-FILL PROMPT TO UNLOCK APPRASIAL ENGINE IMMEDIATELY AFTER SPEAKING
+            setPrompt("[Acoustic Audio Diagnostic Telemetry Attached]");
           }
         };
         reader.readAsDataURL(audioBlob);
@@ -105,11 +104,13 @@ export const TriageInputBar: React.FC<TriageInputBarProps> = ({
       };
       recorder.start();
       setIsRecording(true);
+      
+      // ⏳ EXTENDED: Changed from 6 seconds to 25 seconds to support complete voice over prompts!
       setTimeout(() => {
         if (mediaRecorderRef.current && mediaRecorderRef.current.state === "recording") {
           stopEngineAudioCapture();
         }
-      }, 6000);
+      }, 25000);
     } catch (err) {
       alert("Microphone access denied.");
       setIsRecording(false);
@@ -165,7 +166,7 @@ export const TriageInputBar: React.FC<TriageInputBarProps> = ({
           )}
           {audioBlobUrl && (
             <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 text-[10px] font-mono font-bold uppercase">
-              <Volume2 className="w-3 h-3健 animate-pulse" /> Engine Acoustic Audio Locked
+              <Volume2 className="w-3 h-3 animate-pulse" /> Engine Acoustic Audio Locked
             </span>
           )}
         </div>
