@@ -433,7 +433,7 @@ export default function App() {
       )}
 
       <SubscriptionModal
-        isOpen={(daysRemaining === 0 || showPricingModal) && !isPremium && !isSubscriptionModalDismissed}
+        isOpen={!showLegalModal && hasAcceptedTerms && (daysRemaining === 0 || showPricingModal) && !isPremium && !isSubscriptionModalDismissed}
         onClose={() => setIsSubscriptionModalDismissed(true)}
         onSubscribeSuccess={(tier) => {
           localStorage.setItem("auto_forensic_subscription_tier", tier);
