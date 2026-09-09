@@ -34,6 +34,16 @@ import { useAutoLocation } from "./useAutoLocation";
 import { useTrialGate } from "./useTrialGate";
 
 export default function App() {
+  // 📱 SMART MOBILE HANDSHAKE TRACK FOR DRIVERS
+  const [isAndroidUser, setIsAndroidUser] = useState(false);
+  const [showDownloadBanner, setShowDownloadBanner] = useState(true);
+
+  useEffect(() => {
+    const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera;
+    if (/android/i.test(userAgent)) {
+      setIsAndroidUser(true);
+    }
+  }, []);
   // 🧠 MASTER VARIABLE STATES
   const [vehicleType, setVehicleType] = useState<"Car" | "Bike" | "Truck" | "EV">("Car");
   const [appSection, setAppSection] = useState<"Invoice Audit" | "Common Symptoms" | "PDI Checklist">("Common Symptoms");
