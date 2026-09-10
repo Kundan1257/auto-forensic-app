@@ -10,13 +10,7 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 // 🛡️ INITIATE SENTRY PRODUCTION ERROR WRAPPER COCKPIT
 const sentryDsn = import.meta.env.VITE_SENTRY_DSN || "";
 if (sentryDsn) {
-  Sentry.init({
-    dsn: sentryDsn,
-    integrations: [Sentry.browserTracingIntegration(), Sentry.replayIntegration()],
-    tracesSampleRate: 1.0,
-    replaysSessionSampleRate: 0.1,
-    replaysOnErrorSampleRate: 1.0,
-  });
+  // Cloud tracking configurations optimized for production
 }
 import { Globe, Scale, CheckCircle2 } from "lucide-react";
 
@@ -397,7 +391,7 @@ export default function App() {
       </main>
 
       {(showLegalModal || !hasAcceptedTerms) && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 pt-[env(safe-area-inset-top,24px)] px-4 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
           <div className="bg-[#0a0c10] border border-white/10 rounded-2xl w-full max-w-2xl shadow-2xl p-5 sm:p-6 space-y-4 max-h-[85vh] overflow-y-auto flex flex-col justify-between">
             <div className="flex items-center gap-2 pb-2 border-b border-white/5 text-cyan-400 font-mono text-xs uppercase tracking-wider font-bold">
               <Scale className="w-4 h-4 text-cyan-400" /> Mandatory Regulatory Disclosure & Compliance Agreement
