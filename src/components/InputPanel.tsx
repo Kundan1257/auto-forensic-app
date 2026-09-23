@@ -2,14 +2,14 @@ import React, { useState, useRef, useEffect } from "react";
 import { MessageSquare, Send, ShieldCheck, Sparkles, User, Bot, Camera, VideoOff } from "lucide-react";
 
 interface InputPanelProps {
-  vehicleType: "Car" | "Bike" | "Truck";
-  appSection: "Invoice Audit" | "Common Symptoms" | "PDI Checklist";
-  userIssue: string;
-  isScanning: boolean;
-  setUserIssue: (val: string) => void;
-  runForensicAnalysis: () => void;
-  messages: Message[];
-  setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
+  vehicleType?: any;
+  appSection?: any;
+  userIssue?: any;
+  isScanning?: any;
+  setUserIssue?: (val: string) => void;
+  runForensicAnalysis?: () => void;
+  messages?: Message[];
+  setMessages?: React.Dispatch<React.SetStateAction<Message[]>>;
 }
 
 interface Message {
@@ -22,10 +22,10 @@ export const InputPanel: React.FC<InputPanelProps> = ({
   vehicleType,
   userIssue,
   isScanning,
-  setUserIssue,
-  runForensicAnalysis,
-  messages,
-  setMessages
+  setUserIssue = () => {},
+  runForensicAnalysis = () => {},
+  messages = [],
+  setMessages = () => {}
 }) => {
   const [chatInput, setChatInput] = useState("");
   const [isCameraActive, setIsCameraActive] = useState(false);

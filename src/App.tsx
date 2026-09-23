@@ -16,6 +16,7 @@ import { Globe, Scale, CheckCircle2 } from "lucide-react";
 
 // 📦 IMPORT YOUR COMPLETE PRISTINE SPLIT COMPONENTS
 import { SelectionPanel } from "./components/SelectionPanel";
+import { InputPanel } from "./components/InputPanel";
 import { ViewfinderCard } from "./components/ViewfinderCard";
 import { RightOutputPanel } from "./components/RightOutputPanel";
 import { UserManual } from "./components/UserManual";
@@ -341,6 +342,16 @@ export default function App() {
         <div className="w-full lg:w-[38%] flex flex-col space-y-6 flex-shrink-0">
           <SelectionPanel vehicleType={vehicleType} setVehicleType={(val) => setVehicleType(val as any)} appSection={appSection} setAppSection={setAppSection} />
           <ViewfinderCard image={image} isCameraActive={isCameraActive} isCameraLoading={isCameraLoading} cameraError={cameraError} videoRef={videoRef} fileInputRef={fileInputRef} startCamera={startCamera} stopCamera={stopCamera} captureSnapshot={captureSnapshot} clearCapturedImage={clearCapturedImage} handleFileUpload={handleFileUpload} handleDragOver={handleDragOver} handleDrop={handleDrop} />
+          <InputPanel 
+            vehicleType={vehicleType}
+            appSection={appSection}
+            userIssue={userIssue}
+            isScanning={isScanning}
+            setUserIssue={setUserIssue}
+            runForensicAnalysis={runForensicAnalysis}
+            messages={messages}
+            setMessages={setMessages}
+          />
           <UserManual />
         </div>
         <div className="w-full lg:w-[58%] flex flex-col space-y-4">
