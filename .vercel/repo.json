@@ -1,0 +1,11 @@
+{
+  "remoteName": "origin",
+  "projects": [
+    {
+      "id": "prj_gBAPxKtH9ood32mSTKOZhnzRn6tE",
+      "name": "auto-forensic-app",
+      "directory": ".",
+      "orgId": "team_ykEnQHGQnGsQG9LJEj0klAiZ"
+    }
+  ]
+}
