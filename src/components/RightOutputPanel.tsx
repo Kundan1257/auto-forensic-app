@@ -1,5 +1,6 @@
 import React from 'react';
 
+// Loose interface template completely overrides strict type restrictions natively
 interface RightOutputPanelProps {
   [key: string]: any;
 }
