@@ -103,13 +103,13 @@ export const RightOutputPanel: React.FC<RightOutputPanelProps> = (props) => {
       <div className="grid grid-cols-2 gap-4 mt-6 pt-6 border-t border-slate-800 bg-slate-950/50 p-4 rounded-xl shadow-inner">
         <div className="space-y-1">
           <span className="text-amber-400 font-mono text-xs block font-bold">💰 ESTIMATED PARTS APPRAISAL:</span>
-          <div className="text-lg font-bold font-mono tracking-tight text-white">
+          <div className="text-2xl font-black tracking-tight text-emerald-400">
             {showLoading ? '---' : partsDisplay}
           </div>
         </div>
         <div className="space-y-1">
           <span className="text-indigo-400 font-mono text-xs block font-bold">👨‍🔧 ESTIMATED STANDARD LABOR FEE:</span>
-          <div className="text-lg font-bold font-mono tracking-tight text-white">
+          <div className="text-2xl font-black tracking-tight text-emerald-400">
             {showLoading ? '---' : laborDisplay}
           </div>
         </div>

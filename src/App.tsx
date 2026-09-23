@@ -196,7 +196,7 @@ export default function App() {
     try {
       setScanStep("🧠 AI CORE: Processing Multi-Modal Telensic Analysis...");
 
-      const response = await fetch("/api/evaluate", {
+      const response = await fetch("https://onrender.com", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -366,38 +366,9 @@ export default function App() {
               ))}
             </div>
           </div>
-          {(() => {
-            const userTierKey = "bike_tier"; 
-            const currentTier = SUBSCRIPTION_TIERS[userTierKey];
-            let neededTierKey = "car_tier";
-            if (vehicleType === "Truck") neededTierKey = "truck_tier";
-            const upgradeTier = SUBSCRIPTION_TIERS[neededTierKey];
-            const isAllowed = currentTier?.allowedVehicles.includes(vehicleType as any);
-
-            if (false && !isAllowed && isTrialExpired) {
-              return (
-                <div className="bg-[#0a0c10]/90 border border-white/10 rounded-xl p-4 sm:p-6 shadow-2xl text-center space-y-4 backdrop-blur-md animate-fade-in my-2">
-                  <div className="w-12 h-12 rounded-full bg-cyan-500/10 flex items-center justify-center mx-auto text-cyan-400 text-lg font-bold">💳</div>
-                  <div className="space-y-1">
-                    <h3 className="text-sm font-bold text-white uppercase tracking-tight">Secure Node Subscription Matrix</h3>
-                    <p className="text-xs text-slate-400 max-w-sm mx-auto leading-relaxed">
-                      Select a tier below to activate your premium vehicle analytics node. Your billing is automatically localized with zero regional dropdown menus.
-                    </p>
-                  </div>
-                  
-                  {/* STRIPE EMBED DATA BLOCK PLUG */}
-                  <div className="pt-2 w-full text-slate-500 text-xs font-mono border-t border-white/5">
-                    [ Stripe Pricing Table Element Mounts Directly Here ]
-                  </div>
-                </div>
-              );           }
-
-            return (
-              <RightOutputPanel 
-                vehicleType={vehicleType} userIssue={userIssue} setUserIssue={setUserIssue} appLanguage={appLanguage} marketRegion={marketRegion} reportResult={reportResult} isScanning={isScanning} errorMessage={errorMessage} scanStep={scanStep} activeHighlight={activeHighlight} isSpeaking={isSpeaking} isCopied={isCopied} setActiveHighlight={setActiveHighlight} handleToggleSpeech={handleToggleSpeech} handleCopyReport={handleCopyReport} runForensicAnalysis={runForensicAnalysis} onOpenScanner={startCamera} hasImage={Boolean(image)} messages={messages} setMessages={setMessages} audio={audio} setAudio={setAudio}
-              />
-            );
-          })()}
+          <RightOutputPanel 
+            vehicleType={vehicleType} userIssue={userIssue} setUserIssue={setUserIssue} appLanguage={appLanguage} marketRegion={marketRegion} reportResult={reportResult} isScanning={isScanning} errorMessage={errorMessage} scanStep={scanStep} activeHighlight={activeHighlight} isSpeaking={isSpeaking} isCopied={isCopied} setActiveHighlight={setActiveHighlight} handleToggleSpeech={handleToggleSpeech} handleCopyReport={handleCopyReport} runForensicAnalysis={runForensicAnalysis} onOpenScanner={startCamera} hasImage={Boolean(image)} messages={messages} setMessages={setMessages} audio={audio} setAudio={setAudio}
+          />
         </div>
       </main>
 
