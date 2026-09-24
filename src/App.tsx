@@ -196,7 +196,7 @@ export default function App() {
     try {
       setScanStep("🧠 AI CORE: Processing Multi-Modal Telensic Analysis...");
 
-      const response = await fetch("https://onrender.com", {
+      const response = await fetch("https://auto-forensic-app.onrender.com/api/evaluate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
