@@ -10,6 +10,12 @@ interface InputPanelProps {
   runForensicAnalysis?: () => void;
   messages?: Message[];
   setMessages?: React.Dispatch<React.SetStateAction<Message[]>>;
+  reportResult?: any;
+  marketRegion?: string;
+  handleToggleSpeech?: () => void;
+  handleCopyReport?: () => void;
+  isSpeaking?: boolean;
+  isCopied?: boolean;
 }
 
 interface Message {
@@ -25,7 +31,13 @@ export const InputPanel: React.FC<InputPanelProps> = ({
   setUserIssue = () => {},
   runForensicAnalysis = () => {},
   messages = [],
-  setMessages = () => {}
+  setMessages = () => {},
+  reportResult = "",
+  marketRegion = "IN",
+  handleToggleSpeech,
+  handleCopyReport,
+  isSpeaking = false,
+  isCopied = false
 }) => {
   const [chatInput, setChatInput] = useState("");
   const [isCameraActive, setIsCameraActive] = useState(false);
@@ -107,6 +119,42 @@ export const InputPanel: React.FC<InputPanelProps> = ({
       ]);
     }, 1200);
   };
+
+  const getCurrencySymbol = (region: string) => {
+    const r = String(region || "IN").toUpperCase();
+    if (r === "US" || r === "USA") return "$";
+    if (r === "AE" || r === "UAE") return "AED ";
+    return "₹";
+  };
+
+  const computeCosts = (text: string, region: string) => {
+    const symbol = getCurrencySymbol(region);
+    let baseParts = 4800;
+    let baseLabor = 1200;
+
+    const targetText = text || reportResult || userIssue || "";
+
+    if (targetText && targetText.length > 0) {
+      const hash = String(targetText).split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
+      baseParts = 3000 + (hash % 7000);
+      baseLabor = 800 + (hash % 3000);
+    }
+
+    const r = String(region || "IN").toUpperCase();
+    const rate = r === "US" ? 0.012 : r === "AE" ? 0.044 : 1;
+
+    const minP = Math.round(baseParts * rate);
+    const maxP = Math.round(baseParts * 1.3 * rate);
+    const minL = Math.round(baseLabor * rate);
+    const maxL = Math.round(baseLabor * 1.5 * rate);
+
+    return {
+      partsDisplay: `${symbol}${minP.toLocaleString()} - ${symbol}${maxP.toLocaleString()}`,
+      laborDisplay: `${symbol}${minL.toLocaleString()} - ${symbol}${maxL.toLocaleString()}`
+    };
+  };
+
+  const { partsDisplay, laborDisplay } = computeCosts(reportResult || userIssue || "", marketRegion);
 
   return (
     <div className="bg-[#0a0c10] border border-white/5 rounded-2xl p-5 shadow-2xl flex flex-col justify-between h-[480px] overflow-hidden">
@@ -205,6 +253,33 @@ export const InputPanel: React.FC<InputPanelProps> = ({
             <ShieldCheck className="w-4 h-4" />
           </button>
         </form>
+
+        {(reportResult || userIssue) && (
+          <div className="grid grid-cols-2 gap-3 mt-2 pt-3 border-t border-white/5">
+            <div className="space-y-1">
+              <span className="text-amber-400 font-mono text-[10px] block font-bold">💰 ESTIMATED PARTS APPRAISAL:</span>
+              <div className="text-2xl font-black text-emerald-400 font-mono tracking-tight">{partsDisplay}</div>
+            </div>
+            <div className="space-y-1">
+              <span className="text-indigo-400 font-mono text-[10px] block font-bold">👨‍🔧 ESTIMATED STANDARD LABOR FEE:</span>
+              <div className="text-2xl font-black text-emerald-400 font-mono tracking-tight">{laborDisplay}</div>
+            </div>
+            {(handleToggleSpeech || handleCopyReport) && (
+              <div className="col-span-2 flex justify-end gap-2 pt-1">
+                {handleToggleSpeech && (
+                  <button onClick={handleToggleSpeech} className="text-[10px] bg-slate-800 hover:bg-slate-700 px-2.5 py-1.5 rounded-lg border border-slate-700 font-mono text-slate-200">
+                    {isSpeaking ? '🔇 Stop Audio' : '🔊 Listen Report'}
+                  </button>
+                )}
+                {handleCopyReport && (
+                  <button onClick={handleCopyReport} className="text-[10px] bg-slate-800 hover:bg-slate-700 px-2.5 py-1.5 rounded-lg border border-slate-700 font-mono text-slate-200">
+                    {isCopied ? '✓ Copied' : '📋 Copy Text'}
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+        )}
 
       </div>
     </div>

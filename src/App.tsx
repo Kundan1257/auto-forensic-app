@@ -351,6 +351,12 @@ export default function App() {
             runForensicAnalysis={runForensicAnalysis}
             messages={messages}
             setMessages={setMessages}
+            reportResult={reportResult}
+            marketRegion={marketRegion}
+            handleToggleSpeech={handleToggleSpeech}
+            handleCopyReport={handleCopyReport}
+            isSpeaking={isSpeaking}
+            isCopied={isCopied}
           />
           <UserManual />
         </div>

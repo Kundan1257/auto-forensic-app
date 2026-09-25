@@ -99,21 +99,6 @@ export const RightOutputPanel: React.FC<RightOutputPanelProps> = (props) => {
           )}
         </div>
       )}
-
-      <div className="grid grid-cols-2 gap-4 mt-6 pt-6 border-t border-slate-800 bg-slate-950/50 p-4 rounded-xl shadow-inner">
-        <div className="space-y-1">
-          <span className="text-amber-400 font-mono text-xs block font-bold">💰 ESTIMATED PARTS APPRAISAL:</span>
-          <div className="text-2xl font-black text-emerald-400 font-mono tracking-tight">
-            {showLoading ? '---' : partsDisplay}
-          </div>
-        </div>
-        <div className="space-y-1">
-          <span className="text-indigo-400 font-mono text-xs block font-bold">👨‍🔧 ESTIMATED STANDARD LABOR FEE:</span>
-          <div className="text-2xl font-black text-emerald-400 font-mono tracking-tight">
-            {showLoading ? '---' : laborDisplay}
-          </div>
-        </div>
-      </div>
     </div>
   );
 };
