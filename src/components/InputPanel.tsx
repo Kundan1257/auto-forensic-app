@@ -171,10 +171,32 @@ export const InputPanel: React.FC<InputPanelProps> = ({
       </div>
 
       {/* 💬 MAIN CHAT FEED AREA */}
-      <div className="flex-grow overflow-y-auto p-2 space-y-3 bg-black/40 border border-white/5 rounded-xl scrollbar-thin scrollbar-thumb-white/5 mb-3">
-       
-        <div ref={chatEndRef} />
+      // 🟢 The restored, perfectly unified chat stream and live report container block:
+<div className="flex-grow overflow-y-auto p-2 space-y-3 bg-black/40 border border-white/5 rounded-xl scrollbar-thin scrollbar-thumb-white/5 mb-3">
+  {/* Restored Message History Items */}
+  {messages && messages.map((msg: any, index: number) => (
+    <div key={index} className={`flex items-start gap-2 ${msg.sender === "user" ? "justify-end" : "justify-start"}`}>
+      <div className={`p-2.5 rounded-xl text-[11px] max-w-[85%] leading-relaxed ${msg.sender === "user" ? "bg-cyan-500/10 border border-cyan-500/20 text-cyan-200" : "bg-white/5 border border-white/10 text-slate-200 font-mono"}`}>
+        <div className="whitespace-pre-wrap">{msg.text}</div>
       </div>
+    </div>
+  ))}
+  
+  {/* Unified Production API Report Stream Integration */}
+  {reportResult && (
+    <div className="flex items-start gap-2 justify-start">
+      <div className="p-3 rounded-xl text-[11px] bg-emerald-500/5 border border-emerald-500/20 text-emerald-200 font-mono shadow-md w-full">
+        <div className="text-[9px] uppercase font-bold tracking-widest text-emerald-400 border-b border-emerald-500/10 pb-1 mb-2 flex items-center gap-1.5">
+          <span>📡</span> Live Telemetry Analysis Report Stream:
+        </div>
+        <div className="whitespace-pre-wrap">{typeof reportResult === 'string' ? reportResult : reportResult?.diagnosticBreakdown || JSON.stringify(reportResult)}</div>
+      </div>
+    </div>
+  )}
+
+  <div ref={chatEndRef} />
+</div>
+
 
       {/* ⚓ THE BOTTOM CONTROL ENGINE BOUNDARY BLOCK */}
       <div className="flex-shrink-0 space-y-3 bg-black/30 border border-white/5 p-3 rounded-xl">
