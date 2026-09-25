@@ -171,7 +171,7 @@ export const InputPanel: React.FC<InputPanelProps> = ({
       </div>
 
       {/* 💬 MAIN CHAT FEED AREA */}
-      // 🟢 The restored, perfectly unified chat stream and live report container block:
+      
 <div className="flex-grow overflow-y-auto p-2 space-y-3 bg-black/40 border border-white/5 rounded-xl scrollbar-thin scrollbar-thumb-white/5 mb-3">
   {/* Restored Message History Items */}
   {messages && messages.map((msg: any, index: number) => (
