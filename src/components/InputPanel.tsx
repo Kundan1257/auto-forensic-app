@@ -172,17 +172,7 @@ export const InputPanel: React.FC<InputPanelProps> = ({
 
       {/* 💬 MAIN CHAT FEED AREA */}
       <div className="flex-grow overflow-y-auto p-2 space-y-3 bg-black/40 border border-white/5 rounded-xl scrollbar-thin scrollbar-thumb-white/5 mb-3">
-        {messages.map((msg, index) => (
-          <div key={index} className={`flex items-start gap-2 max-w-[85%] ${msg.sender === "user" ? "ml-auto flex-row-reverse" : "mr-auto"}`}>
-            <div className={`p-1.5 rounded-lg flex-shrink-0 ${msg.sender === "user" ? "bg-cyan-500 text-black" : "bg-white/5 border border-white/10 text-cyan-400"}`}>
-              {msg.sender === "user" ? <User className="w-3.5 h-3.5" /> : <Bot className="w-3.5 h-3.5" />}
-            </div>
-            <div className={`p-3 rounded-xl text-xs leading-relaxed font-medium shadow-md space-y-2 ${msg.sender === "user" ? "bg-cyan-600/20 border border-cyan-500/30 text-slate-100 rounded-tr-none" : "bg-slate-900/60 border border-white/[0.03] text-slate-300 rounded-tl-none"}`}>
-              <div>{msg.text}</div>
-              {msg.image && <img src={msg.image} alt="Forensic preview" className="rounded-lg border border-white/10 max-w-full h-auto max-h-[100px] object-cover" />}
-            </div>
-          </div>
-        ))}
+       
         <div ref={chatEndRef} />
       </div>
 
