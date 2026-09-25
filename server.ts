@@ -80,7 +80,6 @@ app.post("/api/evaluate", async (req: express.Request, res: express.Response): P
       CRITICAL UNBREAKABLE CONDITION: You MUST write your complete entire response in the native language script corresponding to this short ISO code: ${app_language || 'en'}. Example: if 'hi' write Hindi text script, if 'ja' write Japanese text script, if 'ko' write Korean text script, if 'zh' write Chinese text script. Do not output any English text rows if a non-English ISO code is specified.
       
       Structure your response exactly like this template layout:
-      🤖 ══ AI TELEMETRY DISPATCH ══
       [CRITICAL FAULT DETECTED: FAULT DESCRIPTION HERE]
 
       📊 LOGGED TELEMETRY PARAMETERS:
