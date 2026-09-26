@@ -79,25 +79,20 @@ export const RightOutputPanel: React.FC<RightOutputPanelProps> = (props) => {
             <span className="text-4xl">🔍</span>
             <p className="text-slate-400 font-mono text-sm">AWAITING AUTOMOTIVE DATA INGESTION NODE...</p>
           </div>
-        )}
+                )}
       </div>
-
-      {displayText && !showLoading && (
-        <div className="flex justify-end space-x-2 mb-4 mt-2">
-          {handleToggleSpeech && (
-            <button onClick={handleToggleSpeech} className="text-xs bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-lg border border-slate-700 font-mono">
-              {isSpeaking ? '🔇 Stop Audio' : '🔊 Listen Report'}
-            </button>
-          )}
-          {handleCopyReport && (
-            <button onClick={handleCopyReport} className="text-xs bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-lg border border-slate-700 font-mono">
-              {isCopied ? '✓ Copied' : '📋 Copy Text'}
-            </button>
-          )}
-        </div>
-      )}
     </div>
   );
 };
 
 export default RightOutputPanel;
+
+
+
+        
+      
+    
+  
+
+
+
