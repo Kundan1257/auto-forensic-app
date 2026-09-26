@@ -73,10 +73,7 @@ export const RightOutputPanel: React.FC<RightOutputPanelProps> = (props) => {
           <div className="text-red-400 font-mono text-sm border border-red-900 bg-red-950/30 p-4 rounded-lg">
             ❌ BACKEND CONNECTION ERROR: {errorMessage}
           </div>
-        ) : displayText ? (
-          <div className="whitespace-pre-wrap font-sans text-sm leading-relaxed tracking-wide bg-slate-950 p-5 rounded-lg border border-slate-850 shadow-inner">
-            {displayText}
-          </div>
+        
         ) : (
           <div className="flex flex-col items-center justify-center py-20 text-center space-y-3">
             <span className="text-4xl">🔍</span>
