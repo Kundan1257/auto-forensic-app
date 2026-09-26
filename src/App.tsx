@@ -372,9 +372,7 @@ export default function App() {
               ))}
             </div>
           </div>
-          <RightOutputPanel 
-            vehicleType={vehicleType} userIssue={userIssue} setUserIssue={setUserIssue} appLanguage={appLanguage} marketRegion={marketRegion} reportResult={reportResult} isScanning={isScanning} errorMessage={errorMessage} scanStep={scanStep} activeHighlight={activeHighlight} isSpeaking={isSpeaking} isCopied={isCopied} setActiveHighlight={setActiveHighlight} handleToggleSpeech={handleToggleSpeech} handleCopyReport={handleCopyReport} runForensicAnalysis={runForensicAnalysis} onOpenScanner={startCamera} hasImage={Boolean(image)} messages={messages} setMessages={setMessages} audio={audio} setAudio={setAudio}
-          />
+          
         </div>
       </main>
 
