@@ -298,7 +298,8 @@ export default function App() {
   return (
     <div className="w-full min-h-screen bg-[#050608] text-slate-100 flex flex-col justify-between font-sans overflow-x-hidden max-w-full relative">
       <header className="h-auto md:h-16 flex items-center justify-between px-4 sm:px-8 border-b border-white/5 bg-[#0a0c10]/80 backdrop-blur-md z-30">
-        <div className="max-w-7xl mx-auto w-full flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-4 py-2.5 md:py-0">
+        <div className="w-full flex flex-col lg:flex-row lg:items-center justify-between gap-4 py-2 px-2">
+
           <div className="flex items-center gap-3 w-full md:w-auto justify-between md:justify-start">
             <div className="flex items-center gap-3">
               <img src="/icon-192.png" alt="Auto Forensic Logo" className="w-8 h-8 rounded-lg shadow-md border border-cyan-500/20 object-contain" />

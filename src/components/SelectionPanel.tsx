@@ -61,8 +61,8 @@ export function SelectionPanel({ vehicleType, setVehicleType, appSection, setApp
 
           {/* CARD 02: VERIFY WORKSHOP INVOICE */}
           <div 
-            onClick={() => setAppSection("Invoice Audit")}
-            className={`bg-[#0d1117]/80 border ${appSection === "Invoice Audit" ? "border-cyan-500" : "border-white/5"} rounded-xl p-5 transition-all cursor-pointer flex items-start gap-4`}
+            onClick={() => setAppSection("InvoiceAudit")}
+            className={`bg-[#0d1117]/80 border ${appSection === "InvoiceAudit" ? "border-cyan-500" : "border-white/5"} rounded-xl p-5 transition-all cursor-pointer flex items-start gap-4`}
           >
             <div className="mt-1 w-2.5 h-2.5 rounded-full bg-slate-600" />
             <div className="space-y-1">
