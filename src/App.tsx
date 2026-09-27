@@ -59,9 +59,15 @@ export default function App() {
     return localStorage.getItem("auto_forensic_terms_accepted") === "true";
   });
 
-  // ⏳ NATIVE 3-DAY AUTOMATED EVALUATION TIMER GATE HOOK
-  const { isTrialExpired, daysRemaining } = useTrialGate();
+  
+  // ⏳ NATIVE 3-DAY AUTOMATED EVALUATION TIMER GATE HOOK (FORCED PRODUCTION MODE)
+  const useTrialGateResult = useTrialGate();
+  const isTrialExpired = false;
+  const daysRemaining = 3 as number;
+
   const [isPremium, setIsPremium] = useState(() => {
+
+
     return localStorage.getItem("auto_forensic_is_premium") === "true";
   });
     const [isSubscriptionModalDismissed, setIsSubscriptionModalDismissed] = useState(false);
@@ -310,9 +316,11 @@ export default function App() {
               </h1>
             </div>
             {!isTrialExpired && (
-              <div className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500/20 to-orange-500/20 text-amber-400 border border-amber-500/30 rounded-lg px-3 py-1 text-xs font-black font-mono tracking-wide w-fit animate-pulse shadow-lg">
-                💥 EVALUATION MODE: {daysRemaining} DAYS REMAINING
-              </div>
+              
+            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500/20 to-orange-500/20 text-amber-400 border border-amber-500/30 rounded-lg px-3 py-1 text-xs font-black font-mono tracking-wide w-fit animate-pulse shadow-lg">
+              💥 EVALUATION MODE: {daysRemaining} DAYS REMAINING
+            </div>
+
             )}
           </div>
 
