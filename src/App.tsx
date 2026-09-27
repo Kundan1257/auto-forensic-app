@@ -301,7 +301,9 @@ export default function App() {
 <header className="min-h-16 h-auto w-full border-b border-white/5 bg-[#0a0c10]/80 backdrop-blur-md z-30 flex items-center p-4">
   <div className="w-full flex flex-col md:flex-row md:items-center justify-between gap-4">
 
-          <div className="flex items-center gap-3 w-full md:w-auto justify-between md:justify-start">
+          
+<div className="flex items-center gap-4 flex-wrap">
+
             <div className="flex items-center gap-3">
               <img src="/icon-192.png" alt="Auto Forensic Logo" className="w-8 h-8 rounded-lg shadow-md border border-cyan-500/20 object-contain" />
               <h1 className="text-lg sm:text-xl font-bold tracking-tight uppercase italic text-white leading-none">
