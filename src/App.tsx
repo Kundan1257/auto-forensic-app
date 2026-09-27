@@ -297,7 +297,7 @@ export default function App() {
 
   return (
     <div className="w-full min-h-screen bg-[#050608] text-slate-100 flex flex-col justify-between font-sans overflow-x-hidden max-w-full relative">
-      // 🟢 The repaired, perfectly spaced header container layout:
+      
 <header className="min-h-16 h-auto w-full border-b border-white/5 bg-[#0a0c10]/80 backdrop-blur-md z-30 flex items-center p-4">
   <div className="w-full flex flex-col md:flex-row md:items-center justify-between gap-4">
 
