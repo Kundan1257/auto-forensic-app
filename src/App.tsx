@@ -298,30 +298,31 @@ export default function App() {
   return (
     <div className="w-full min-h-screen bg-[#050608] text-slate-100 flex flex-col justify-between font-sans overflow-x-hidden max-w-full relative">
       
-<header className="min-h-16 h-auto w-full border-b border-white/5 bg-[#0a0c10]/80 backdrop-blur-md z-30 flex items-center p-4">
-  <div className="w-full flex flex-col md:flex-row md:items-center justify-between gap-4">
-
+      <header className="w-full border-b border-white/5 bg-[#0a0c10]/80 backdrop-blur-md z-30 p-4 sm:p-6">
+        <div className="w-full flex flex-col md:flex-row md:items-center justify-between gap-4">
           
-<div className="flex items-center gap-4 flex-wrap">
-
+          {/* LEFT AREA: BRANDING & BOLD EVALUATION BADGE */}
+          <div className="flex flex-col gap-2">
             <div className="flex items-center gap-3">
               <img src="/icon-192.png" alt="Auto Forensic Logo" className="w-8 h-8 rounded-lg shadow-md border border-cyan-500/20 object-contain" />
-              <h1 className="text-lg sm:text-xl font-bold tracking-tight uppercase italic text-white leading-none">
+              <h1 className="text-xl sm:text-2xl font-black tracking-tight uppercase italic text-white leading-none">
                 Auto Forensic <span className="text-cyan-400 font-mono text-xs align-top ml-1">v4.5</span>
               </h1>
             </div>
             {!isTrialExpired && (
-              <span className="text-[10px] font-mono bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 rounded-full px-2 py-0.5 animate-pulse">
-                ⌛ Evaluation Mode: {daysRemaining} Days Left
-              </span>
+              <div className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500/20 to-orange-500/20 text-amber-400 border border-amber-500/30 rounded-lg px-3 py-1 text-xs font-black font-mono tracking-wide w-fit animate-pulse shadow-lg">
+                💥 EVALUATION MODE: {daysRemaining} DAYS REMAINING
+              </div>
             )}
           </div>
-          <div className="flex flex-wrap items-center gap-2 sm:gap-4 w-full md:w-auto justify-start md:justify-end">
-            <button onClick={() => setShowLegalModal(true)} className="text-[10px] font-mono flex items-center gap-1 text-slate-400 hover:text-cyan-400 bg-white/5 border border-white/10 rounded-full px-2.5 py-1 transition-all cursor-pointer">
+
+          {/* RIGHT AREA: ACTION BUTTON & DROP DOWN MENUS */}
+          <div className="flex flex-wrap items-center gap-3 justify-start md:justify-end">
+            <button onClick={() => setShowLegalModal(true)} className="text-[10px] font-mono flex items-center gap-1 text-slate-400 hover:text-cyan-400 bg-white/5 border border-white/10 rounded-full px-3 py-1.5 transition-all cursor-pointer">
               <Scale className="w-3 h-3" /> T&C Disclosures
             </button>
             <div className="flex items-center gap-1.5 bg-black/40 border border-white/10 rounded-full px-3 py-1.5 shadow-md">
-              <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider mr-1">Language: {GLOBAL_LANGUAGES.find(l => l.code === appLanguage)?.label || appLanguage.toUpperCase()}</span>
+              <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider mr-1">Language:</span>
               <select value={appLanguage} onChange={(e) => setAppLanguage(e.target.value)} className="bg-transparent text-xs font-bold text-white focus:outline-none cursor-pointer">
                 {GLOBAL_LANGUAGES && GLOBAL_LANGUAGES.map((lang) => (
                   <option key={lang.code} value={lang.code} className="bg-gray-950 text-white text-xs">{lang.label}</option>
@@ -329,10 +330,7 @@ export default function App() {
               </select>
             </div>
             <div className="flex items-center gap-1.5 bg-black/40 border border-white/10 rounded-full px-4 py-1.5 shadow-md">
-              <Globe className="w-3.5 h-3.5 text-cyan-400" />
-              <label className="text-[10px] font-mono text-slate-400 uppercase tracking-wider mr-1">
-      Global Node: {MARKET_REGIONS.find(r => r.code === marketRegion)?.label || marketRegion.toUpperCase()}
-     </label>
+              <Globe className="w-3.5 h-3.5 text-cyan-400"/>
               <select value={marketRegion} onChange={(e) => setMarketRegion(e.target.value)} className="bg-transparent text-xs font-bold text-white focus:outline-none cursor-pointer">
                 {MARKET_REGIONS && MARKET_REGIONS.map((r) => (
                   <option key={r.code} value={r.code} className="bg-gray-950 text-white text-xs">{r.label}</option>
@@ -340,12 +338,32 @@ export default function App() {
               </select>
             </div>
           </div>
+
         </div>
       </header>
+
+            {/* 🚀 MAIN COCKPIT INTERFACE CONTAINER GRID */}
       <main className="max-w-7xl mx-auto w-full flex-grow p-2 sm:p-4 flex flex-col lg:flex-row gap-4 lg:gap-8 items-start max-w-full overflow-x-hidden">
+        
+        {/* 🟢 LEFT COLUMN PANELS STACK (lg:w-[38%]) */}
         <div className="w-full lg:w-[38%] flex flex-col space-y-6 flex-shrink-0">
           <SelectionPanel vehicleType={vehicleType} setVehicleType={(val) => setVehicleType(val as any)} appSection={appSection} setAppSection={setAppSection} />
+          
           <ViewfinderCard image={image} isCameraActive={isCameraActive} isCameraLoading={isCameraLoading} cameraError={cameraError} videoRef={videoRef} fileInputRef={fileInputRef} startCamera={startCamera} stopCamera={stopCamera} captureSnapshot={captureSnapshot} clearCapturedImage={clearCapturedImage} handleFileUpload={handleFileUpload} handleDragOver={handleDragOver} handleDrop={handleDrop} />
+          
+          {/* ⚙️ Restored Roadside Emergency Presets directly above the triage console box */}
+          <div className="bg-[#0a0c10]/60 border border-white/5 rounded-xl p-3 shadow-xl backdrop-blur-md">
+            <h3 className="text-[10px] font-mono text-cyan-400 uppercase tracking-wider mb-2 flex items-center gap-1.5 px-1"><span>⚙️</span> Roadside Emergency Presets (Tap to Load into Chat):</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {ROADSIDE_HACK_QUESTIONS && ROADSIDE_HACK_QUESTIONS.filter(hack => hack.category.toLowerCase() === vehicleType.toLowerCase()).map((hack) => (
+                <button key={hack.id} onClick={() => setUserIssue(hack.text)} className="flex items-center gap-2 bg-black/40 border border-white/5 rounded-lg p-2.5 text-left text-[11px] font-medium text-slate-300 hover:border-cyan-500/40 hover:bg-cyan-500/5 transition-all shadow-sm group cursor-pointer">
+                  <span className="text-sm group-hover:scale-110 transition-transform">{hack.icon}</span>
+                  <span className={`${hack.color} font-semibold leading-tight`}>{hack.text}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
           <InputPanel 
             vehicleType={vehicleType}
             appSection={appSection}
@@ -364,21 +382,14 @@ export default function App() {
           />
           <UserManual />
         </div>
+
+        {/* 🔵 RIGHT COLUMN PANELS STACK (lg:w-[58%]) */}
         <div className="w-full lg:w-[58%] flex flex-col space-y-4">
-          <div className="bg-[#0a0c10]/60 border border-white/5 rounded-xl p-3 shadow-xl backdrop-blur-md">
-            <h3 className="text-[10px] font-mono text-cyan-400 uppercase tracking-wider mb-2 flex items-center gap-1.5 px-1"><span>⚙️</span> Roadside Emergency Presets (Tap to Load into Chat):</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              {ROADSIDE_HACK_QUESTIONS && ROADSIDE_HACK_QUESTIONS.filter(hack => hack.category.toLowerCase() === vehicleType.toLowerCase()).map((hack) => (
-                <button key={hack.id} onClick={() => setUserIssue(hack.text)} className="flex items-center gap-2 bg-black/40 border border-white/5 rounded-lg p-2.5 text-left text-[11px] font-medium text-slate-300 hover:border-cyan-500/40 hover:bg-cyan-500/5 transition-all shadow-sm group cursor-pointer">
-                  <span className="text-sm group-hover:scale-110 transition-transform">{hack.icon}</span>
-                  <span className={`${hack.color} font-semibold leading-tight`}>{hack.text}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-          
+          {/* Right workspace drawer is now clean, unblocked, and beautifully organized */}
         </div>
+
       </main>
+
 
       {(showLegalModal || !hasAcceptedTerms) && (
         <div className="fixed inset-0 pt-[env(safe-area-inset-top,24px)] px-4 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
