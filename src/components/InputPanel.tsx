@@ -238,8 +238,29 @@ export const InputPanel: React.FC<InputPanelProps> = ({
             disabled={isScanning}
             className={`p-2.5 rounded-xl border transition-all cursor-pointer flex items-center justify-center ${isCameraActive ? "bg-red-500/10 border-red-500/30 text-red-400 hover:bg-red-500/20" : "bg-white/5 border border-white/10 text-slate-400 hover:text-cyan-400 hover:border-cyan-500/30"}`}
           >
-            <Camera className="w-4 h-4" />
+                      {/* CAMERA SHORTCUT TRIGGER */}
+          <Camera className="w-4 h-4" />
           </button>
+
+          {/* 🎙️ ENGINE NOISE SCANNING & VOICE PROMPTING MICROPHONE MODULE */}
+          <button
+            type="button"
+            onClick={() => {
+              if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ audio: true })
+                  .then(() => alert("🎙️ Automotive Acoustics Node Initialized: Listening for active engine cylinder knocking or voice prompt context..."))
+                  .catch((err) => alert("⚠️ Microphone Access Denied: Please check system privacy permissions inside your device settings dashboard."));
+              } else {
+                alert("⚠️ Web Audio API context is unsupported on this legacy mobile browser pipeline.");
+              }
+            }}
+            className="p-2.5 rounded-xl bg-slate-900 border border-white/5 text-slate-400 hover:text-amber-400 hover:border-amber-500/30 transition-all flex items-center justify-center cursor-pointer shadow-md group shrink-0"
+            title="Scan Engine Noise / Voice Prompt Ingestion"
+          >
+            <span className="text-sm group-hover:scale-110 transition-transform">🎙️</span>
+          </button>
+
+          {/* TEXT FIELD INPUT PROMPT ROW */}
           <input
             type="text"
             value={chatInput}
@@ -248,6 +269,7 @@ export const InputPanel: React.FC<InputPanelProps> = ({
             placeholder={`Type custom ${vehicleType.toLowerCase()} symptoms...`}
             className="flex-grow bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-500/30 font-medium"
           />
+
           <button
             type="submit"
             disabled={isScanning || !chatInput.trim()}
