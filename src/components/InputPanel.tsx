@@ -172,7 +172,7 @@ export const InputPanel: React.FC<InputPanelProps> = ({
 
       {/* 💬 MAIN CHAT FEED AREA */}
       
-<div className="flex-grow overflow-y-auto p-2 space-y-3 bg-black/40 border border-white/5 rounded-xl scrollbar-thin scrollbar-thumb-white/5 mb-3">
+<div className="flex-grow overflow-y-auto p-2 space-y-3 bg-black/40 border border-white/5 rounded-xl scrollbar-thin scrollbar-thumb-cyan-500/40 scrollbar-track-black/20 mb-3">
   {/* Restored Message History Items */}
   {messages && messages.map((msg: any, index: number) => (
     <div key={index} className={`flex items-start gap-2 ${msg.sender === "user" ? "justify-end" : "justify-start"}`}>
