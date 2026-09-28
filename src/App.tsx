@@ -254,14 +254,16 @@ export default function App() {
 
     const speechUtterance = new SpeechSynthesisUtterance(cleanTextToSpeak);
     
-    // 🌐 MAP ACTIVE APPLICATION LANGUAGE ROUTING TO WEB AUDIO CHIP CONTROLLERS
-    if (appLanguage === "hi") {
-      speechUtterance.lang = "hi-IN"; // Sets voice module directly to native Hindi (India) phonetics
-    } else if (appLanguage === "mr") {
-      speechUtterance.lang = "mr-IN"; // Handles Marathi localization profile smoothly
-    } else {
-      speechUtterance.lang = "en-US"; // Falls back safely to standard American English
-    }
+        // 🌐 BCP-47 GLOBAL SPEECH PHONETIC VOICE MAP DICTIONARY
+    const languageVoiceMap: Record<string, string> = {
+      en: "en-US", hi: "hi-IN", zh: "zh-CN", ja: "ja-JP", ko: "ko-KR",
+      es: "es-ES", fr: "fr-FR", de: "de-DE", it: "it-IT", pt: "pt-BR",
+      ru: "ru-RU", ar: "ar-SA", nl: "nl-NL", tr: "tr-TR", sv: "sv-SE",
+      pl: "pl-PL", vi: "vi-VN"
+    };
+
+    // Extract the precise voice destination tag or default back safely to English
+    speechUtterance.lang = languageVoiceMap[appLanguage] || "en-US";
     
     speechUtterance.onend = () => setIsSpeaking(false);
     speechUtterance.onerror = () => setIsSpeaking(false);
@@ -269,6 +271,7 @@ export default function App() {
     setIsSpeaking(true);
     window.speechSynthesis.speak(speechUtterance);
   };
+
 
 
   const handleCopyReport = () => {
