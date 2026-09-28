@@ -323,33 +323,37 @@ export const InputPanel: React.FC<InputPanelProps> = ({
           </button>
 
 
-          {/* TEXT FIELD INPUT PROMPT ROW */}
+                    {/* TEXT FIELD INPUT PROMPT ROW */}
           <input
             type="text"
             value={chatInput}
             onChange={(e) => setChatInput(e.target.value)}
             disabled={isScanning}
             placeholder={`Type custom ${vehicleType.toLowerCase()} symptoms...`}
-            className="flex-grow bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-500/30 font-medium"
+            className="flex-grow min-w-0 bg-black/50 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-500/30 font-medium"
           />
 
+          {/* CHAT TEXT SEND UTILITY ICON BUTTON */}
           <button
             type="submit"
             disabled={isScanning || !chatInput.trim()}
-            className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-slate-400 hover:text-cyan-400 hover:border-cyan-500/30 transition-all cursor-pointer disabled:opacity-40"
+            className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-slate-400 hover:text-cyan-400 hover:border-cyan-500/30 transition-all cursor-pointer disabled:opacity-40 shrink-0"
           >
             <Send className="w-4 h-4" />
           </button>
+
+          {/* 🛡️ CYAN SHIELD CHECK ACTION BUTTON (CLIP-PROTECTED MOBILITY v4.6.4) */}
           <button
             type="button"
             onClick={runForensicAnalysis}
             disabled={isScanning || !userIssue.trim()}
-            className="p-2.5 bg-cyan-500 hover:bg-cyan-400 disabled:bg-slate-800 text-slate-950 rounded-xl transition-all shadow-md flex items-center justify-center cursor-pointer disabled:cursor-not-allowed"
+            className="p-2.5 bg-cyan-500 hover:bg-cyan-400 disabled:bg-slate-800 text-slate-950 rounded-xl transition-all shadow-md flex items-center justify-center cursor-pointer disabled:cursor-not-allowed shrink-0"
             title="Run Auto Forensic Appraisal"
           >
             <ShieldCheck className="w-4 h-4" />
           </button>
         </form>
+
 
         {(reportResult || userIssue) && (
           <div className="grid grid-cols-2 gap-3 mt-2 pt-3 border-t border-white/5">
