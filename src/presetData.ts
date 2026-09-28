@@ -12,22 +12,23 @@ export interface MarketRegion {
 export const GLOBAL_LANGUAGES: GlobalLanguage[] = [
   { code: "en", label: "English (Global)" },
   { code: "hi", label: "Hindi (हिंदी)" },
-  { code: "es", label: "Espa\u00F1ol (ES)" },
-  { code: "zh", label: "Chinese (\\u4E2D\\u6585)" },
-  { code: "ja", label: "Japanese (\\u65E5\\u672C\\u8A9E)" },
-  { code: "ko", label: "Korean (\\uD55C\\uAD6D\\uC5B4)" },
-  { code: "fr", label: "Fran\\u00E7ais (FR)" },
+  { code: "es", label: "Español (ES)" },
+  { code: "zh", label: "Chinese (中文)" },
+  { code: "ja", label: "Japanese (日本語)" },
+  { code: "ko", label: "Korean (한국어)" },
+  { code: "fr", label: "Français (FR)" },
   { code: "de", label: "Deutsch (DE)" },
   { code: "it", label: "Italiano (IT)" },
-  { code: "pt", label: "Portugu\\u00EAt (BR)" },
-  { code: "ru", label: "Russian (\\u0420\\u0443\\u0441\\u0441\\u043A\\u0438\\u0439)" },
-  { code: "ar", label: "Arabic (\\u0627\\u0644\\u0639\\u0631\\u0628\\u064A\\u0629)" },
+  { code: "pt", label: "Português (BR)" },
+  { code: "ru", label: "Russian (Русский)" },
+  { code: "ar", label: "Arabic (العربية)" },
   { code: "nl", label: "Nederlands (NL)" },
-  { code: "tr", label: "T\\u00FCrk\\u00E7e (TR)" },
+  { code: "tr", label: "Türkçe (TR)" },
   { code: "sv", label: "Svenska (SE)" },
   { code: "pl", label: "Polski (PL)" },
-  { code: "vi", label: "Vietnamese (\\u0056\\u0069\\u1EC7\\u0074\\u004E\\u0061\\u006D)" }
+  { code: "vi", label: "Vietnamese (Tiếng Việt)" }
 ];
+
 
 export const MARKET_REGIONS: MarketRegion[] = [
   { code: "na", label: "North America (USD $)", currency: "$" },
