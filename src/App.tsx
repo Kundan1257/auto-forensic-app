@@ -234,16 +234,18 @@ export default function App() {
     }
   };
 
-    // 🔊 LIVE MULTI-MODAL TEXT-TO-SPEECH DEFENSE CORE
+      // 🔊 LIVE MULTI-MODAL TEXT-TO-SPEECH DEFENSE CORE (LANG LOCALIZED v4.5.2)
   const handleToggleSpeech = () => {
     if (!reportResult) return;
     
+    // Check if the browser audio engine is already actively speaking
     if (window.speechSynthesis.speaking) {
       window.speechSynthesis.cancel();
       setIsSpeaking(false);
       return;
     }
 
+    // Strip markdown typography syntax keys cleanly before feeding raw text strings
     const cleanTextToSpeak = reportResult
       .replace(/\*\*/g, "")
       .replace(/•/g, "")
@@ -252,12 +254,22 @@ export default function App() {
 
     const speechUtterance = new SpeechSynthesisUtterance(cleanTextToSpeak);
     
+    // 🌐 MAP ACTIVE APPLICATION LANGUAGE ROUTING TO WEB AUDIO CHIP CONTROLLERS
+    if (appLanguage === "hi") {
+      speechUtterance.lang = "hi-IN"; // Sets voice module directly to native Hindi (India) phonetics
+    } else if (appLanguage === "mr") {
+      speechUtterance.lang = "mr-IN"; // Handles Marathi localization profile smoothly
+    } else {
+      speechUtterance.lang = "en-US"; // Falls back safely to standard American English
+    }
+    
     speechUtterance.onend = () => setIsSpeaking(false);
     speechUtterance.onerror = () => setIsSpeaking(false);
     
     setIsSpeaking(true);
     window.speechSynthesis.speak(speechUtterance);
   };
+
 
   const handleCopyReport = () => {
     if (!reportResult) return;
