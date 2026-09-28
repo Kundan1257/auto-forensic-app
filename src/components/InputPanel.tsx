@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { MessageSquare, Send, ShieldCheck, Sparkles, User, Bot, Camera, VideoOff } from "lucide-react";
+import { MARKET_REGIONS } from "../presetData";
+
 
 interface InputPanelProps {
   vehicleType?: any;
@@ -120,12 +122,13 @@ export const InputPanel: React.FC<InputPanelProps> = ({
     }, 1200);
   };
 
+    
   const getCurrencySymbol = (region: string) => {
-    const r = String(region || "IN").toUpperCase();
-    if (r === "US" || r === "USA") return "$";
-    if (r === "AE" || r === "UAE") return "AED ";
-    return "₹";
+    const r = String(region || "in").toLowerCase();
+    const currentRegionData = MARKET_REGIONS.find(item => item.code === r);
+    return currentRegionData?.currency || "₹";
   };
+
 
   const computeCosts = (text: string, region: string) => {
     const symbol = getCurrencySymbol(region);
