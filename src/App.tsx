@@ -234,7 +234,31 @@ export default function App() {
     }
   };
 
-  const handleToggleSpeech = () => setIsSpeaking(!isSpeaking);
+    // 🔊 LIVE MULTI-MODAL TEXT-TO-SPEECH DEFENSE CORE
+  const handleToggleSpeech = () => {
+    if (!reportResult) return;
+    
+    if (window.speechSynthesis.speaking) {
+      window.speechSynthesis.cancel();
+      setIsSpeaking(false);
+      return;
+    }
+
+    const cleanTextToSpeak = reportResult
+      .replace(/\*\*/g, "")
+      .replace(/•/g, "")
+      .replace(/\[/g, "")
+      .replace(/\]/g, "");
+
+    const speechUtterance = new SpeechSynthesisUtterance(cleanTextToSpeak);
+    
+    speechUtterance.onend = () => setIsSpeaking(false);
+    speechUtterance.onerror = () => setIsSpeaking(false);
+    
+    setIsSpeaking(true);
+    window.speechSynthesis.speak(speechUtterance);
+  };
+
   const handleCopyReport = () => {
     if (!reportResult) return;
     navigator.clipboard.writeText(reportResult);
