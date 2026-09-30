@@ -74,7 +74,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
           </div>
         </div>
 
-        {/* PRICING GRID LAYOUT CARDS */}
+                {/* PRICING GRID LAYOUT CARDS */}
         <div className="flex-[1.5] grid grid-cols-1 sm:grid-cols-3 gap-4">
           
           {/* TIER 1: BIKE PASS */}
@@ -90,7 +90,10 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
               <p className="text-[10px] text-slate-400 font-sans mt-2">Up to 3 multi-modal evaluation scans for a single motorcycle or scooter service event.</p>
             </div>
             <button
-              onClick={() => handlePassPurchaseRedirect("Bike")}
+              type="button"
+              onClick={() => {
+                window.location.href = "https://razorpay.me";
+              }}
               className="w-full py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white font-mono font-bold text-[10px] uppercase border border-white/10 transition-all cursor-pointer"
             >
               Get Bike Pass
@@ -110,7 +113,10 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
               <p className="text-[10px] text-slate-400 font-sans mt-2">Up to 3 comprehensive component photography audits and garage invoice validations.</p>
             </div>
             <button
-              onClick={() => handlePassPurchaseRedirect("Car")}
+              type="button"
+              onClick={() => {
+                window.location.href = "https://razorpay.me";
+              }}
               className="w-full py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white font-mono font-bold text-[10px] uppercase border border-white/10 transition-all cursor-pointer"
             >
               Get Car Pass
@@ -133,7 +139,10 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
               <p className="text-[10px] text-slate-300 font-sans mt-2">Completely unlimited diagnostic scans and attempts across all vehicles for 24 full hours.</p>
             </div>
             <button
-              onClick={() => handlePassPurchaseRedirect("AllAccess")}
+              type="button"
+              onClick={() => {
+                window.location.href = "https://razorpay.me";
+              }}
               className="w-full py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-mono font-black text-[10px] uppercase tracking-wider transition-all cursor-pointer shadow-md"
             >
               Unlock 24H Pass
@@ -141,6 +150,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
           </div>
 
         </div>
+
 
       </div>
     </div>
