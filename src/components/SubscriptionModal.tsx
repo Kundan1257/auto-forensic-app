@@ -74,7 +74,8 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
           </div>
         </div>
 
-                                {/* PRICING GRID LAYOUT CARDS */}
+                                
+                                        {/* PRICING GRID LAYOUT CARDS */}
         <div className="flex-[1.5] grid grid-cols-1 sm:grid-cols-3 gap-4">
           
           {/* TIER 1: BIKE PASS */}
@@ -92,7 +93,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
             <button
               type="button"
               onClick={() => {
-                window.location.href = "https://razorpay.com"; // 🟢 CORRECTED LINK: Single "pages." prefix!
+                window.location.href = "https://rzp.io"; // 🟢 FIXED LINE 95: Points directly to your live pass page!
               }}
               className="w-full py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white font-mono font-bold text-[10px] uppercase border border-white/10 transition-all cursor-pointer"
             >
@@ -115,7 +116,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
             <button
               type="button"
               onClick={() => {
-                window.location.href = "https://razorpay.com"; // 🟢 CORRECTED LINK: Single "pages." prefix!
+                window.location.href = "https://rzp.io"; // 🟢 FIXED LINE 118: Points directly to your live pass page!
               }}
               className="w-full py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white font-mono font-bold text-[10px] uppercase border border-white/10 transition-all cursor-pointer"
             >
@@ -141,7 +142,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
             <button
               type="button"
               onClick={() => {
-                window.location.href = "https://razorpay.com"; // 🟢 CORRECTED LINK: Single "pages." prefix!
+                window.location.href = "https://rzp.io"; // 🟢 FIXED LINE 144: Points directly to your live pass page!
               }}
               className="w-full py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-mono font-black text-[10px] uppercase tracking-wider transition-all cursor-pointer shadow-md"
             >
