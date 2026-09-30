@@ -93,7 +93,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
             <button
               type="button"
               onClick={() => {
-                window.location.href = "https://rzp.io";
+                window.location.href = "https://rzp.io/rzp/autoforensi";
               }}
               className="w-full py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white font-mono font-bold text-[10px] uppercase border border-white/10 transition-all cursor-pointer"
             >
@@ -116,7 +116,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
             <button
               type="button"
               onClick={() => {
-                window.location.href = "https://rzp.io";
+                window.location.href = "https://rzp.io/rzp/g3eDX6Hz";
               }}
               className="w-full py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white font-mono font-bold text-[10px] uppercase border border-white/10 transition-all cursor-pointer"
             >
@@ -142,7 +142,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
             <button
               type="button"
               onClick={() => {
-                window.location.href = "https://rzp.io";
+                window.location.href = "https://rzp.io/rzp/O80vi5f";
               }}
               className="w-full py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-mono font-black text-[10px] uppercase tracking-wider transition-all cursor-pointer shadow-md"
             >
