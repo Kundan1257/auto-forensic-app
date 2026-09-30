@@ -333,7 +333,7 @@ export const InputPanel: React.FC<InputPanelProps> = ({
             className="flex-grow min-w-0 bg-black/50 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-500/30 font-medium"
           />
 
-          {/* CHAT TEXT SEND UTILITY ICON BUTTON */}
+                    {/* CHAT TEXT SEND UTILITY ICON BUTTON */}
           <button
             type="submit"
             disabled={isScanning || !chatInput.trim()}
@@ -342,10 +342,25 @@ export const InputPanel: React.FC<InputPanelProps> = ({
             <Send className="w-4 h-4" />
           </button>
 
-          {/* 🛡️ CYAN SHIELD CHECK ACTION BUTTON (CLIP-PROTECTED MOBILITY v4.6.4) */}
+          {/* 🛡️ CYAN SHIELD CHECK ACTION BUTTON (SECURE RAZORPAY HOSTED HANDLE ACTIVE) */}
           <button
             type="button"
-            onClick={runForensicAnalysis}
+            onClick={() => {
+              if (!userIssue.trim() && !reportResult) return;
+              
+              console.log(`Forwarding regional pricing contract to payment handle: ${marketRegion}`);
+              alert("Securely initializing your pre-configured Razorpay checkout pipeline...");
+
+              // 📡 OFFICIAL HOSTED HANDLE GATEWAY CORE
+              // Points straight to your live activated short payment link handle channel
+              const basePaymentHandleUrl = "https://razorpay.me";
+              
+              // Appends dynamic cross-border regional tracking variables straight onto the address link path
+              const targetQueryUrl = `${basePaymentHandleUrl}?currency=${encodeURIComponent(marketRegion === "IN" ? "INR" : marketRegion === "EU" ? "EUR" : "USD")}&portal=auto-forensic`;
+              
+              // Forces the active browser window viewport to jump straight onto your live merchant screen safely
+              window.location.href = targetQueryUrl;
+            }}
             disabled={isScanning || !userIssue.trim()}
             className="p-2.5 bg-cyan-500 hover:bg-cyan-400 disabled:bg-slate-800 text-slate-950 rounded-xl transition-all shadow-md flex items-center justify-center cursor-pointer disabled:cursor-not-allowed shrink-0"
             title="Run Auto Forensic Appraisal"
@@ -353,6 +368,7 @@ export const InputPanel: React.FC<InputPanelProps> = ({
             <ShieldCheck className="w-4 h-4" />
           </button>
         </form>
+
 
 
         {(reportResult || userIssue) && (
