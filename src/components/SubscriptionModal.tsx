@@ -74,7 +74,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
           </div>
         </div>
 
-                {/* PRICING GRID LAYOUT CARDS */}
+                        {/* PRICING GRID LAYOUT CARDS */}
         <div className="flex-[1.5] grid grid-cols-1 sm:grid-cols-3 gap-4">
           
           {/* TIER 1: BIKE PASS */}
@@ -92,7 +92,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
             <button
               type="button"
               onClick={() => {
-                window.location.href = "https://razorpay.me";
+                window.location.href = "https://rzp.io";
               }}
               className="w-full py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white font-mono font-bold text-[10px] uppercase border border-white/10 transition-all cursor-pointer"
             >
@@ -115,7 +115,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
             <button
               type="button"
               onClick={() => {
-                window.location.href = "https://razorpay.me";
+                window.location.href = "https://rzp.io";
               }}
               className="w-full py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white font-mono font-bold text-[10px] uppercase border border-white/10 transition-all cursor-pointer"
             >
@@ -123,7 +123,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
             </button>
           </div>
 
-          {/* TIER 3: 24H PASS (HERO CARD) */}
+          {/* TIER 3: HEAVY PASS (HERO CARD) */}
           <div className="p-4 bg-cyan-950/20 border border-cyan-500/40 rounded-2xl flex flex-col justify-between space-y-4 text-center relative shadow-lg">
             <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 px-2 py-0.5 rounded-full bg-cyan-500 text-slate-950 text-[7px] font-mono font-black uppercase tracking-widest">
               BEST VALUE
@@ -141,7 +141,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
             <button
               type="button"
               onClick={() => {
-                window.location.href = "https://razorpay.me";
+                window.location.href = "https://rzp.io";
               }}
               className="w-full py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-mono font-black text-[10px] uppercase tracking-wider transition-all cursor-pointer shadow-md"
             >
@@ -150,6 +150,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
           </div>
 
         </div>
+
 
 
       </div>
