@@ -353,7 +353,7 @@ export const InputPanel: React.FC<InputPanelProps> = ({
 
               // 📡 OFFICIAL HOSTED HANDLE GATEWAY CORE
               // Points straight to your live activated short payment link handle channel
-              const basePaymentHandleUrl = "https://razorpay.me/@autoforensic"
+              const basePaymentHandleUrl = "https://razorpay.me/@autoforensic";
               
               // Appends dynamic cross-border regional tracking variables straight onto the address link path
               const targetQueryUrl = `${basePaymentHandleUrl}?currency=${encodeURIComponent(marketRegion === "IN" ? "INR" : marketRegion === "EU" ? "EUR" : "USD")}&portal=auto-forensic`;
