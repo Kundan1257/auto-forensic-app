@@ -93,7 +93,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
             <button
               type="button"
               onClick={() => {
-                window.location.href = "https://rzp.io/rzp/autoforensi";
+                window.location.href = "https://rzp.io/rzp/CiL76Lk";
               }}
               className="w-full py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white font-mono font-bold text-[10px] uppercase border border-white/10 transition-all cursor-pointer"
             >
