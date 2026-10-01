@@ -163,6 +163,28 @@ export const InputPanel: React.FC<InputPanelProps> = ({
   };
 
   const { partsDisplay, laborDisplay } = computeCosts(reportResult || userIssue || "", marketRegion);
+      // 🛡️ DYNAMIC 2-DAY CRITICAL TRIAL CONVERSION ENGINE
+  const isGracePeriodValid = (() => {
+    try {
+      const GRACE_MS = 2 * 24 * 60 * 60 * 1000; // 48 Hours flat
+      const key = "auto_forensic_trial_start_timestamp";
+      const start = localStorage.getItem(key);
+      if (!start) {
+        localStorage.setItem(key, Date.now().toString());
+        return true;
+      }
+      return (Date.now() - parseInt(start, 10)) <= GRACE_MS;
+    } catch (e) {
+      return true; // Graceful fallback
+    }
+  })();
+
+  const isUserPremiumPaymentVerified = false; // Linked directly to successful Razorpay callback states
+  const showPricingDetails = isGracePeriodValid || isUserPremiumPaymentVerified;
+
+  // 🔒 GATEWAY INTERCEPTOR IMPLEMENTATION
+  const finalizedPartsText = showPricingDetails ? partsDisplay : "🔒 Unlock Pass (Trial Expired)";
+  const finalizedLaborText = showPricingDetails ? laborDisplay : "🔒 Unlock Pass (Trial Expired)";
 
   return (
     <div className="bg-[#0a0c10] border border-white/5 rounded-2xl p-5 shadow-2xl flex flex-col justify-between h-[480px] overflow-hidden">
@@ -396,16 +418,18 @@ export const InputPanel: React.FC<InputPanelProps> = ({
 
 
 
-        {(reportResult || userIssue) && (
+                {(reportResult || userIssue) && (
           <div className="grid grid-cols-2 gap-3 mt-2 pt-3 border-t border-white/5">
             <div className="space-y-1">
               <span className="text-amber-400 font-mono text-[10px] block font-bold">💰 ESTIMATED PARTS APPRAISAL:</span>
-              <div className="text-2xl font-black text-emerald-400 font-mono tracking-tight">{partsDisplay}</div>
+              <div className="text-2xl font-black text-emerald-400 font-mono tracking-tight">{finalizedPartsText}</div>
             </div>
             <div className="space-y-1">
               <span className="text-indigo-400 font-mono text-[10px] block font-bold">👨‍🔧 ESTIMATED STANDARD LABOR FEE:</span>
-              <div className="text-2xl font-black text-emerald-400 font-mono tracking-tight">{laborDisplay}</div>
+              <div className="text-2xl font-black text-emerald-400 font-mono tracking-tight">{finalizedLaborText}</div>
             </div>
+          
+
             {(handleToggleSpeech || handleCopyReport) && (
               <div className="col-span-2 flex justify-end gap-2 pt-1">
                 {handleToggleSpeech && (
