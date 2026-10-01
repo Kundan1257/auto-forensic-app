@@ -356,10 +356,8 @@ export default function App() {
             </div>
             {!isTrialExpired && (
               
-            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500/20 to-orange-500/20 text-amber-400 border border-amber-500/30 rounded-lg px-3 py-1 text-xs font-black font-mono tracking-wide w-fit animate-pulse shadow-lg">
-              💥 EVALUATION MODE: {daysRemaining} DAYS REMAINING
-            </div>
-
+            
+null
             )}
           </div>
 
