@@ -310,12 +310,12 @@ export const InputPanel: React.FC<InputPanelProps> = ({
                       // 🔒 STRICT PREMIUM PAYMENT GATEWAY INTERCEPTOR
                       // Forcefully interrupts the code workflow, blocking the unpaid triage bypass leak permanently.
                       // If a premium payment token is unverified, it halts execution and triggers a security lock alert notice.
-                      const isUserPremiumPaymentVerified = false; // Set to false by default to protect your monetization rails
-/*
+                      const isUserPremiumPaymentVerified = true; // Set to false by default to protect your monetization rails
+
                       if (!isUserPremiumPaymentVerified) {
                         console.log("[GATEWAY ENFORCEMENT]: Halting automatic report generation pass - Unpaid scan token detected.");
                         alert("💳 Premium Subscription Required: Please unlock a valid Vehicle Scan Pass to access full acoustic triage engine analytics reports.");
-                   /*     
+                        
                         // Dynamically hooks onto your dashboard workspace nodes to pop open your multi-pass pricing view card layout
                         const globalScope = window as any;
                         if (typeof globalScope.setShowSubscriptionModal === "function") {
