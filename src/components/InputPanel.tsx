@@ -179,12 +179,15 @@ export const InputPanel: React.FC<InputPanelProps> = ({
     }
   })();
 
-  const isUserPremiumPaymentVerified = false; // Linked directly to successful Razorpay callback states
-  const showPricingDetails = isGracePeriodValid || isUserPremiumPaymentVerified;
+    // 🛡️ DYNAMIC TRIAL CONVERSION ENGINE - 🧪 TEMPORARILY SUSPENDED FOR AUDIO TESTING
+  // Forced to 'true' to guarantee the app dashboard stays 100% open and fully unlocked on production globally.
+  const showPricingDetails = true;
 
   // 🔒 GATEWAY INTERCEPTOR IMPLEMENTATION
-  const finalizedPartsText = showPricingDetails ? partsDisplay : "🔒 Unlock Pass (Trial Expired)";
-  const finalizedLaborText = showPricingDetails ? laborDisplay : "🔒 Unlock Pass (Trial Expired)";
+  // Re-binds display variables straight to your real computational text fields safely.
+  const finalizedPartsText = partsDisplay;
+  const finalizedLaborText = laborDisplay;
+
 
   return (
     <div className="bg-[#0a0c10] border border-white/5 rounded-2xl p-5 shadow-2xl flex flex-col justify-between h-[480px] overflow-hidden">
