@@ -135,15 +135,32 @@ export const InputPanel: React.FC<InputPanelProps> = ({
   };
 
 
-  const computeCosts = (text: string, region: string) => {
+    const computeCosts = (text: string, region: string) => {
     const symbol = getCurrencySymbol(region);
+    
+    // 🟢 ACOUSTIC OVERRIDE MONITOR MATRIX
+    // Stringifies the data input sources to cleanly inspect for healthy engine indicators
+    const incomingPayloadString = String(text || reportResult || userIssue || "");
+    const isEngineMechanicallyOptimal = 
+      incomingPayloadString.includes("🟢") || 
+      incomingPayloadString.includes("Optimal") || 
+      incomingPayloadString.includes("Healthy") || 
+      incomingPayloadString.includes("safe");
+
+    // If a clean operational verification pass is triggered, force cost values to ₹0 instantly!
+    if (isEngineMechanicallyOptimal) {
+      return {
+        partsDisplay: "₹0",
+        laborDisplay: "₹0"
+      };
+    }
+
+    // 📊 STANDARD COMPONENT CHARACTER SIMULATION (Only runs if a true fault is logged)
     let baseParts = 4800;
     let baseLabor = 1200;
 
-    const targetText = text || reportResult || userIssue || "";
-
-    if (targetText && targetText.length > 0) {
-      const hash = String(targetText).split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    if (incomingPayloadString && incomingPayloadString.length > 0) {
+      const hash = incomingPayloadString.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
       baseParts = 3000 + (hash % 7000);
       baseLabor = 800 + (hash % 3000);
     }
@@ -161,6 +178,7 @@ export const InputPanel: React.FC<InputPanelProps> = ({
       laborDisplay: `${symbol}${minL.toLocaleString()} - ${symbol}${maxL.toLocaleString()}`
     };
   };
+
 
   const { partsDisplay, laborDisplay } = computeCosts(reportResult || userIssue || "", marketRegion);
       // 🛡️ DYNAMIC 2-DAY CRITICAL TRIAL CONVERSION ENGINE
