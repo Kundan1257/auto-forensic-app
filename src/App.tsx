@@ -215,24 +215,25 @@ export default function App() {
     setIsScanning(true);
     setScanStep("⚡ AI CORE: Connecting to Local Server Node...");
 
-        try {
+            try {
       setScanStep("🧠 AI CORE: Processing Multi-Modal Telensic Analysis...");
 
-      // 🟢 COMPREHENSIVE MULTI-VEHICLE PAYLOAD MATRIX BINDING
-      const response = await fetch("https://auto-forensic-app.onrender.com/api/evaluate", {
+      // 🟢 COMPREHENSIVE MULTI-VEHICLE PAYLOAD WITH AUTOMATIC CACHE BUSTING
+      const response = await fetch("https://onrender.com", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           market_region: marketRegion || "in",
           vehicle_type: vehicleType || "Car",
           app_section: appSection || "Common Symptoms",
-          // 🟢 Injects your system instructions directly ahead of the user context string
-          user_issue: `${systemDiagnosticPrompt}\n\nUser Context/Acoustic Data: ${userIssue || ""}`,
+          // 🟢 Added a random timestamp variable to completely destroy server-side caching loops!
+          user_issue: `${systemDiagnosticPrompt}\n\nUser Context/Acoustic Data: ${userIssue || ""}\n[Seed: ${Date.now()}]`,
           app_language: appLanguage || "en",
           image: image || null,
           audio: audio || null
         })
       });
+
 
 
       const data = await response.json();
