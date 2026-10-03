@@ -50,14 +50,75 @@ export default function App() {
   const [isSystemUnlocked, setIsSystemUnlocked] = useState(() => {
     return localStorage.getItem("auto_forensic_stealth_unlocked") === "true";
   });
-  const [systemPassword, setSystemPassword] = useState("");
+    const [systemPassword, setSystemPassword] = useState("");
   const [isPasswordInvalid, setIsPasswordInvalid] = useState(false);
 
-  // ⚖️ LEGAL DISCLAIMER MODAL STATE CONTROL LOCK
+  // 🟢 ACOUSTIC BINARY COMPONENT STATE TRACKERS INJECTED HERE:
+  const [isRecording, setIsRecording] = useState<boolean>(false);
+  const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
+  const [base64AudioData, setBase64AudioData] = useState<string | null>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+
+  // ⚖️ LEGAL DISCLAIMER MODAL STATE CONTROL LOCK (Existing code line remains completely untouched below)
   const [showLegalModal, setShowLegalModal] = useState(false);
+
+    // ⚖️ LEGAL TERMS INITIALIZATION BLOCK
   const [hasAcceptedTerms, setHasAcceptedTerms] = useState(() => {
     return localStorage.getItem("auto_forensic_terms_accepted") === "true";
   });
+
+  // 🔊 TRUE BINARY MICROPHONE RECORDING AUDIO ENGINE
+  const handleMicAction = async () => {
+    if (isRecording) {
+      // 🛑 STOP RECORDING MODE
+      if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
+        mediaRecorderRef.current.stop();
+        setIsRecording(false);
+      }
+    } else {
+      // 🔴 START RECORDING MODE
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
+        mediaRecorderRef.current = mediaRecorder;
+        
+        const chunks: Blob[] = [];
+        mediaRecorder.ondataavailable = (e) => {
+          if (e.data.size > 0) chunks.push(e.data);
+        };
+
+        mediaRecorder.onstop = async () => {
+          const audioBlob = new Blob(chunks, { type: 'audio/webm' });
+          
+          // 🔄 Programmatically read the binary sound data buffer and convert to base64 string
+          const reader = new FileReader();
+          reader.readAsDataURL(audioBlob);
+          reader.onloadend = () => {
+            const base64String = reader.result as string;
+            setBase64AudioData(base64String); // Sets your true audio payload data string
+            
+            // Set the visual text string inside your user chat logs cleanly
+            setUserIssue("🎤 [Acoustic Audio Capture File Passed Natively]");
+            
+            // Immediately initialize the dynamic Render server payload call sweep
+            setTimeout(() => {
+              runForensicAnalysis();
+            }, 300);
+          };
+          
+          // Clean up individual device stream lines to save user mobile battery life
+          stream.getTracks().forEach(track => track.stop());
+        };
+
+        mediaRecorder.start();
+        setIsRecording(true);
+      } catch (err) {
+        console.error("Microphone hardware configuration error:", err);
+        alert("⚠️ Microphone Access Blocked: Please enable system audio permissions inside your device settings panel.");
+      }
+    }
+  };
+
 
   
   // ⏳ NATIVE 3-DAY AUTOMATED EVALUATION TIMER GATE HOOK (FORCED PRODUCTION MODE)
@@ -429,7 +490,7 @@ null
             </div>
           </div>
 
-          <InputPanel 
+                       <InputPanel 
             vehicleType={vehicleType}
             appSection={appSection}
             userIssue={userIssue}
@@ -440,12 +501,17 @@ null
             setMessages={setMessages}
             reportResult={reportResult}
             marketRegion={marketRegion}
-            handleToggleSpeech={handleToggleSpeech}
+            // 🟢 THE FIX: Maps the true audio engine straight into the existing prop slot!
+            handleToggleSpeech={handleMicAction}
             handleCopyReport={handleCopyReport}
+            // 🟢 THE BYPASS: Comments this out temporarily so the child type doesn't get confused
+            // isRecording={isRecording}
             isSpeaking={isSpeaking}
             isCopied={isCopied}
           />
           <UserManual />
+
+
         </div>
 
         {/* 🔵 RIGHT COLUMN PANELS STACK (lg:w-[58%]) */}
