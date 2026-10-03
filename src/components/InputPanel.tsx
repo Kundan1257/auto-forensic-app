@@ -179,17 +179,19 @@ export const InputPanel: React.FC<InputPanelProps> = ({
     }
   })();
 
-    // 🛡️ DYNAMIC TRIAL CONVERSION ENGINE - 🧪 TEMPORARILY SUSPENDED FOR AUDIO TESTING
+      // 🛡️ DYNAMIC TRIAL CONVERSION ENGINE - 🧪 TEMPORARILY SUSPENDED FOR AUDIO TESTING
   // Forced to 'true' to guarantee the app dashboard stays 100% open and fully unlocked on production globally.
   const showPricingDetails = true;
 
-    // 🔒 GATEWAY INTERCEPTOR IMPLEMENTATION - ACOUSTIC VERIFICATION PASS
-  // Re-binds display variables straight to your real computational text fields safely.
-  const isHealthyEngineReport = reportResult?.includes("🟢") || reportResult?.includes("Optimal") || reportResult?.includes("Healthy");
+  // 🔒 GATEWAY INTERCEPTOR IMPLEMENTATION - ACOUSTIC TEXT REALIGNMENT
+  // Stringifies the data payload object to guarantee the text checking parameters parse perfectly!
+  const parsedReportTextData = typeof reportResult === "object" ? JSON.stringify(reportResult) : String(reportResult || "");
+  const isHealthyEngineReport = parsedReportTextData.includes("🟢") || parsedReportTextData.includes("Optimal") || parsedReportTextData.includes("Healthy") || parsedReportTextData.includes("safe");
 
   // Force your display layout containers to snap to ₹0 dynamically for safe baseline engine runs!
   const finalizedPartsText = isHealthyEngineReport ? "₹0" : (partsDisplay || "₹3,879 - ₹5,043");
   const finalizedLaborText = isHealthyEngineReport ? "₹0" : (laborDisplay || "₹3,679 - ₹5,519");
+
 
 
 
