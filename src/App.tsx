@@ -215,9 +215,10 @@ export default function App() {
     setIsScanning(true);
     setScanStep("⚡ AI CORE: Connecting to Local Server Node...");
 
-    try {
+        try {
       setScanStep("🧠 AI CORE: Processing Multi-Modal Telensic Analysis...");
 
+      // 🟢 COMPREHENSIVE MULTI-VEHICLE PAYLOAD MATRIX BINDING
       const response = await fetch("https://auto-forensic-app.onrender.com/api/evaluate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -225,12 +226,14 @@ export default function App() {
           market_region: marketRegion || "in",
           vehicle_type: vehicleType || "Car",
           app_section: appSection || "Common Symptoms",
-          user_issue: userIssue,
+          // 🟢 Injects your system instructions directly ahead of the user context string
+          user_issue: `${systemDiagnosticPrompt}\n\nUser Context/Acoustic Data: ${userIssue || ""}`,
           app_language: appLanguage || "en",
           image: image || null,
           audio: audio || null
         })
       });
+
 
       const data = await response.json();
       
