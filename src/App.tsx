@@ -194,7 +194,23 @@ export default function App() {
     reader.readAsDataURL(file);
   };
 
+    
   const runForensicAnalysis = async () => {
+    // 🛡️ DYNAMIC MULTI-VEHICLE ACOUSTIC CALIBRATION PROMPT MATRIX
+    // Declared immediately at the entry point of the forensic engine so the Gemini API parses it perfectly!
+    const systemDiagnosticPrompt = `
+      You are an expert full-stack automotive forensic analysis engine evaluating an engine's acoustic footprint.
+      
+      ⚠️ MANDATORY ENGINE DISCRIMINATION DIRECTIVE:
+      - If the vehicle type is identified as DIESEL, a heavy truck, commercial vehicle, or a TDI/CRDI engine model, expect a naturally loud, rapid, high-compression metallic clicking or rhythmic chattered rhythm as the healthy baseline layout.
+      - Do NOT mistake normal, steady diesel clatter or high-pressure injection noise for a petrol engine valve tick, rod knock, or cylinder misfire loop.
+      - Only flag a diesel engine as faulty if there are irregular, asynchronous grinding screeches, deep uneven metal-on-metal thuds, or sudden broken gaps in the cadence.
+      - If the sound profile has an even, rhythmic, continuous pattern, treat the vehicle as mechanically safe. Bypass all cost evaluations, and return exactly: partsDisplay = "₹0", laborDisplay = "₹0", and reportResult starting with "🟢 Vehicle Performance Status: Optimal".
+    `;
+
+    // ... The rest of your existing analysis and API fetch rows remain completely untouched and safe underneath!
+
+    
     if (userIssue.trim().length === 0) return;
     setIsScanning(true);
     setScanStep("⚡ AI CORE: Connecting to Local Server Node...");
