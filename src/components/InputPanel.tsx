@@ -206,9 +206,10 @@ export const InputPanel: React.FC<InputPanelProps> = ({
   const parsedReportTextData = typeof reportResult === "object" ? JSON.stringify(reportResult) : String(reportResult || "");
   const isHealthyEngineReport = parsedReportTextData.includes("🟢") || parsedReportTextData.includes("Optimal") || parsedReportTextData.includes("Healthy") || parsedReportTextData.includes("safe");
 
-  // 🟢 FIXED CORE: Changes the ultimate default backup fallback from hardcoded strings to ₹0!
-  const finalizedPartsText = isHealthyEngineReport ? "₹0" : (partsDisplay && partsDisplay !== "₹0" ? partsDisplay : "₹0");
-  const finalizedLaborText = isHealthyEngineReport ? "₹0" : (laborDisplay && laborDisplay !== "₹0" ? laborDisplay : "₹0");
+      // 🟢 NEW DIRECT AI CORE: Zero frontend price forcing! Displays purely what Gemini dictates.
+  const finalizedPartsText = reportResult && typeof reportResult === "object" ? (reportResult.parts_appraisal || "") : String(reportResult || "");
+  const finalizedLaborText = reportResult && typeof reportResult === "object" ? (reportResult.labor_fee || "") : String(reportResult || "");
+
 
 
 
