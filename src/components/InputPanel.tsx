@@ -155,29 +155,26 @@ export const InputPanel: React.FC<InputPanelProps> = ({
       };
     }
 
-    // 📊 STANDARD COMPONENT CHARACTER SIMULATION (Only runs if a true fault is logged)
-    let baseParts = 4800;
-    let baseLabor = 1200;
+        // 📊 PURE DYNAMIC EXTRACTOR LAYER (Replaces the problematic local math calculations)
+    // The layout component file now holds zero hardcoded math formulas or short logic shortcuts.
+    let dynamicPartsText = "";
+    let dynamicLaborText = "";
 
-    if (incomingPayloadString && incomingPayloadString.length > 0) {
-      const hash = incomingPayloadString.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
-      baseParts = 3000 + (hash % 7000);
-      baseLabor = 800 + (hash % 3000);
+    if (reportResult && typeof reportResult === "object") {
+      dynamicPartsText = reportResult.parts_appraisal || "";
+      dynamicLaborText = reportResult.labor_fee || "";
+    } else if (reportResult) {
+      // If the engine receives an unstructured raw text fallback report, pass it down completely clean
+      dynamicPartsText = String(reportResult);
+      dynamicLaborText = String(reportResult);
     }
 
-    const r = String(region || "IN").toUpperCase();
-    const rate = r === "US" ? 0.012 : r === "AE" ? 0.044 : 1;
-
-    const minP = Math.round(baseParts * rate);
-    const maxP = Math.round(baseParts * 1.3 * rate);
-    const minL = Math.round(baseLabor * rate);
-    const maxL = Math.round(baseLabor * 1.5 * rate);
-
     return {
-      partsDisplay: `${symbol}${minP.toLocaleString()} - ${symbol}${maxP.toLocaleString()}`,
-      laborDisplay: `${symbol}${minL.toLocaleString()} - ${symbol}${maxL.toLocaleString()}`
+      partsDisplay: dynamicPartsText,
+      laborDisplay: dynamicLaborText
     };
   };
+
 
 
   const { partsDisplay, laborDisplay } = computeCosts(reportResult || userIssue || "", marketRegion);
