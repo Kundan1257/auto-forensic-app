@@ -279,21 +279,22 @@ export default function App() {
             try {
       setScanStep("🧠 AI CORE: Processing Multi-Modal Telensic Analysis...");
 
-      // 🟢 COMPREHENSIVE MULTI-VEHICLE PAYLOAD WITH AUTOMATIC CACHE BUSTING
+            // 🟢 PURE UN-INSULATED MULTIMODAL INTELLIGENCE PIPELINE
+      // Zero hardcoded frontend fallbacks or default overrides! Passes raw telemetry only.
       const response = await fetch("https://onrender.com", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          market_region: marketRegion || "in",
-          vehicle_type: vehicleType || "Car",
-          app_section: appSection || "Common Symptoms",
-          // 🟢 Added a random timestamp variable to completely destroy server-side caching loops!
-          user_issue: `${systemDiagnosticPrompt}\n\nUser Context/Acoustic Data: ${userIssue || ""}\n[Seed: ${Date.now()}]`,
-          app_language: appLanguage || "en",
+          market_region: marketRegion || null,
+          vehicle_type: vehicleType || null,
+          app_section: appSection || null,
+          user_issue: userIssue || "",
+          app_language: appLanguage || null,
           image: image || null,
           audio: audio || null
         })
       });
+
 
 
 
