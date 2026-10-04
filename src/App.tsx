@@ -282,7 +282,7 @@ export default function App() {
                   // 🟢 PURE UN-INSULATED MULTIMODAL INTELLIGENCE PIPELINE
       // Connected directly to your live production server API node link!
             // 🟢 PURE UN-INSULATED PIPELINE: Connected directly to your live unique production path endpoint!
-      const response = await fetch("https://onrender.com", {
+      const response = await fetch("https://auto-forensic-app.onrender.com", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
 
