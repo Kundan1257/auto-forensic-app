@@ -78,10 +78,9 @@ app.post("/api/evaluate", async (req: express.Request, res: express.Response): P
       CORE MISSION OBJECTIVE DETERMINATION RULES:
       Analyze the vehicle issue description: "\${user_issue || 'General Conversation and Inquiry Mode'}" for vehicle category node: \${vehicle_type}.
       
-      1. GENERAL AUTOMOTIVE INQUIRY & CHAT DIRECTIVE:
-         - Detect if the user is asking a general, non-diagnostic question (e.g., how to plug in an OBD-II interface, mechanical advice, general operations, tools, or standard vehicle queries).
-         - If it is a general conversational question, you must deliver full, comprehensive, step-by-step instructional arrays directly inside your text response text layer. Do NOT invent mechanical issues or fabricate vehicle failures. Because zero active hardware repairs are requested, you must explicitly set parts_appraisal and labor_fee fields dynamically to "₹0" (or "N/A").
-      
+            1. GENERAL AUTOMOTIVE INQUIRY & CHAT DIRECTIVE:
+         - Autonomously evaluate the user input intent. If the query is conversational, instructional, or informational, answer the user directly with comprehensive, step-by-step guidance arrays based on your complete internal automotive intelligence database. Do not use rigid response templates or ask troubleshooting questions unless a clear mechanical failure sound scan or diagnostic issue is present. Keep the cost parameters completely clean.
+
       2. MULTIMODAL ACOUSTIC SCAN & PHOTO APPRAISAL DIRECTIVE:
          - If an audio file chunk or component photo frame binary data payload is present inside this multimodal package, inspect the telemetry variables with absolute precision.
          - If the vehicle uses a "DIESEL" high-compression powertrain node, expect a rapid, loud rhythmic injection clatter cadence as its completely optimal operational baseline. Do NOT mistake normal healthy diesel idling noise for lifter defects or rod knocks.
