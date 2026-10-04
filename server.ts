@@ -75,7 +75,7 @@ app.post("/api/evaluate", async (req: express.Request, res: express.Response): P
         payloadParts.push({
       text: `You are an elite automotive forensic AI expert. Analyze this vehicle issue description: "${user_issue}" for vehicle category node: ${vehicle_type}.
       
-      If an audio file data chunk is present inside this multimodal package, listen to the acoustic parameters (knocks, screeching, ticking, grinding) with absolute precision. Differentiate structural engine knocks from light top-end valvetrain noises.
+      If an audio file data chunk is present inside this multimodal package, listen to the acoustic parameters (knocks, screeching,ticking, grinding) with absolute precision. Differentiate structural engine knocks from light top-end valvetrain noises.
 
       ⚠️ MANDATORY DIESEL & HEALTHY ENGINE PERFORMANCE DIRECTIVE:
       - If the user specifies "DIESEL", heavy commercial truck, or a TDI/CRDI vehicle model, expect a naturally loud, rapid, high-compression metallic clicking or rhythmic chattered cadence as its completely healthy operational baseline. 
@@ -83,7 +83,7 @@ app.post("/api/evaluate", async (req: express.Request, res: express.Response): P
       - If the audio spectrum cadence is perfectly uniform, steady, and lacks chaotic screeching loops or heavy metal-on-metal thuds, classify the powertrain as 100% optimal.
       - If the engine is optimal and safe, you MUST skip all fault summaries and return exactly: partsDisplay = "₹0", laborDisplay = "₹0", and your text summary output MUST start precisely with: "[CRITICAL FAULT DETECTED: 🟢 Engine Performance Status: Optimal. Powertrain operates smoothly within factory-calibrated parameters. Zero faults detected.]"
 
-      CRITICAL UNBREAKABLE CONDITION: You MUST write your complete entire response in the native language script corresponding to this short ISO code: ${app_language || 'en'}. Example: if 'hi' write Hindi text script, if 'ja' write Japanese text script, if 'ko' write Korean text script, if 'zh' write Chinese text script. Do not output any English text rows if a non-English ISO code is specified.
+      CRITICAL UNBREAKABLE CONDITION: You MUST write your complete entire response in the native language script corresponding to this short ISO code: ${app_language || 'en'}. Example: if 'hi' write Hindi text script, if 'ja' write Japanese text script, if 'ko' write Korean text script, if 'zh' write Chinese text script. Do notoutput any English text rows if a non-English ISO code is specified.
       
       Structure your response exactly like this template layout:
       [CRITICAL FAULT DETECTED: FAULT DESCRIPTION HERE]
@@ -107,17 +107,37 @@ app.post("/api/evaluate", async (req: express.Request, res: express.Response): P
     });
 
 
+        // 📡 MASTER RE-INITIALIZED API DATA BRIDGE CONTRACT
+    // Enforces a strict schema model layout so Gemini responds with raw JSON object parameters
     const aiResponse = await aiClient.models.generateContent({
       model: "gemini-2.5-flash",
       contents: payloadParts,
+      config: {
+        responseMimeType: "application/json"
+      }
     });
 
-    // 🟢 The perfect, textbook-ready SDK function call:
-const outputText = aiResponse.text || "⚠️ Zero-telemetry return frame from the Proprietary AI Engine model loop.";
+        // 🟢 SECURED TYPE CONTRACT PROCESSING BLOCK
+    const outputText = aiResponse.text || ""; // 👈 Added fallback to satisfy type validation contract!
+    console.log("📥 Raw response stream from Gemini engine node:", outputText);
+
+    // Parse the textual stream directly into a real dynamic data dictionary frame block
+    let structuredPayloadResult;
+    try {
+      // TypeScript is now 100% happy because outputText is guaranteed to be a valid string primitive!
+      structuredPayloadResult = JSON.parse(outputText);
+    } catch (parseErr) {
+      // Safe fallback data container layout if the string parsing hits unexpected characters
+      structuredPayloadResult = {
+        result: outputText,
+        parts_appraisal: "₹0",
+        labor_fee: "₹0"
+      };
+    }
+
+    return res.json(structuredPayloadResult);
 
 
-
-    return res.json({ result: outputText });
 
   } catch (error: any) {
     console.error("Evaluation Route Exception Failure:", error);
