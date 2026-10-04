@@ -297,13 +297,15 @@ export default function App() {
 
 
 
-      const data = await response.json();
+            const data = await response.json();
       
-      // Read the text return payload cleanly matching your updated server JSON result key contract
-      const rawText = data?.result || data?.response || "⚠️ Zero-telemetry return frame. Re-verify engine terminal sensor metrics.";
+      // 🟢 MASTER MULTIMODAL INTELLIGENCE BINDING: Preserves the structured JSON contract!
+      const mainChatTextResponse = data?.result || (typeof data === "string" ? data : "⚠️ Zero-telemetry return frame. Re-verify engine terminal sensor metrics.");
       
-      setMessages(prev => [...prev, { sender: "ai", text: rawText }]);
-      setReportResult(rawText);
+      setMessages(prev => [...prev, { sender: "ai", text: mainChatTextResponse }]);
+      
+      // 📡 Save the full, raw response payload object intact so Gemini can command the cost grids dynamically!
+      setReportResult(data);
     } catch (err) {
       console.error(err);
       const errFallback = "❌ BACKEND CONNECTION ERROR: Could not sync stream packages with local Express server node. Check your terminal dev log panels.";
@@ -314,6 +316,7 @@ export default function App() {
       setScanStep("");
     }
   };
+
 
       // 🔊 LIVE MULTI-MODAL TEXT-TO-SPEECH DEFENSE CORE (LANG LOCALIZED v4.5.2)
   const handleToggleSpeech = () => {
