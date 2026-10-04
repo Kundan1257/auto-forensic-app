@@ -279,9 +279,9 @@ export default function App() {
             try {
       setScanStep("🧠 AI CORE: Processing Multi-Modal Telensic Analysis...");
 
-            // 🟢 PURE UN-INSULATED MULTIMODAL INTELLIGENCE PIPELINE
-      // Zero hardcoded frontend fallbacks or default overrides! Passes raw telemetry only.
-      const response = await fetch("https://onrender.com", {
+                  // 🟢 PURE UN-INSULATED MULTIMODAL INTELLIGENCE PIPELINE
+      // Connected directly to your live production server API node link!
+      const response = await fetch("https://auto-forensic-app.onrender.com", { // 👈 Change this to match your real unique Render subdomain address!
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -294,6 +294,7 @@ export default function App() {
           audio: audio || null
         })
       });
+
 
 
 
