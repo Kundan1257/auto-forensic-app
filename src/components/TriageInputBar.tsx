@@ -92,11 +92,12 @@ export const TriageInputBar: React.FC<TriageInputBarProps> = ({
         const reader = new FileReader();
         reader.onloadend = () => {
           if (typeof reader.result === "string") {
+            // 📡 Transmits the raw base64 binary sound track data over the parent state hooks
             onAudioRecorded(reader.result);
             setAudioBlobUrl(URL.createObjectURL(audioBlob));
             
-            // 📡 AUTO-FILL PROMPT TO UNLOCK APPRASIAL ENGINE IMMEDIATELY AFTER SPEAKING
-            setPrompt("[Acoustic Audio Diagnostic Telemetry Attached]");
+            // 🟢 CLEAN SYSTEM CHANGE: Removed the text-forcing placeholder line!
+            // Keeps the user prompt clean, pure, and transparent for Gemini to process.
           }
         };
         reader.readAsDataURL(audioBlob);
@@ -105,7 +106,6 @@ export const TriageInputBar: React.FC<TriageInputBarProps> = ({
       recorder.start();
       setIsRecording(true);
       
-      // ⏳ EXTENDED: Changed from 6 seconds to 25 seconds to support complete voice over prompts!
       setTimeout(() => {
         if (mediaRecorderRef.current && mediaRecorderRef.current.state === "recording") {
           stopEngineAudioCapture();
@@ -124,10 +124,17 @@ export const TriageInputBar: React.FC<TriageInputBarProps> = ({
     }
   };
 
+  const handleBarSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isLoading) {
+      onSubmit();
+    }
+  };
+
   return (
     <div className="bg-[#0e1218] border border-cyan-500/30 rounded-2xl p-3 sm:p-4 shadow-2xl space-y-3 text-left">
       
-      {/* LOCALIZED INLINE VIDEO VIEWPORT (MOUNTED SEQUENTIALLY ABOVE INPUT BAR) */}
+      {/* LOCALIZED INLINE VIDEO VIEWPORT MOUNTED ABOVE INPUT BAR */}
       {isInlineCameraActive && (
         <div className="relative rounded-xl overflow-hidden border border-cyan-500/40 bg-black h-[160px] w-full animate-fade-in mb-2 shadow-inner">
           <video ref={videoRef} autoPlay playsInline className="w-full h-full object-cover" />
@@ -156,7 +163,7 @@ export const TriageInputBar: React.FC<TriageInputBarProps> = ({
         </div>
       )}
 
-      {/* ATTACHMENT BADGES ROW */}
+      {/* ATTACHMENT BADGES MONITOR ROW */}
       {(hasImage || capturedImageLocal || audioBlobUrl) && (
         <div className="flex flex-wrap gap-2 items-center pb-2 border-b border-white/5">
           {(hasImage || capturedImageLocal) && (
@@ -172,6 +179,46 @@ export const TriageInputBar: React.FC<TriageInputBarProps> = ({
         </div>
       )}
 
+      {/* HORIZONTAL INTERACTIVE CONTROL DRAWER ASSEMBLY */}
+      <form onSubmit={handleBarSubmit} className="flex items-center gap-2 relative">
+        <button
+          type="button"
+          onClick={startInlineCamera}
+          className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-cyan-400 transition-all cursor-pointer flex-shrink-0"
+          title="Trigger inspection lens snapshots"
+        >
+          <Camera className="w-4 h-4" />
+        </button>
+
+        <button
+          type="button"
+          onClick={isRecording ? stopEngineAudioCapture : startEngineAudioCapture}
+          className={`p-2 rounded-xl border transition-all cursor-pointer flex-shrink-0 ${isRecording ? "bg-red-500/20 border-red-500/40 text-red-400 animate-pulse" : "bg-slate-900 border-slate-800 text-slate-400 hover:text-blue-400"}`}
+          title="Stream raw acoustic waveforms"
+        >
+          {isRecording ? <Square className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+        </button>
+
+        <input
+          type="text"
+          value={prompt}
+          onChange={(e) => setPrompt(e.target.value)}
+          placeholder="Type vehicle conditions or general questions..."
+          className="w-full bg-slate-900/60 border border-slate-800/80 rounded-xl px-3 py-2 text-xs font-medium text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-500/40 transition-all font-sans"
+          disabled={isLoading}
+        />
+
+        <button
+          type="submit"
+          disabled={isLoading || (!prompt.trim() && !hasImage && !audioBlobUrl)}
+          className="p-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 disabled:bg-slate-900/40 disabled:text-slate-600 disabled:border-transparent text-slate-950 transition-all cursor-pointer flex-shrink-0 shadow-md font-bold"
+        >
+          <Send className="w-4 h-4" />
+        </button>
+      </form>
+
     </div>
   );
 };
+
+export default TriageInputBar;
