@@ -281,9 +281,11 @@ export default function App() {
 
                   // 🟢 PURE UN-INSULATED MULTIMODAL INTELLIGENCE PIPELINE
       // Connected directly to your live production server API node link!
-      const response = await fetch("https://auto-forensic-app.onrender.com", { // 👈 Change this to match your real unique Render subdomain address!
+            // 🟢 PURE UN-INSULATED PIPELINE: Connected directly to your live unique production path endpoint!
+      const response = await fetch("https://onrender.com", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+
         body: JSON.stringify({
           market_region: marketRegion || null,
           vehicle_type: vehicleType || null,
