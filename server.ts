@@ -72,39 +72,38 @@ app.post("/api/evaluate", async (req: express.Request, res: express.Response): P
       }
     }
 
-        payloadParts.push({
-      text: `You are an elite automotive forensic AI expert. Analyze this vehicle issue description: "${user_issue}" for vehicle category node: ${vehicle_type}.
+            payloadParts.push({
+      text: `You are an elite automotive forensic AI expert, conversation guide, and master mechanic.
       
-      If an audio file data chunk is present inside this multimodal package, listen to the acoustic parameters (knocks, screeching,ticking, grinding) with absolute precision. Differentiate structural engine knocks from light top-end valvetrain noises.
-
-      ⚠️ MANDATORY DIESEL & HEALTHY ENGINE PERFORMANCE DIRECTIVE:
-      - If the user specifies "DIESEL", heavy commercial truck, or a TDI/CRDI vehicle model, expect a naturally loud, rapid, high-compression metallic clicking or rhythmic chattered cadence as its completely healthy operational baseline. 
-      - Do NOT mistake normal diesel idling clatter or loud mechanical injection clicks for valve lifter damage, connecting rod defects, or engine failures.
-      - If the audio spectrum cadence is perfectly uniform, steady, and lacks chaotic screeching loops or heavy metal-on-metal thuds, classify the powertrain as 100% optimal.
-      - If the engine is optimal and safe, you MUST skip all fault summaries and return exactly: partsDisplay = "₹0", laborDisplay = "₹0", and your text summary output MUST start precisely with: "[CRITICAL FAULT DETECTED: 🟢 Engine Performance Status: Optimal. Powertrain operates smoothly within factory-calibrated parameters. Zero faults detected.]"
-
-      CRITICAL UNBREAKABLE CONDITION: You MUST write your complete entire response in the native language script corresponding to this short ISO code: ${app_language || 'en'}. Example: if 'hi' write Hindi text script, if 'ja' write Japanese text script, if 'ko' write Korean text script, if 'zh' write Chinese text script. Do notoutput any English text rows if a non-English ISO code is specified.
+      CORE MISSION OBJECTIVE DETERMINATION RULES:
+      Analyze the vehicle issue description: "\${user_issue || 'General Conversation and Inquiry Mode'}" for vehicle category node: \${vehicle_type}.
       
-      Structure your response exactly like this template layout:
-      [CRITICAL FAULT DETECTED: FAULT DESCRIPTION HERE]
-
-      📊 LOGGED TELEMETRY PARAMETERS:
-      • Metric items list here
-
-      🧠 AI FORENSIC CAUSE ANALYSIS:
-      1. Hardware trace breakdown item here
-
-      🛠️ RECOMMENDATION AUDIT SUMMARY:
-      • Engineering remedy list item here
+      1. GENERAL AUTOMOTIVE INQUIRY & CHAT DIRECTIVE:
+         - Detect if the user is asking a general, non-diagnostic question (e.g., how to plug in an OBD-II interface, mechanical advice, general operations, tools, or standard vehicle queries).
+         - If it is a general conversational question, you must deliver full, comprehensive, step-by-step instructional arrays directly inside your text response text layer. Do NOT invent mechanical issues or fabricate vehicle failures. Because zero active hardware repairs are requested, you must explicitly set parts_appraisal and labor_fee fields dynamically to "₹0" (or "N/A").
       
-      SPECIAL FIELD DIRECTIVE (ELECTRIC VEHICLE NODE SELECTION):
-      If the vehicle_type is explicitly specified as 'EV', completely skip internal combustion mechanisms (like spark plugs, fuel line contamination, or exhaust smoke logs). Instead, focus your forensic analysis explicitly on high-voltage battery cell impedance delta variations, thermal coolant circulation loop leaks, regenerative braking pressure drops, or inverter gate driver board fault alerts.
+      2. MULTIMODAL ACOUSTIC SCAN & PHOTO APPRAISAL DIRECTIVE:
+         - If an audio file chunk or component photo frame binary data payload is present inside this multimodal package, inspect the telemetry variables with absolute precision.
+         - If the vehicle uses a "DIESEL" high-compression powertrain node, expect a rapid, loud rhythmic injection clatter cadence as its completely optimal operational baseline. Do NOT mistake normal healthy diesel idling noise for lifter defects or rod knocks.
+         - If the audio wave spectrum cadence is perfectly uniform, steady, quiet, or lacks chaotic metallic friction thuds, classify the powertrain as 100% optimal. Set your parts_appraisal and labor_fee fields explicitly to "₹0".
+         - If clear asymmetrical structural engine knock waves, cylinder misfire logs, or physical photo defects are identified, provide a detailed mechanical forensic cause analysis and use your internal tracking dataset to calculate an accurate, dynamic parts and workshop labor fee projection.
 
-      --- CONTEXT PARAMETERS ---
-      Market Location Region: ${market_region}
-      Selected Vehicle Type: ${vehicle_type}
+      CRITICAL UNBREAKABLE CONDITION: You MUST write your complete textual response answer in the native language script corresponding to this short ISO code: \${app_language || 'en'}.
+      
+      RESPONSE FORMAT CONTRACT:
+      You MUST respond with a single, perfectly formatted JSON data object structure matching this exact shape. Do not wrap it in markdown code block markers like \`\`\`json. Output raw JSON fields only:
+      {
+        "result": "Your full comprehensive step-by-step instructional answer or complete automotive diagnostic forensic cause report analysis text here.",
+        "parts_appraisal": "Direct calculated price string here (e.g., ₹0, ₹3,500 - ₹5,000, or N/A)",
+        "labor_fee": "Direct calculated workshop labor fee string here (e.g., ₹0, ₹1,200 - ₹1,800, or N/A)"
+      }
+
+      --- MULTIMODAL INTEGRATION MATRIX ---
+      Market Region Code: ${market_region}
+      Selected Vehicle Category: ${vehicle_type}
       Current Selected App Section Focus: ${app_section}`
     });
+
 
 
         // 📡 MASTER RE-INITIALIZED API DATA BRIDGE CONTRACT
@@ -126,14 +125,17 @@ app.post("/api/evaluate", async (req: express.Request, res: express.Response): P
     try {
       // TypeScript is now 100% happy because outputText is guaranteed to be a valid string primitive!
       structuredPayloadResult = JSON.parse(outputText);
-    } catch (parseErr) {
-      // Safe fallback data container layout if the string parsing hits unexpected characters
+        } catch (parseErr) {
+      // 🟢 PURE TRANSPARENT FALLBACK:
+      // If the string parsing hits unexpected text formats, completely preserve Gemini's raw text content!
+      // This leaves the pricing methodology 100% inside Gemini's intelligence with zero frontend forcing.
       structuredPayloadResult = {
         result: outputText,
-        parts_appraisal: "₹0",
-        labor_fee: "₹0"
+        parts_appraisal: outputText,
+        labor_fee: outputText
       };
     }
+
 
     return res.json(structuredPayloadResult);
 
