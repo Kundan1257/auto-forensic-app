@@ -278,32 +278,61 @@ export default function App() {
     setIsScanning(true);
     setScanStep("⚡ AI CORE: Connecting to Local Server Node...");
 
-            try {
-      setScanStep("🧠 AI CORE: Processing Multi-Modal Telensic Analysis...");
+                try {
+      setScanStep("🧠 AI CORE: Processing Multi-Modal Telemetry Analysis...");
 
-                  // 🟢 PURE UN-INSULATED MULTIMODAL INTELLIGENCE PIPELINE
-      // Connected directly to your live production server API node link!
-            // 🟢 PURE UN-INSULATED PIPELINE: Connected directly to your live unique production path endpoint!
-      const response = await fetch("https://auto-forensic-app.onrender.com", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      // 📡 UNIFIED INTELLIGENCE DIRECT PROMPT CONTRACT
+      // Directs the client connection to evaluate both text queries and technical scans natively.
+      const baseSystemInstruction = `
+        \${systemDiagnosticPrompt}
+        
+        🚨 GENERAL CONVERSATION INTLELIGENCE RULE:
+        - If the user query is a general automotive question, instructional request, or standard helpful chat, answer it directly step-by-step like ChatGPT or Grok inside the "result" property. Keep costs clean and set parts_appraisal and labor_fee fields to "₹0" or empty strings.
+        
+        OUTPUT FORMAT CONTRACT:
+        You MUST respond strictly with a valid JSON data structure matching this exact shape, without any markdown formatting wrappers or code block markers:
+        {
+          "result": "Your full response narrative text or step-by-step assistant instructions string goes here.",
+          "parts_appraisal": "Price range string or empty if general query",
+          "labor_fee": "Price range string or empty if general query"
+        }
+      `;
 
-        body: JSON.stringify({
-          market_region: marketRegion || null,
-          vehicle_type: vehicleType || null,
-          app_section: appSection || null,
-          user_issue: userIssue || "",
-          app_language: appLanguage || null,
-          image: image || null,
-          audio: audio || null
-        })
+      const contentsPayload: any[] = [
+        baseSystemInstruction,
+        `User Input Query: \${userIssue}`,
+        `Context Telemetry -> Region: \${marketRegion || "in"}, Vehicle: \${vehicleType || "Car"}, App Frame: \${appSection || "Common Symptoms"}, Language: \${appLanguage || "en"}`
+      ];
+
+      if (image) {
+        contentsPayload.push({ inlineData: { data: image.includes(",") ? image.split(",")[1] : image, mimeType: "image/jpeg" } });
+      }
+
+      if (audio) {
+        contentsPayload.push({ inlineData: { data: audio.includes(",") ? audio.split(",")[1] : audio, mimeType: "audio/mp3" } });
+      }
+
+      // Initialize the direct Google Client engine wrapper securely inside your client build context
+      const { GoogleGenAI } = await import("@google/genai");
+      const aiClientInstance = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY || "" });
+
+      const aiResponseNode = await aiClientInstance.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: contentsPayload,
       });
 
+      const responseTextString = aiResponseNode.text || "";
+      const cleanJsonContent = responseTextString.replace(/```json/g, "").replace(/```/g, "").trim();
+      
+      // Pack the response directly back into your existing data layout variable state
+      const data = JSON.parse(cleanJsonContent);
 
 
 
 
-            const data = await response.json();
+
+
+            
       
       // 🟢 MASTER MULTIMODAL INTELLIGENCE BINDING: Preserves the structured JSON contract!
       const mainChatTextResponse = data?.result || (typeof data === "string" ? data : "⚠️ Zero-telemetry return frame. Re-verify engine terminal sensor metrics.");
