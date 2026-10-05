@@ -217,268 +217,109 @@ export const InputPanel: React.FC<InputPanelProps> = ({
 
 
 
-  return (
-    <div className="bg-[#0a0c10] border border-white/5 rounded-2xl p-5 shadow-2xl flex flex-col justify-between h-[480px] overflow-hidden">
+    return (
+    <div className="bg-[#0a0c10] border border-white/5 rounded-2xl p-4 sm:p-5 shadow-2xl flex flex-col justify-between h-[480px] overflow-hidden w-full">
       
-      {/* HEADER ROW */}
-      <div className="flex items-center justify-between border-b border-white/5 pb-2 flex-shrink-0">
+      {/* HEADER CONTROLS INTERFACE PANEL ROW */}
+      <div className="flex items-center justify-between border-b border-white/5 pb-3 flex-shrink-0 w-full">
         <div className="flex items-center gap-2">
-          <span className="text-[10px] bg-cyan-950 text-cyan-400 border border-cyan-800/60 px-2 py-0.5 rounded-full font-mono">03_DIAGNOSTIC_CHAT</span>
-          <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
-            <MessageSquare className="w-3.5 h-3.5 text-cyan-400" />
-            <span>Interactive AI Triage Box</span>
-          </h3>
+          <div className="p-1.5 rounded-lg bg-cyan-500/10 text-cyan-400">
+            <MessageSquare className="w-3.5 h-3.5" />
+          </div>
+          <div>
+            <span className="text-[10px] font-mono font-bold tracking-wider text-slate-400 uppercase block">Interactive AI Triage Box</span>
+            <span className="text-[9px] font-mono text-cyan-500 font-medium tracking-widest uppercase block">Telemetry Channel Active</span>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <button 
+            type="button"
+            onClick={isCameraActive ? stopCamera : startCamera} 
+            className={`p-2 rounded-xl border transition-all cursor-pointer ${isCameraActive ? 'bg-rose-500/10 border-rose-500/30 text-rose-400 hover:bg-rose-500/20' : 'bg-white/5 border-white/10 text-slate-400 hover:text-white hover:bg-white/10'}`}
+            title={isCameraActive ? "Deactivate Camera Lens" : "Activate Component Lens Snapshot Panel"}
+          >
+            {isCameraActive ? <VideoOff className="w-4 h-4" /> : <Camera className="w-4 h-4" />}
+          </button>
         </div>
       </div>
 
-      {/* 💬 MAIN CHAT FEED AREA */}
-      
-<div className="flex-grow overflow-y-auto p-2 space-y-3 bg-black/40 border border-white/5 rounded-xl scrollbar-thin scrollbar-thumb-cyan-500/40 scrollbar-track-black/20 mb-3">
-  {/* Restored Message History Items */}
-  {messages && messages.map((msg: any, index: number) => (
-    <div key={index} className={`flex items-start gap-2 ${msg.sender === "user" ? "justify-end" : "justify-start"}`}>
-      <div className={`p-2.5 rounded-xl text-[11px] max-w-[85%] leading-relaxed ${msg.sender === "user" ? "bg-cyan-500/10 border border-cyan-500/20 text-cyan-200" : "bg-white/5 border border-white/10 text-slate-200 font-mono"}`}>
-        <div className="whitespace-pre-wrap">{msg.text}</div>
-      </div>
-    </div>
-  ))}
-  
-  {/* Unified Production API Report Stream Integration */}
-  {reportResult && (
-    <div className="flex items-start gap-2 justify-start">
-      <div className="p-3 rounded-xl text-[11px] bg-emerald-500/5 border border-emerald-500/20 text-emerald-200 font-mono shadow-md w-full">
-        <div className="text-[9px] uppercase font-bold tracking-widest text-emerald-400 border-b border-emerald-500/10 pb-1 mb-2 flex items-center gap-1.5">
-          <span>📡</span> Live Telemetry Analysis Report Stream:
+      {/* 📹 HARDWARE CAMERA VIEWPORT CANVAS MESH OVERLAY PANEL */}
+      {isCameraActive && (
+        <div className="flex-1 w-full relative bg-black/60 rounded-xl overflow-hidden border border-white/5 my-3 flex flex-col justify-between p-3 animate-fade-in z-20">
+          <video ref={videoRef} autoPlay playsInline muted className="absolute inset-0 w-full h-full object-cover opacity-80" />
+          {cameraError && (
+            <p className="relative z-10 text-xs text-rose-400 bg-black/60 px-3 py-1.5 rounded-lg border border-rose-500/20 font-mono font-medium">{cameraError}</p>
+          )}
+          <div className="relative z-10 w-full flex items-center justify-end gap-2 mt-auto">
+            <button type="button" onClick={stopCamera} className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-white/10 text-[10px] font-mono font-bold uppercase tracking-wider cursor-pointer">Cancel</button>
+            <button type="button" onClick={capturePhoto} className="px-4 py-1.5 rounded-lg bg-cyan-500 text-black hover:bg-cyan-400 text-[10px] font-mono font-black uppercase tracking-wider shadow-md cursor-pointer">Snap Component</button>
+          </div>
         </div>
-        <div className="whitespace-pre-wrap">{typeof reportResult === 'string' ? reportResult : reportResult?.diagnosticBreakdown || JSON.stringify(reportResult)}</div>
-      </div>
-    </div>
-  )}
+      )}
 
-  <div ref={chatEndRef} />
-</div>
-
-
-      {/* ⚓ THE BOTTOM CONTROL ENGINE BOUNDARY BLOCK */}
-      <div className="flex-shrink-0 space-y-3 bg-black/30 border border-white/5 p-3 rounded-xl">
-        
-        {/* LOCALIZED INLINE VIDEO CONTEXT SCREEN */}
-        {isCameraActive && (
-          <div className="relative rounded-lg overflow-hidden border border-cyan-500/40 bg-black h-[140px] w-full animate-fade-in mb-2">
-            <video ref={videoRef} autoPlay playsInline className="w-full h-full object-cover" />
-            <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-2 px-3">
-              <button
-                type="button"
-                onClick={capturePhoto}
-                className="px-3 py-1.5 rounded-md bg-cyan-500 text-slate-950 font-mono font-black text-[9px] uppercase tracking-wider shadow-lg flex items-center gap-1 hover:bg-cyan-400 transition-all cursor-pointer"
-              >
-                <Camera className="w-3 h-3" /> Capture Frame
-              </button>
-              <button
-                type="button"
-                onClick={stopCamera}
-                className="px-2.5 py-1.5 rounded-md bg-white/10 hover:bg-white/20 text-white font-mono text-[9px] uppercase border border-white/10 transition-all cursor-pointer"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        )}
-
-        {cameraError && (
-          <div className="p-2 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-[9px] font-mono text-center mb-2">
-            {cameraError}
-          </div>
-        )}
-
-        {/* INPUT INPUT ROW BUTTON GROUP */}
-        <form onSubmit={handleSendMessage} className="flex gap-2 w-full">
-          <button
-            type="button"
-            onClick={isCameraActive ? stopCamera : startCamera}
-            disabled={isScanning}
-            className={`p-2.5 rounded-xl border transition-all cursor-pointer flex items-center justify-center ${isCameraActive ? "bg-red-500/10 border-red-500/30 text-red-400 hover:bg-red-500/20" : "bg-white/5 border border-white/10 text-slate-400 hover:text-cyan-400 hover:border-cyan-500/30"}`}
-          >
-                      {/* CAMERA SHORTCUT TRIGGER */}
-          <Camera className="w-4 h-4" />
-          </button>
-
-                    {/* 🎙️ ADVANCED ACOUSTICS DECK: LIVE SCANNING & AUTOMATED REPORT INTEGRATION */}
-          <button
-            type="button"
-            disabled={isScanning}
-            onClick={() => {
-              // 🛑 STOP CONSOLE LAYER: If already recording, turn off the stream and trigger analysis instantly
-              if (isRecording) {
-                if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
-                  mediaRecorderRef.current.stop();
-                }
-                setIsRecording(false);
-                return;
-              }
-
-              // 🟢 START CONSOLE LAYER: Open microphone input channel nodes natively
-              if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                navigator.mediaDevices.getUserMedia({ audio: true })
-                  .then((stream) => {
-                    audioChunksRef.current = [];
-                    const mediaRecorder = new MediaRecorder(stream);
-                    mediaRecorderRef.current = mediaRecorder;
-                    
-                    mediaRecorder.ondataavailable = (event) => {
-                      if (event.data.size > 0) {
-                        audioChunksRef.current.push(event.data);
-                      }
-                    };
-
-                                        mediaRecorder.onstop = () => {
-                      // Turn off active stream mic tracks immediately to release hardware locks safely
-                      stream.getTracks().forEach(track => track.stop());
-
-                      // 🔒 STRICT PREMIUM PAYMENT GATEWAY INTERCEPTOR
-                      // Forcefully interrupts the code workflow, blocking the unpaid triage bypass leak permanently.
-                      // If a premium payment token is unverified, it halts execution and triggers a security lock alert notice.
-                      const isUserPremiumPaymentVerified = true; // Set to false by default to protect your monetization rails
-
-                      if (!isUserPremiumPaymentVerified) {
-                        console.log("[GATEWAY ENFORCEMENT]: Halting automatic report generation pass - Unpaid scan token detected.");
-                        alert("💳 Premium Subscription Required: Please unlock a valid Vehicle Scan Pass to access full acoustic triage engine analytics reports.");
-                        
-                        // Dynamically hooks onto your dashboard workspace nodes to pop open your multi-pass pricing view card layout
-                        const globalScope = window as any;
-                        if (typeof globalScope.setShowSubscriptionModal === "function") {
-                          globalScope.setShowSubscriptionModal(true);
-                        } else if (typeof globalScope.setShowPricingModal === "function") {
-                          globalScope.setShowPricingModal(true);
-                        } else {
-                          // Safe fallback: searches the page layout to simulate a manual click on your subscription passes button
-                          const toggleBtn = document.querySelector('[title*="Pass"], [title*="Pricing"], button:has(.w-4)') as HTMLButtonElement;
-                          if (toggleBtn) toggleBtn.click();
-                        }
-                        return; // 🛑 Halts compilation and function execution immediately, keeping your data protected!
-                      }
-                      
-                      // 🎙️ ACOUSTIC NOISE & HUMAN VOICE FILTER SIMULATION RULES
-                      // Suppresses high-frequency vocal chatter/room noise parameters, passing only clean engine combustion cycles.
-                      const simulatedAcousticPrompt = `[ACOUSTICS AUDIO CAPTURE SWEEP]: Isolated engine cylinder low-frequency resonance patterns recorded cleanly. Suppressing external background vocal chatter noise.`;
-                      
-                      // Auto populate input console and immediately push the cloud server triage request pass
-                      if (setUserIssue) setUserIssue(simulatedAcousticPrompt);
-                      
-                      // Force an instant layout generation cycle matching your previous operational cockpit framework
-                      setTimeout(() => {
-                        if (runForensicAnalysis) runForensicAnalysis();
-                      }, 200);
-                    };
-
-
-                    mediaRecorder.start();
-                    setIsRecording(true);
-                  })
-                  .catch((err) => {
-                    console.error("Microphone hardware connection error:", err);
-                    alert("⚠️ Microphone Access Denied: Please check system privacy permissions inside your device settings dashboard.");
-                  });
-              } else {
-                alert("⚠️ Web Audio API context is unsupported on this legacy mobile browser pipeline.");
-              }
-            }}
-            className={`p-2.5 rounded-xl border transition-all flex items-center justify-center cursor-pointer shadow-md group shrink-0 relative ${
-              isRecording 
-                ? "bg-red-500/20 border-red-500/40 text-red-400 animate-pulse" 
-                : "bg-slate-900 border border-white/5 text-slate-400 hover:text-amber-400 hover:border-amber-500/30"
-            }`}
-            title={isRecording ? "🔴 Recording In Progress - Click to Stop and Analyze" : "🎙️ Ingest Engine Sound / Voice Context"}
-          >
-            <span className="text-sm group-hover:scale-110 transition-transform">
-              {isRecording ? "⏹️" : "🎙️"}
-            </span>
-            {isRecording && (
-              <span className="absolute -top-7 left-1/2 -translate-x-1/2 bg-red-950 border border-red-500/30 text-red-400 font-mono text-[9px] uppercase tracking-widest px-2 py-0.5 rounded shadow-xl whitespace-nowrap z-50">
-                🔴 RECORDING LIVE [CLICK TO SCAN]
-              </span>
-            )}
-          </button>
-
-
-                    {/* TEXT FIELD INPUT PROMPT ROW */}
-          <input
-            type="text"
-            value={chatInput}
-            onChange={(e) => setChatInput(e.target.value)}
-            disabled={isScanning}
-            placeholder={`Type custom ${vehicleType.toLowerCase()} symptoms...`}
-            className="flex-grow min-w-0 bg-black/50 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-500/30 font-medium"
-          />
-
-                    {/* CHAT TEXT SEND UTILITY ICON BUTTON */}
-          <button
-            type="submit"
-            disabled={isScanning || !chatInput.trim()}
-            className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-slate-400 hover:text-cyan-400 hover:border-cyan-500/30 transition-all cursor-pointer disabled:opacity-40 shrink-0"
-          >
-            <Send className="w-4 h-4" />
-          </button>
-
-          {/* 🛡️ CYAN SHIELD CHECK ACTION BUTTON (SECURE RAZORPAY HOSTED HANDLE ACTIVE) */}
-          <button
-            type="button"
-            onClick={() => {
-              if (!userIssue.trim() && !reportResult) return;
-              
-              console.log(`Forwarding regional pricing contract to payment handle: ${marketRegion}`);
-              alert("Securely initializing your pre-configured Razorpay checkout pipeline...");
-
-              // 📡 OFFICIAL HOSTED HANDLE GATEWAY CORE
-              // Points straight to your live activated short payment link handle channel
-              const basePaymentHandleUrl = "https://razorpay.me/@autoforensic";
-              
-              // Appends dynamic cross-border regional tracking variables straight onto the address link path
-              const targetQueryUrl = `${basePaymentHandleUrl}?currency=${encodeURIComponent(marketRegion === "IN" ? "INR" : marketRegion === "EU" ? "EUR" : "USD")}&portal=auto-forensic`;
-              
-              // Forces the active browser window viewport to jump straight onto your live merchant screen safely
-              window.location.href = targetQueryUrl;
-            }}
-            disabled={isScanning || !userIssue.trim()}
-            className="p-2.5 bg-cyan-500 hover:bg-cyan-400 disabled:bg-slate-800 text-slate-950 rounded-xl transition-all shadow-md flex items-center justify-center cursor-pointer disabled:cursor-not-allowed shrink-0"
-            title="Run Auto Forensic Appraisal"
-          >
-            <ShieldCheck className="w-4 h-4" />
-          </button>
-        </form>
-
-
-
-                {(reportResult || userIssue) && (
-          <div className="grid grid-cols-2 gap-3 mt-2 pt-3 border-t border-white/5">
-            <div className="space-y-1">
-              <span className="text-amber-400 font-mono text-[10px] block font-bold">💰 ESTIMATED PARTS APPRAISAL:</span>
-              <div className="text-2xl font-black text-emerald-400 font-mono tracking-tight">{finalizedPartsText}</div>
-            </div>
-            <div className="space-y-1">
-              <span className="text-indigo-400 font-mono text-[10px] block font-bold">👨‍🔧 ESTIMATED STANDARD LABOR FEE:</span>
-              <div className="text-2xl font-black text-emerald-400 font-mono tracking-tight">{finalizedLaborText}</div>
-            </div>
-          
-
-            {(handleToggleSpeech || handleCopyReport) && (
-              <div className="col-span-2 flex justify-end gap-2 pt-1">
-                {handleToggleSpeech && (
-                  <button onClick={handleToggleSpeech} className="text-[10px] bg-slate-800 hover:bg-slate-700 px-2.5 py-1.5 rounded-lg border border-slate-700 font-mono text-slate-200">
-                    {isSpeaking ? '🔇 Stop Audio' : '🔊 Listen Report'}
-                  </button>
-                )}
-                {handleCopyReport && (
-                  <button onClick={handleCopyReport} className="text-[10px] bg-slate-800 hover:bg-slate-700 px-2.5 py-1.5 rounded-lg border border-slate-700 font-mono text-slate-200">
-                    {isCopied ? '✓ Copied' : '📋 Copy Text'}
-                  </button>
-                )}
+      {/* 💬 MAIN HISTORICAL CHAT CONSOLE LOG DISPLAY LAYER FLOW (SCROLL CONTAINER ARRAY) */}
+      {!isCameraActive && (
+        <div className="flex-1 w-full overflow-y-auto py-4 space-y-4 pr-1 scrollbar-thin scrollbar-thumb-white/5 scroll-smooth flex flex-col">
+          {messages.length === 0 ? (
+            <div className="my-auto text-center space-y-2 p-6">
+              <div className="w-10 h-10 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mx-auto text-slate-400 opacity-60">
+                <Bot className="w-5 h-5" />
               </div>
-            )}
-          </div>
-        )}
+              <p className="text-xs font-sans font-medium text-slate-400 max-w-xs mx-auto">Vehicle Intake Telemetry Node Standing By. Provide a component snap, acoustic sound sample, or text description to diagnose issue context variables.</p>
+            </div>
+          ) : (
+            messages.map((msg, i) => (
+              <div key={i} className={`w-full flex items-start gap-2.5 max-w-[85%] animate-fade-in ${msg.sender === "user" ? "ml-auto flex-row-reverse" : "mr-auto"}`}>
+                <div className={`p-1.5 rounded-lg flex-shrink-0 border ${msg.sender === "user" ? "bg-blue-500/10 border-blue-500/20 text-blue-400" : "bg-cyan-500/10 border-cyan-500/20 text-cyan-400"}`}>
+                  {msg.sender === "user" ? <User className="w-3.5 h-3.5" /> : <Bot className="w-3.5 h-3.5" />}
+                </div>
+                <div className={`rounded-xl p-3 text-xs leading-relaxed border ${msg.sender === "user" ? "bg-blue-950/20 border-blue-500/10 text-slate-200" : "bg-slate-900/60 border-white/5 text-slate-300 font-sans"}`}>
+                  {msg.image && (
+                    <img src={msg.image} alt="Component Telemetry Visual Snap" className="w-full max-w-[200px] h-auto rounded-lg mb-2 border border-white/10 shadow-md object-contain" />
+                  )}
+                  <p className="whitespace-pre-wrap">{msg.text}</p>
+                </div>
+              </div>
+            ))
+          )}
 
-      </div>
+          {/* 🧠 DYNAMIC RADAR LOADING BADGE ELEMENT COMPONENT */}
+          {isScanning && (
+            <div className="w-full max-w-[85%] mr-auto flex items-start gap-2.5 p-3 bg-cyan-950/10 border border-cyan-500/10 rounded-xl animate-pulse my-1">
+              <div className="relative flex h-3 w-3 mt-1.5 flex-shrink-0">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-cyan-500"></span>
+              </div>
+              <div className="flex-1 flex flex-col gap-0.5">
+                <p className="text-xs font-mono font-bold tracking-wider text-cyan-400 uppercase">🧠 Auto Forensic System Scanning...</p>
+                <span className="text-[10px] font-mono text-slate-400 tracking-wide uppercase">AI Engine is crunching multi-modal sensor telemetry tokens</span>
+              </div>
+            </div>
+          )}
+          
+          <div ref={chatEndRef} />
+        </div>
+      )}
+
+      {/* 📥 BOTTOM DIALOGUE COMMAND ENTRY TRIAGE INPUT BAR FRAME PANEL FORM */}
+      <form onSubmit={handleSendMessage} className="w-full border-t border-white/5 pt-3 flex-shrink-0 flex items-center gap-2">
+        <input 
+          type="text" 
+          value={chatInput}
+          onChange={(e) => setChatInput(e.target.value)}
+          disabled={isScanning || isCameraActive}
+          placeholder={isScanning ? "AI Engine processing request parameters..." : isCameraActive ? "Capture visual lens snap to continue..." : "Type custom vehicle symptoms description..."}
+          className="flex-1 bg-black/40 border border-white/5 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 outline-none transition focus:border-cyan-500/40 disabled:opacity-50 font-sans shadow-inner"
+        />
+        <button 
+          type="submit" 
+          disabled={!chatInput.trim() || isScanning || isCameraActive}
+          className="p-2.5 rounded-xl bg-cyan-500 text-black hover:bg-cyan-400 transition-all disabled:opacity-40 disabled:bg-white/5 disabled:text-slate-500 flex items-center justify-center flex-shrink-0 cursor-pointer shadow-md"
+        >
+          <Send className="w-3.5 h-3.5" />
+        </button>
+      </form>
+
     </div>
   );
 };
