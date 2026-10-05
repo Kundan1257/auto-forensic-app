@@ -19,8 +19,10 @@ import { SelectionPanel } from "./components/SelectionPanel";
 import { InputPanel } from "./components/InputPanel";
 import { ViewfinderCard } from "./components/ViewfinderCard";
 import { RightOutputPanel } from "./components/RightOutputPanel";
+import { DiagnosticReport } from "./components/DiagnosticReport"; // 🟢 ADDED: Mounts the missing chat bubble route!
 import { UserManual } from "./components/UserManual";
 import { SubscriptionModal } from "./components/SubscriptionModal";
+
 
 // 🧠 IMPORT GLOBAL UTILITY ASSETS
 import { ROADSIDE_HACK_QUESTIONS } from "./data/hacks";
@@ -522,9 +524,28 @@ null
         </div>
 
         {/* 🔵 RIGHT COLUMN PANELS STACK (lg:w-[58%]) */}
-        <div className="w-full lg:w-[58%] flex flex-col space-y-4">
-          {/* Right workspace drawer is now clean, unblocked, and beautifully organized */}
+                <div className="w-full lg:w-[58%] flex flex-col space-y-4">
+          {/* 📡 Dynamic Multimodal Chat Narrative Bubble and Diagnostic Manifest Component */}
+          <DiagnosticReport 
+            isScanning={isScanning}
+            errorMessage={errorMessage}
+            reportResult={reportResult}
+            scanStep={scanStep}
+            activeHighlight={activeHighlight}
+            activeRegionSymbol={marketRegion === "us" ? "$" : marketRegion === "ae" ? "AED " : "₹"}
+            runForensicAnalysis={runForensicAnalysis}
+          />
+
+          {/* 💰 Autonomous Pricing Telemetry Boxes Grid Wrapper Component */}
+          <RightOutputPanel 
+            reportResult={reportResult}
+            isScanning={isScanning}
+            isLoading={isScanning}
+            scanStep={scanStep}
+            errorMessage={errorMessage}
+          />
         </div>
+
 
       </main>
 
