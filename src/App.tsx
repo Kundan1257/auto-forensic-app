@@ -278,78 +278,102 @@ export default function App() {
     setIsScanning(true);
     setScanStep("⚡ AI CORE: Connecting to Local Server Node...");
 
-                try {
-      setScanStep("🧠 AI CORE: Processing Multi-Modal Telemetry Analysis...");
+           try {
+      setScanStep("🧠 AI CORE: Processing Multi-Modal Telemetry Grid...");
 
-      // 📡 UNIFIED INTELLIGENCE DIRECT PROMPT CONTRACT
-      // Directs the client connection to evaluate both text queries and technical scans natively.
+      // 📡 SYSTEM PROMPT CONTRACT: Combines diagnostic matrices and general chatbot utilities smoothly
       const baseSystemInstruction = `
-        \${systemDiagnosticPrompt}
+        You are an advanced automotive forensic expert operating as a direct conversational assistant and technical appraisal platform.
         
-        🚨 GENERAL CONVERSATION INTLELIGENCE RULE:
-        - If the user query is a general automotive question, instructional request, or standard helpful chat, answer it directly step-by-step like ChatGPT or Grok inside the "result" property. Keep costs clean and set parts_appraisal and labor_fee fields to "₹0" or empty strings.
+        ${systemDiagnosticPrompt}
+        
+        OPERATIONAL MODES:
+        1. GENERAL QUESTION MODE: If the user query is an open-ended conversational question, operational inquiry, or tool setup guidance (such as asking how to plug in an OBD2 scanner safely), answer the question directly with clear, step-by-step instructions. Because this is an informational query, set parts_appraisal and labor_fee fields to "₹0" or empty strings.
+        2. COMPONENT SCAN MODE: If the user passes a mechanical issue description, attaches a component snapshot photo, or records an engine acoustic audio sample, activate your deep vehicle troubleshooting parameters to analyze the fault signatures and provide realistic price range estimations.
         
         OUTPUT FORMAT CONTRACT:
-        You MUST respond strictly with a valid JSON data structure matching this exact shape, without any markdown formatting wrappers or code block markers:
+        You MUST respond strictly with a valid JSON data structure matching this exact shape, without any markdown formatting wrappers, markdown backticks, or code block markers:
         {
           "result": "Your full response narrative text or step-by-step assistant instructions string goes here.",
-          "parts_appraisal": "Price range string or empty if general query",
-          "labor_fee": "Price range string or empty if general query"
+          "parts_appraisal": "Price range string or ₹0 if general query",
+          "labor_fee": "Price range string or ₹0 if general query"
         }
       `;
 
+      // Synchronize all dropdown values and user intake text inputs into a unified array
       const contentsPayload: any[] = [
         baseSystemInstruction,
-        `User Input Query: \${userIssue}`,
-        `Context Telemetry -> Region: \${marketRegion || "in"}, Vehicle: \${vehicleType || "Car"}, App Frame: \${appSection || "Common Symptoms"}, Language: \${appLanguage || "en"}`
+        `User Input Issue: ${userIssue}`,
+        `Context Parameters -> Region: ${marketRegion || "in"}, Vehicle Profile: ${vehicleType || "Car"}, App Section: ${appSection || "Common Symptoms"}, System Language: ${appLanguage || "en"}`
       ];
 
+      // Safe multi-modal injection: Maps your camera snapshot state safely if present
       if (image) {
-        contentsPayload.push({ inlineData: { data: image.includes(",") ? image.split(",")[1] : image, mimeType: "image/jpeg" } });
+        const cleanedImageBase64 = image.includes(",") ? image.split(",")[1] : image;
+        contentsPayload.push({
+          inlineData: { data: cleanedImageBase64, mimeType: "image/jpeg" }
+        });
       }
 
+      // Safe multi-modal injection: Maps your microphone recording state safely if present
       if (audio) {
-        contentsPayload.push({ inlineData: { data: audio.includes(",") ? audio.split(",")[1] : audio, mimeType: "audio/mp3" } });
+        const cleanedAudioBase64 = audio.includes(",") ? audio.split(",")[1] : audio;
+        contentsPayload.push({
+          inlineData: { data: cleanedAudioBase64, mimeType: "audio/mp3" }
+        });
       }
 
-      // Initialize the direct Google Client engine wrapper securely inside your client build context
+      // Inline dynamic import to protect your existing top-level import scope layout completely
       const { GoogleGenAI } = await import("@google/genai");
-      const aiClientInstance = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY || "" });
+      const aiInstance = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY || "" });
 
-      const aiResponseNode = await aiClientInstance.models.generateContent({
+      // Transmit the synchronized data directly over Google's global serverless API channels
+      const aiResponseNode = await aiInstance.models.generateContent({
         model: "gemini-2.5-flash",
         contents: contentsPayload,
       });
 
       const responseTextString = aiResponseNode.text || "";
+      
+      // Clear away any unexpected markdown code wrappers returned by the model before parsing
       const cleanJsonContent = responseTextString.replace(/```json/g, "").replace(/```/g, "").trim();
       
-      // Pack the response directly back into your existing data layout variable state
-      const data = JSON.parse(cleanJsonContent);
+      let parsedDataPayload: any = null;
+      let finalChatNarrativeText = "";
 
+      // FAIL-SAFE DATA BRIDGE: Guarantees the chat bubble opens even if text formatting fluctuates
+      try {
+        parsedDataPayload = JSON.parse(cleanJsonContent);
+        finalChatNarrativeText = parsedDataPayload?.result || responseTextString;
+      } catch (jsonParseError) {
+        console.warn("Formatting variance caught. Executing text-wrapper normalization:", jsonParseError);
+        finalChatNarrativeText = responseTextString;
+        parsedDataPayload = {
+          result: responseTextString,
+          parts_appraisal: "₹0",
+          labor_fee: "₹0"
+        };
+      }
 
+      // Update your interface displays synchronously
+      setMessages(prev => [...prev, { sender: "ai", text: finalChatNarrativeText }]);
+      setReportResult(parsedDataPayload);
 
-
-
-
-            
-      
-      // 🟢 MASTER MULTIMODAL INTELLIGENCE BINDING: Preserves the structured JSON contract!
-      const mainChatTextResponse = data?.result || (typeof data === "string" ? data : "⚠️ Zero-telemetry return frame. Re-verify engine terminal sensor metrics.");
-      
-      setMessages(prev => [...prev, { sender: "ai", text: mainChatTextResponse }]);
-      
-      // 📡 Save the full, raw response payload object intact so Gemini can command the cost grids dynamically!
-      setReportResult(data);
     } catch (err) {
-      console.error(err);
-      const errFallback = "❌ BACKEND CONNECTION ERROR: Could not sync stream packages with local Express server node. Check your terminal dev log panels.";
-      setMessages(prev => [...prev, { sender: "ai", text: errFallback }]);
-      setReportResult(errFallback);
+      console.error("Global data pipeline connection fault:", err);
+      const connectivityErrorString = "❌ SYSTEM LAYOUT ERROR: Unable to communicate with the direct AI network node. Please check your internet connection and verify your Vercel configurations.";
+      
+      setMessages(prev => [...prev, { sender: "ai", text: connectivityErrorString }]);
+      setReportResult({
+        result: connectivityErrorString,
+        parts_appraisal: "Error",
+        labor_fee: "Error"
+      });
     } finally {
       setIsScanning(false);
       setScanStep("");
     }
+
   };
 
 
