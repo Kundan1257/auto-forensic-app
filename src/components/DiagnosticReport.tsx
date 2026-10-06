@@ -9,7 +9,13 @@ interface ReportProps {
   scanStep: string;
   activeHighlight: boolean;
   activeRegionSymbol: string;
-  runForensicAnalysis: () => void;
+  runForensicAnalysis: (textOverrideParam?: string) => void;
+  
+  // 🟢 LIVE AUDIO HOOK INTERFACE MAPPINGS: Restores speech triggers with zero structure errors!
+  handleToggleSpeech?: () => void;
+  handleCopyReport?: () => void;
+  isSpeaking?: boolean;
+  isCopied?: boolean;
 }
 
 export const DiagnosticReport: React.FC<ReportProps> = ({
@@ -18,8 +24,16 @@ export const DiagnosticReport: React.FC<ReportProps> = ({
   reportResult,
   scanStep,
   activeHighlight,
-  runForensicAnalysis
+  activeRegionSymbol,
+  runForensicAnalysis,
+  
+  // 🟢 STRUCTURAL UNPACKING CHANNELS: Safely injects the speech actions onto your dashboard canvas!
+  handleToggleSpeech,
+  handleCopyReport,
+  isSpeaking = false,
+  isCopied = false
 }) => {
+
   const [scriptCopied, setScriptCopied] = useState(false);
 
   // 📝 Safely extracts Gemini's text from both structured JSON contracts and raw fallbacks
@@ -61,9 +75,11 @@ export const DiagnosticReport: React.FC<ReportProps> = ({
           <h3 className="font-bold text-gray-200">System Connection Fault</h3>
           <p className="text-xs text-rose-400 font-mono mt-2 bg-black/60 p-3 rounded-lg border border-red-900/40 leading-relaxed text-left">{errorMessage}</p>
         </div>
-        <button type="button" onClick={runForensicAnalysis} className="text-xs px-4 py-2 rounded-full bg-cyan-500 hover:bg-cyan-400 text-black font-bold font-mono cursor-pointer">
+                {/* 🟢 PERFECTLY BALANCED RETRY TRIGGER: Fires cleanly with 0 arguments on mouse press! */}
+        <button type="button" onClick={() => runForensicAnalysis()} className="text-xs px-4 py-2 rounded-full bg-cyan-500 hover:bg-cyan-400 text-black font-bold font-mono cursor-pointer">
           <RefreshCw className="w-3 h-3 inline-block mr-1" /> Retry Analysis
         </button>
+
       </motion.div>
     );
   }
