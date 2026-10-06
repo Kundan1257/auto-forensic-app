@@ -258,7 +258,8 @@ export default function App() {
   };
 
     
-  const runForensicAnalysis = async () => {
+  const runForensicAnalysis = async (textOverrideParam?: string) => {
+
     // 🛡️ DYNAMIC MULTI-VEHICLE ACOUSTIC CALIBRATION PROMPT MATRIX
     // Declared immediately at the entry point of the forensic engine so the Gemini API parses it perfectly!
     const systemDiagnosticPrompt = `
@@ -274,12 +275,16 @@ export default function App() {
     // ... The rest of your existing analysis and API fetch rows remain completely untouched and safe underneath!
 
     
-    if (userIssue.trim().length === 0) return;
+        // 📡 Read the parameter argument directly to clear out the state engine lag instantly!
+    const activeTelemetryQueryText = textOverrideParam !== undefined ? textOverrideParam : userIssue;
+    
+    if (!activeTelemetryQueryText || activeTelemetryQueryText.trim().length === 0) return;
     setIsScanning(true);
     setScanStep("⚡ AI CORE: Connecting to Local Server Node...");
 
-           try {
+    try {
       setScanStep("🧠 AI CORE: Processing Multi-Modal Telemetry Grid...");
+
 
       // 📡 SYSTEM PROMPT CONTRACT: Combines diagnostic matrices and general chatbot utilities smoothly
       const baseSystemInstruction = `
@@ -300,12 +305,13 @@ export default function App() {
         }
       `;
 
-      // Synchronize all dropdown values and user intake text inputs into a unified array
+            // Synchronize all dropdown values and user intake text inputs into a unified array
       const contentsPayload: any[] = [
         baseSystemInstruction,
-        `User Input Issue: ${userIssue}`,
+        `User Input Issue: ${activeTelemetryQueryText}`, // 🟢 Only change this variable name right here!
         `Context Parameters -> Region: ${marketRegion || "in"}, Vehicle Profile: ${vehicleType || "Car"}, App Section: ${appSection || "Common Symptoms"}, System Language: ${appLanguage || "en"}`
       ];
+
 
       // Safe multi-modal injection: Maps your camera snapshot state safely if present
       if (image) {
