@@ -377,7 +377,8 @@ export default function App() {
   };
 
 
-      // 🔊 LIVE MULTI-MODAL TEXT-TO-SPEECH DEFENSE CORE (LANG LOCALIZED v4.5.2)
+        // 🔊 LIVE MULTI-MODAL TEXT-TO-SPEECH DEFENSE CORE (TYPE-SAFE v4.5.3)
+  // 🟢 BALANCED ASSISTANCE LOCK: 100% Guarded against object or empty state layout crashes!
   const handleToggleSpeech = () => {
     if (!reportResult) return;
     
@@ -388,8 +389,16 @@ export default function App() {
       return;
     }
 
+    // TYPE SAFETY INJECTION: Safely extract raw text narrative if reportResult is packaged as a JSON object
+    let rawTextToProcess = "";
+    if (typeof reportResult === "object" && reportResult !== null) {
+      rawTextToProcess = reportResult.result || JSON.stringify(reportResult);
+    } else {
+      rawTextToProcess = String(reportResult || "");
+    }
+
     // Strip markdown typography syntax keys cleanly before feeding raw text strings
-    const cleanTextToSpeak = reportResult
+    const cleanTextToSpeak = rawTextToProcess
       .replace(/\*\*/g, "")
       .replace(/•/g, "")
       .replace(/\[/g, "")
@@ -397,7 +406,7 @@ export default function App() {
 
     const speechUtterance = new SpeechSynthesisUtterance(cleanTextToSpeak);
     
-        // 🌐 BCP-47 GLOBAL SPEECH PHONETIC VOICE MAP DICTIONARY
+    // 🌐 BCP-47 GLOBAL SPEECH PHONETIC VOICE MAP DICTIONARY
     const languageVoiceMap: Record<string, string> = {
       en: "en-US", hi: "hi-IN", zh: "zh-CN", ja: "ja-JP", ko: "ko-KR",
       es: "es-ES", fr: "fr-FR", de: "de-DE", it: "it-IT", pt: "pt-BR",
@@ -414,6 +423,7 @@ export default function App() {
     setIsSpeaking(true);
     window.speechSynthesis.speak(speechUtterance);
   };
+
 
 
 
