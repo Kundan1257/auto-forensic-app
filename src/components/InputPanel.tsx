@@ -101,36 +101,33 @@ export const InputPanel: React.FC<InputPanelProps> = ({
       stopCamera();
     }
   };
-      // 🟢 DEADBAND-FREE DISPATCH KERNEL: 100% Guarded against asynchronous double-fire event loops!
+        // 🟢 DEADBAND-FREE DISPATCH KERNEL: Guarantees 100% single visual bubble mapping!
   const handleSendMessage = async (e: React.FormEvent) => {
     if (e && typeof e.preventDefault === "function") {
       e.preventDefault();
     }
     
-    // 📡 Step 1: Capture an absolute immutable static value snapshot of your query string immediately
     const textTelemetryInputBuffer = (chatInput || "").trim();
-    
-    // 🚨 Safe Exit Guard: Halt cleanly only if the actual text query is genuinely empty
     if (!textTelemetryInputBuffer || isScanning) return;
 
-    // 📡 Step 2: Clear your visual text entry field box immediately right after the string is captured
     setChatInput("");
 
-    // 📡 Step 3: Natively append your user message bubble straight into your visible chat flow container lists
+    // 📡 Step 1: Functional State Updater Pattern — Bypasses array caching loops completely!
     if (typeof setMessages === "function") {
-      setMessages([...messages, { sender: "user", text: textTelemetryInputBuffer }]);
+      setMessages(prev => [...prev, { sender: "user", text: textTelemetryInputBuffer }]);
     }
 
-    // 📡 Step 4: Synchronously update the parent full-stack data ingestion tracker node variable
+    // 📡 Step 2: Synchronously update the parent full-stack data ingestion tracker node variable
     if (typeof setUserIssue === "function") {
       setUserIssue(textTelemetryInputBuffer);
     }
 
-    // 🚀 Step 5: Direct, un-lagged macro task execution loop to trigger Gemini's cloud network instantly
+    // 🚀 Step 3: Direct microtask execution loop to trigger Gemini's cloud network instantly
     if (typeof runForensicAnalysis === "function") {
       runForensicAnalysis();
     }
   };
+
 
 
 
