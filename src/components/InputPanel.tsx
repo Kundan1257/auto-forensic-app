@@ -101,7 +101,7 @@ export const InputPanel: React.FC<InputPanelProps> = ({
       stopCamera();
     }
   };
-  // 🟢 SYNCED ACTION CONTROLLER BLOCK: Resolves the empty payload query bug!
+    // 🟢 INSTANT ACTION CONTROLLER BLOCK: Wipes out the first-press latency lag permanently!
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!chatInput.trim() || isScanning) return;
@@ -109,17 +109,18 @@ export const InputPanel: React.FC<InputPanelProps> = ({
     const currentInputText = chatInput.trim();
     setChatInput("");
 
-    // 📡 Step 1: Add user message bubble straight into visual chat array
+    // 📡 Step 1: Add user message bubble straight into visual chat array layout immediately
     setMessages([...messages, { sender: "user", text: currentInputText }]);
 
     // 📡 Step 2: Inform the shared user issue state variable text node natively
     setUserIssue(currentInputText);
 
-    // 🚀 Step 3: Trigger the analysis pass via macro stack loop to allow state binding
-    setTimeout(() => {
+    // 🚀 Step 3: Direct microtask execution loop: Bypasses state timeout latency completely!
+    if (typeof runForensicAnalysis === "function") {
       runForensicAnalysis();
-    }, 50);
+    }
   };
+
 
   const getCurrencySymbol = (region: string) => {
     const r = String(region || "in").toLowerCase();
