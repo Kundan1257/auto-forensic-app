@@ -8,7 +8,7 @@ interface InputPanelProps {
   userIssue?: any;
   isScanning?: any;
   setUserIssue?: (val: string) => void;
-  runForensicAnalysis?: () => void;
+  runForensicAnalysis?: (textOverrideParam?: string) => void;
   messages?: Message[];
   setMessages?: React.Dispatch<React.SetStateAction<Message[]>>;
   reportResult?: any;
@@ -30,7 +30,7 @@ export const InputPanel: React.FC<InputPanelProps> = ({
   userIssue,
   isScanning,
   setUserIssue = () => {},
-  runForensicAnalysis = () => {},
+  runForensicAnalysis = (textOverrideParam?: string) => {},
   messages = [],
   setMessages = () => {},
   reportResult = "",
@@ -117,16 +117,18 @@ export const InputPanel: React.FC<InputPanelProps> = ({
       setMessages(prev => [...prev, { sender: "user", text: textTelemetryInputBuffer }]);
     }
 
-    // 📡 Step 2: Synchronously update the parent full-stack data ingestion tracker node variable
+        // 📡 Step 2: Synchronously update the parent full-stack data ingestion tracker node variable
     if (typeof setUserIssue === "function") {
       setUserIssue(textTelemetryInputBuffer);
     }
 
     // 🚀 Step 3: Direct microtask execution loop to trigger Gemini's cloud network instantly
+    // 🟢 PASS THE RAW SNAPSHOT BUFFER VARIABLE DIRECTLY TO CLEAR THE ₹0 LATENCY LOOP!
     if (typeof runForensicAnalysis === "function") {
-      runForensicAnalysis();
+      runForensicAnalysis(textTelemetryInputBuffer);
     }
   };
+
 
 
 
