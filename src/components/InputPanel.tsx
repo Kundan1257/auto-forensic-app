@@ -215,17 +215,7 @@ export const InputPanel: React.FC<InputPanelProps> = ({
               </div>
             </div>
           ))}
-            {/* 🧠 DYNAMIC REAL-TIME VEHICLE TRIAGE SPINNING INDICATOR */}
-  {isScanning && (
-    <div className="flex items-start gap-2 justify-start animate-pulse my-1.5">
-      <div className="p-2.5 rounded-xl text-[11px] max-w-[85%] leading-relaxed bg-cyan-950/40 border border-cyan-500/30 text-cyan-400 font-mono shadow-md flex items-center gap-2">
-        <Loader2 className="w-3.5 h-3.5 text-cyan-400 animate-spin flex-shrink-0" />
-        <span className="tracking-wide uppercase font-bold text-[9px] tracking-widest block">
-          AI Analyzing Telemetry Layer...
-        </span>
-      </div>
-    </div>
-  )}
+            
 
 
           {/* 🧠 DYNAMIC RADAR TRIAGE MOVING BUBBLE COMPONENT INDICATION PIN */}
