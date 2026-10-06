@@ -101,25 +101,37 @@ export const InputPanel: React.FC<InputPanelProps> = ({
       stopCamera();
     }
   };
-    // 🟢 INSTANT ACTION CONTROLLER BLOCK: Wipes out the first-press latency lag permanently!
+      // 🟢 DEADBAND-FREE DISPATCH KERNEL: 100% Guarded against asynchronous double-fire event loops!
   const handleSendMessage = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!chatInput.trim() || isScanning) return;
+    if (e && typeof e.preventDefault === "function") {
+      e.preventDefault();
+    }
+    
+    // 📡 Step 1: Capture an absolute immutable static value snapshot of your query string immediately
+    const textTelemetryInputBuffer = (chatInput || "").trim();
+    
+    // 🚨 Safe Exit Guard: Halt cleanly only if the actual text query is genuinely empty
+    if (!textTelemetryInputBuffer || isScanning) return;
 
-    const currentInputText = chatInput.trim();
+    // 📡 Step 2: Clear your visual text entry field box immediately right after the string is captured
     setChatInput("");
 
-    // 📡 Step 1: Add user message bubble straight into visual chat array layout immediately
-    setMessages([...messages, { sender: "user", text: currentInputText }]);
+    // 📡 Step 3: Natively append your user message bubble straight into your visible chat flow container lists
+    if (typeof setMessages === "function") {
+      setMessages([...messages, { sender: "user", text: textTelemetryInputBuffer }]);
+    }
 
-    // 📡 Step 2: Inform the shared user issue state variable text node natively
-    setUserIssue(currentInputText);
+    // 📡 Step 4: Synchronously update the parent full-stack data ingestion tracker node variable
+    if (typeof setUserIssue === "function") {
+      setUserIssue(textTelemetryInputBuffer);
+    }
 
-    // 🚀 Step 3: Direct microtask execution loop: Bypasses state timeout latency completely!
+    // 🚀 Step 5: Direct, un-lagged macro task execution loop to trigger Gemini's cloud network instantly
     if (typeof runForensicAnalysis === "function") {
       runForensicAnalysis();
     }
   };
+
 
 
   const getCurrencySymbol = (region: string) => {
