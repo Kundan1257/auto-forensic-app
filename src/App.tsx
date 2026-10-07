@@ -69,7 +69,7 @@ export default function App() {
     return localStorage.getItem("auto_forensic_terms_accepted") === "true";
   });
 
-  // 🔊 TRUE BINARY MICROPHONE RECORDING AUDIO ENGINE
+    // 🔊 TRUE BINARY MICROPHONE RECORDING AUDIO ENGINE - 🟢 ENHANCED SINGLE-PRESS DISPATCH
   const handleMicAction = async () => {
     if (isRecording) {
       // 🛑 STOP RECORDING MODE
@@ -92,19 +92,25 @@ export default function App() {
         mediaRecorder.onstop = async () => {
           const audioBlob = new Blob(chunks, { type: 'audio/webm' });
           
-          // 🔄 Programmatically read the binary sound data buffer and convert to base64 string
+          // 🔄 Programmatically convert the audio data stream into a base64 string layout
           const reader = new FileReader();
           reader.readAsDataURL(audioBlob);
           reader.onloadend = () => {
             const base64String = reader.result as string;
-            setBase64AudioData(base64String); // Sets your true audio payload data string
             
-            // Set the visual text string inside your user chat logs cleanly
-            setUserIssue("🎤 [Acoustic Audio Capture File Passed Natively]");
+            // Safely update the background tracking state nodes if available in your component signature
+            if (typeof setAudio === "function") {
+              setAudio(base64String);
+            } else if (typeof setBase64AudioData === "function") {
+              setBase64AudioData(base64String);
+            }
             
-            // Immediately initialize the dynamic Render server payload call sweep
+            const rawAudioTelemetryTextString = "🎤 [Acoustic Audio Capture File Passed Natively]";
+            setUserIssue(rawAudioTelemetryTextString);
+            
+            // 🚀 INSTANT DISPATCH PASSTHROUGH: Passes both string targets down to bypass async latency loops!
             setTimeout(() => {
-              runForensicAnalysis();
+              runForensicAnalysis(rawAudioTelemetryTextString, base64String);
             }, 300);
           };
           
@@ -119,7 +125,8 @@ export default function App() {
         alert("⚠️ Microphone Access Blocked: Please enable system audio permissions inside your device settings panel.");
       }
     }
-  };
+  }; // 🟢 PERFECT NESTING CLOSURE GATES!
+
 
 
   
@@ -258,7 +265,9 @@ export default function App() {
   };
 
     
-  const runForensicAnalysis = async (textOverrideParam?: string) => {
+  // 🟢 FUNCTION SIGNATURE UPGRADE: Accepts both direct text and raw audio base64 data streams!
+const runForensicAnalysis = async (textOverrideParam?: string, audioOverrideParam?: string) => {
+
 
     // 🛡️ DYNAMIC MULTI-VEHICLE ACOUSTIC CALIBRATION PROMPT MATRIX
     // Declared immediately at the entry point of the forensic engine so the Gemini API parses it perfectly!
@@ -313,7 +322,7 @@ export default function App() {
       ];
 
 
-      // Safe multi-modal injection: Maps your camera snapshot state safely if present
+            // Safe multi-modal injection: Maps your camera snapshot state safely if present
       if (image) {
         const cleanedImageBase64 = image.includes(",") ? image.split(",")[1] : image;
         contentsPayload.push({
@@ -322,12 +331,16 @@ export default function App() {
       }
 
       // Safe multi-modal injection: Maps your microphone recording state safely if present
-      if (audio) {
-        const cleanedAudioBase64 = audio.includes(",") ? audio.split(",")[1] : audio;
+      // 🟢 DIRECT PARAMETER INTERCEPT ENGINE: Reads your incoming base64 argument instantly to skip async latency!
+      const activeAudioDataStream = audioOverrideParam !== undefined ? audioOverrideParam : audio;
+
+      if (activeAudioDataStream) {
+        const cleanedAudioBase64 = activeAudioDataStream.includes(",") ? activeAudioDataStream.split(",")[1] : activeAudioDataStream;
         contentsPayload.push({
           inlineData: { data: cleanedAudioBase64, mimeType: "audio/mp3" }
         });
       }
+
 
       // Inline dynamic import to protect your existing top-level import scope layout completely
       const { GoogleGenAI } = await import("@google/genai");
@@ -594,7 +607,7 @@ null
 
         {/* 🔵 RIGHT COLUMN PANELS STACK (lg:w-[58%]) */}
                 <div className="w-full lg:w-[58%] flex flex-col space-y-4">
-          {/* 📡 Dynamic Multimodal Chat Narrative Bubble and Diagnostic Manifest Component */}
+                    {/* 📡 Dynamic Multimodal Chat Narrative Bubble and Diagnostic Manifest Component */}
           <DiagnosticReport 
             isScanning={isScanning}
             errorMessage={errorMessage}
@@ -603,7 +616,14 @@ null
             activeHighlight={activeHighlight}
             activeRegionSymbol={marketRegion === "us" ? "$" : marketRegion === "ae" ? "AED " : "₹"}
             runForensicAnalysis={runForensicAnalysis}
+            
+            // 🟢 ACTION AUDIO CONTROLLER LINKS: Restores your high-performance audio engine utilities!
+            handleToggleSpeech={handleToggleSpeech}
+            handleCopyReport={handleCopyReport}
+            isSpeaking={isSpeaking}
+            isCopied={isCopied}
           />
+
 
           {/* 💰 Autonomous Pricing Telemetry Boxes Grid Wrapper Component */}
           <RightOutputPanel 
