@@ -273,7 +273,7 @@ export const InputPanel: React.FC<InputPanelProps> = ({
 
 
 
-                {/* PRICE SUMMARY CARD FOOTER MATRIX BLOCKS - 🟢 HIGH-CONTRAST LIGHT THEME LOCALIZATION ENGINE */}
+                  {/* PRICE SUMMARY CARD FOOTER MATRIX BLOCKS - 🟢 HIGH-CONTRAST LIGHT THEME LOCALIZATION ENGINE */}
         {(reportResult || userIssue) && (
           <div className="grid grid-cols-2 gap-4 mt-3 pt-3 border-t border-slate-100 flex-shrink-0 bg-slate-50/50 p-2.5 rounded-xl">
             <div className="space-y-0.5">
@@ -303,4 +303,5 @@ export const InputPanel: React.FC<InputPanelProps> = ({
     </div>
   );
 };
+
 
