@@ -273,16 +273,28 @@ export const InputPanel: React.FC<InputPanelProps> = ({
 
 
 
-        {/* PRICE SUMMARY CARD FOOTER MATRIX BLOCKS */}
+                {/* PRICE SUMMARY CARD FOOTER MATRIX BLOCKS - 🟢 HIGH-CONTRAST LIGHT THEME LOCALIZATION ENGINE */}
         {(reportResult || userIssue) && (
-          <div className="grid grid-cols-2 gap-3 mt-2 pt-2 border-t border-white/5 flex-shrink-0">
+          <div className="grid grid-cols-2 gap-4 mt-3 pt-3 border-t border-slate-100 flex-shrink-0 bg-slate-50/50 p-2.5 rounded-xl">
             <div className="space-y-0.5">
-              <span className="text-amber-400 font-mono text-[9px] block font-bold uppercase tracking-wider">Parts Appraisal:</span>
-              <div className="text-xl font-black text-emerald-400 font-mono tracking-tight">{finalizedPartsText}</div>
+              <span className="text-slate-500 font-mono text-[9px] block font-extrabold uppercase tracking-wider">Parts Appraisal:</span>
+              <div className="text-base font-black text-emerald-600 font-mono tracking-tight flex items-center">
+                {marketRegion === "us" ? "$" : marketRegion === "ae" ? "AED " : marketRegion === "kr" ? "₩" : marketRegion === "cn" ? "¥" : marketRegion === "jp" ? "¥" : "₹"}
+                {/* 🟢 DUP-FREE TEXT STRIPPER: Removes lingering currency symbols or translation words from the model response string! */}
+                {String(finalizedPartsText || "")
+                  .replace(/[¥₩$₹]|AED|약|約|Approx/gi, "")
+                  .trim()}
+              </div>
             </div>
-            <div className="space-y-0.5">
-              <span className="text-indigo-400 font-mono text-[9px] block font-bold uppercase tracking-wider">Labor Fee:</span>
-              <div className="text-xl font-black text-emerald-400 font-mono tracking-tight">{finalizedLaborText}</div>
+            
+            <div className="space-y-0.5 text-right">
+              <span className="text-slate-500 font-mono text-[9px] block font-extrabold uppercase tracking-wider">Labor Fee:</span>
+              <div className="text-base font-black text-emerald-600 font-mono tracking-tight flex items-center justify-end">
+                {marketRegion === "us" ? "$" : marketRegion === "ae" ? "AED " : marketRegion === "kr" ? "₩" : marketRegion === "cn" ? "¥" : marketRegion === "jp" ? "¥" : "₹"}
+                {String(finalizedLaborText || "")
+                  .replace(/[¥₩$₹]|AED|약|約|Approx/gi, "")
+                  .trim()}
+              </div>
             </div>
           </div>
         )}
@@ -291,3 +303,4 @@ export const InputPanel: React.FC<InputPanelProps> = ({
     </div>
   );
 };
+
