@@ -14,6 +14,7 @@ interface InputPanelProps {
   reportResult?: any;
   marketRegion?: string;
   handleToggleSpeech?: () => void;
+  isRecording?: boolean;
   handleCopyReport?: () => void;
   isSpeaking?: boolean;
   isCopied?: boolean;
@@ -36,6 +37,7 @@ export const InputPanel: React.FC<InputPanelProps> = ({
   reportResult = "",
   marketRegion = "IN",
   handleToggleSpeech,
+  isRecording = false,
   handleCopyReport,
   isSpeaking = false,
   isCopied = false
@@ -43,7 +45,7 @@ export const InputPanel: React.FC<InputPanelProps> = ({
   const [chatInput, setChatInput] = useState("");
   const [isCameraActive, setIsCameraActive] = useState(false);
   const [cameraError, setCameraError] = useState<string | null>(null);
-  const [isRecording, setIsRecording] = useState(false);
+
   
   const chatEndRef = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
