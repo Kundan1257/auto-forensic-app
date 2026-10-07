@@ -273,14 +273,14 @@ export const InputPanel: React.FC<InputPanelProps> = ({
 
 
 
-                  {/* PRICE SUMMARY CARD FOOTER MATRIX BLOCKS - 🟢 HIGH-CONTRAST LIGHT THEME LOCALIZATION ENGINE */}
+                    {/* PRICE SUMMARY CARD FOOTER MATRIX BLOCKS - 🟢 CASE-INSENSITIVE MULTI-MARKET SYSTEM */}
         {(reportResult || userIssue) && (
           <div className="grid grid-cols-2 gap-4 mt-3 pt-3 border-t border-slate-100 flex-shrink-0 bg-slate-50/50 p-2.5 rounded-xl">
             <div className="space-y-0.5">
               <span className="text-slate-500 font-mono text-[9px] block font-extrabold uppercase tracking-wider">Parts Appraisal:</span>
               <div className="text-base font-black text-emerald-600 font-mono tracking-tight flex items-center">
-                {marketRegion === "us" ? "$" : marketRegion === "ae" ? "AED " : marketRegion === "kr" ? "₩" : marketRegion === "cn" ? "¥" : marketRegion === "jp" ? "¥" : "₹"}
-                {/* 🟢 DUP-FREE TEXT STRIPPER: Removes lingering currency symbols or translation words from the model response string! */}
+                {/* 🟢 TO LOWERCASE: Converts uppercase regions like "CN" or "JP" safely to match your symbols! */}
+                {marketRegion?.toLowerCase() === "us" ? "$" : marketRegion?.toLowerCase() === "ae" ? "AED " : marketRegion?.toLowerCase() === "kr" ? "₩" : marketRegion?.toLowerCase() === "cn" ? "¥" : marketRegion?.toLowerCase() === "jp" ? "¥" : "₹"}
                 {String(finalizedPartsText || "")
                   .replace(/[¥₩$₹]|AED|약|約|Approx/gi, "")
                   .trim()}
@@ -290,7 +290,7 @@ export const InputPanel: React.FC<InputPanelProps> = ({
             <div className="space-y-0.5 text-right">
               <span className="text-slate-500 font-mono text-[9px] block font-extrabold uppercase tracking-wider">Labor Fee:</span>
               <div className="text-base font-black text-emerald-600 font-mono tracking-tight flex items-center justify-end">
-                {marketRegion === "us" ? "$" : marketRegion === "ae" ? "AED " : marketRegion === "kr" ? "₩" : marketRegion === "cn" ? "¥" : marketRegion === "jp" ? "¥" : "₹"}
+                {marketRegion?.toLowerCase() === "us" ? "$" : marketRegion?.toLowerCase() === "ae" ? "AED " : marketRegion?.toLowerCase() === "kr" ? "₩" : marketRegion?.toLowerCase() === "cn" ? "¥" : marketRegion?.toLowerCase() === "jp" ? "¥" : "₹"}
                 {String(finalizedLaborText || "")
                   .replace(/[¥₩$₹]|AED|약|約|Approx/gi, "")
                   .trim()}
@@ -303,5 +303,6 @@ export const InputPanel: React.FC<InputPanelProps> = ({
     </div>
   );
 };
+
 
 
