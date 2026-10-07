@@ -233,23 +233,23 @@ export const InputPanel: React.FC<InputPanelProps> = ({
         </div>
       )}
 
-                  {/* FOOTER TRIAGE FORM INPUT BLOCK - 🟢 POLISHED HIGH-VISIBILITY SUITE */}
-      <div className="flex-shrink-0 border-t border-white/10 pt-3.5">
+                        {/* FOOTER TRIAGE FORM INPUT BLOCK - 🟢 SOLID LAUNCH HIGH-VISIBILITY SUITE */}
+      <div className="flex-shrink-0 border-t border-white/10 pt-3">
         <form 
           onSubmit={(e) => {
             e.preventDefault();
             handleSendMessage(e);
           }} 
-          className="flex items-center gap-3"
+          className="flex items-center gap-3 w-full h-14"
         >
           
           <button
             type="button"
             onClick={handleToggleSpeech}
-            className={`p-3.5 bg-slate-900 border border-white/10 rounded-xl transition-all flex items-center justify-center cursor-pointer shrink-0 shadow-md hover:border-cyan-500/40 hover:bg-cyan-500/5 ${isRecording ? "bg-red-500/20 border-red-500/40 text-red-400 animate-pulse" : "text-slate-200"}`}
+            className={`w-12 h-12 bg-slate-900 border-2 border-white/20 rounded-2xl transition-all flex items-center justify-center cursor-pointer shrink-0 shadow-lg hover:border-cyan-400 hover:bg-cyan-500/10 ${isRecording ? "bg-red-500/20 border-red-500/40 text-red-400 animate-pulse" : "text-slate-100"}`}
             title="Ingest Engine Sound File"
           >
-            <span className="text-base shrink-0">🎙️</span>
+            <span className="text-xl shrink-0">🎙️</span>
           </button>
 
           <input
@@ -258,15 +258,15 @@ export const InputPanel: React.FC<InputPanelProps> = ({
             onChange={(e) => setChatInput(e.target.value)}
             disabled={isScanning || isCameraActive}
             placeholder={`Type custom ${vehicleType.toLowerCase()} symptoms...`}
-            className="flex-grow min-w-0 bg-black/70 border border-cyan-500/30 focus:border-cyan-400 rounded-xl px-4 py-3 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-cyan-400/40 font-medium transition-all shadow-inner"
+            className="flex-grow h-12 bg-black/80 border-2 border-cyan-500/40 focus:border-cyan-400 rounded-2xl px-4 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-400/20 font-bold transition-all shadow-xl"
           />
 
           <button
             type="submit"
             disabled={isScanning || !chatInput.trim() || isCameraActive}
-            className="p-3.5 rounded-xl bg-cyan-500 border border-cyan-400 text-slate-950 hover:bg-cyan-400 hover:text-black transition-all cursor-pointer disabled:opacity-30 disabled:bg-white/5 disabled:border-white/10 disabled:text-slate-500 shrink-0 shadow-md flex items-center justify-center"
+            className="w-12 h-12 rounded-2xl bg-cyan-500 border-2 border-cyan-400 text-slate-950 hover:bg-cyan-400 hover:text-black transition-all cursor-pointer disabled:opacity-20 disabled:bg-white/5 disabled:border-white/10 disabled:text-slate-500 shrink-0 shadow-lg flex items-center justify-center"
           >
-            <Send className="w-4.5 h-4.5 font-bold" />
+            <Send className="w-5 h-5 font-black" />
           </button>
         </form>
 
