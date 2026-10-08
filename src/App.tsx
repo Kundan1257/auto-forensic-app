@@ -314,15 +314,16 @@ const runForensicAnalysis = async (textOverrideParam?: string, audioOverridePara
         }
       `;
 
-                 // 📡 SYSTEM PARAMETERS CONTEXT SNAPSHOT LOOP - 🟢 UNIVERSAL MULTI-LANGUAGE BINDING
+                       // 📡 SYSTEM PARAMETERS CONTEXT SNAPSHOT LOOP - 🟢 UNIVERSAL LOCALIZATION CORE
       const contentsPayload: any[] = [
         baseSystemInstruction,
         `User Input Issue: ${activeTelemetryQueryText}`,
-        // 🟢 THE BINDING CONTRACT: Bundles your selected dropdown choices natively into every single API packet request!
-        `Context Parameters -> Region: ${marketRegion || "IN"}, Vehicle Profile: ${vehicleType || "Car"}, App Section: ${appSection || "Common Symptoms"}, System Language: ${appLanguage || "zh"}`,
+        // 🟢 FIXED PASSTHROUGH BINDING: Passes the exact raw state variable without static fallback text strings!
+        `Context Parameters -> Region: ${marketRegion}, Vehicle Profile: ${vehicleType}, App Section: ${appSection}, System Language: ${appLanguage}`,
         ...(audio ? [`Audio Attachment: ${audio}`] : []),
         ...(image ? [`Image Attachment: ${image}`] : [])
       ];
+
 
 
 
