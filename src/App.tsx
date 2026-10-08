@@ -314,12 +314,16 @@ const runForensicAnalysis = async (textOverrideParam?: string, audioOverridePara
         }
       `;
 
-            // Synchronize all dropdown values and user intake text inputs into a unified array
+                 // 📡 SYSTEM PARAMETERS CONTEXT SNAPSHOT LOOP - 🟢 UNIVERSAL MULTI-LANGUAGE BINDING
       const contentsPayload: any[] = [
         baseSystemInstruction,
-        `User Input Issue: ${activeTelemetryQueryText}`, // 🟢 Only change this variable name right here!
-        `Context Parameters -> Region: ${marketRegion || "in"}, Vehicle Profile: ${vehicleType || "Car"}, App Section: ${appSection || "Common Symptoms"}, System Language: ${appLanguage || "en"}`
+        `User Input Issue: ${activeTelemetryQueryText}`,
+        // 🟢 THE BINDING CONTRACT: Bundles your selected dropdown choices natively into every single API packet request!
+        `Context Parameters -> Region: ${marketRegion || "IN"}, Vehicle Profile: ${vehicleType || "Car"}, App Section: ${appSection || "Common Symptoms"}, System Language: ${appLanguage || "zh"}`,
+        ...(audio ? [`Audio Attachment: ${audio}`] : []),
+        ...(image ? [`Image Attachment: ${image}`] : [])
       ];
+
 
 
             // Safe multi-modal injection: Maps your camera snapshot state safely if present
@@ -581,7 +585,8 @@ null
             </div>
           </div>
 
-                       <InputPanel 
+                         {/* 📡 Dynamically map the international localization variables down to the user panel */}
+          <InputPanel
             vehicleType={vehicleType}
             appSection={appSection}
             userIssue={userIssue}
@@ -592,14 +597,16 @@ null
             setMessages={setMessages}
             reportResult={reportResult}
             marketRegion={marketRegion}
-            // 🟢 THE FIX: Maps the true audio engine straight into the existing prop slot!
             handleToggleSpeech={handleMicAction}
             handleCopyReport={handleCopyReport}
-            // 🟢 THE BYPASS: Comments this out temporarily so the child type doesn't get confused
-            // isRecording={isRecording}
             isSpeaking={isSpeaking}
             isCopied={isCopied}
+            
+            // 🟢 RESTORED LIVE VARIABLE CHANNEL PASSES: Unlocks your multi-lingual audio reports and visual stop buttons!
+            appLanguage={appLanguage}
+            isRecording={isRecording}
           />
+
           <UserManual />
 
 
