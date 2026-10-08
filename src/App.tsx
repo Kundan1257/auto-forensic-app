@@ -269,8 +269,7 @@ export default function App() {
 const runForensicAnalysis = async (textOverrideParam?: string, audioOverrideParam?: string) => {
 
 
-    // 🛡️ DYNAMIC MULTI-VEHICLE ACOUSTIC CALIBRATION PROMPT MATRIX
-    // Declared immediately at the entry point of the forensic engine so the Gemini API parses it perfectly!
+        // 🛡️ DYNAMIC MULTI-VEHICLE ACOUSTIC CALIBRATION PROMPT MATRIX - 🟢 FIX LOCALIZATION BINDINGS
     const systemDiagnosticPrompt = `
       You are an expert full-stack automotive forensic analysis engine evaluating an engine's acoustic footprint.
       
@@ -278,8 +277,15 @@ const runForensicAnalysis = async (textOverrideParam?: string, audioOverridePara
       - If the vehicle type is identified as DIESEL, a heavy truck, commercial vehicle, or a TDI/CRDI engine model, expect a naturally loud, rapid, high-compression metallic clicking or rhythmic chattered rhythm as the healthy baseline layout.
       - Do NOT mistake normal, steady diesel clatter or high-pressure injection noise for a petrol engine valve tick, rod knock, or cylinder misfire loop.
       - Only flag a diesel engine as faulty if there are irregular, asynchronous grinding screeches, deep uneven metal-on-metal thuds, or sudden broken gaps in the cadence.
-      - If the sound profile has an even, rhythmic, continuous pattern, treat the vehicle as mechanically safe. Bypass all cost evaluations, and return exactly: partsDisplay = "₹0", laborDisplay = "₹0", and reportResult starting with "🟢 Vehicle Performance Status: Optimal".
+      
+      ⚠️ MANDATORY MULTI-MARKET TRANSLATION AND LOCALIZATION RULES:
+      - System Language: You MUST write the final text description content natively inside the language matching this code variable token: "${appLanguage || 'en'}". If the token is "zh", return fluent Chinese characters. If "ja", return clean Japanese text layout fields. If "ko", return native Korean hangul sentence blocks.
+      
+      - Dynamic Target Symbol: Format all price strings returned inside your appraisal matrix fields using this specific currency icon: "${marketRegion?.toLowerCase() === 'cn' || marketRegion?.toLowerCase() === 'jp' ? '¥' : marketRegion?.toLowerCase() === 'ko' ? '₩' : marketRegion?.toLowerCase() === 'us' ? '$' : marketRegion?.toLowerCase() === 'ae' ? 'AED' : '₹'}".
+      
+      - Safe Vehicle Evaluation Route: If the sound profile has an even, rhythmic, continuous pattern, treat the vehicle as mechanically safe. Bypass all cost evaluations, and return exactly: partsDisplay = "${marketRegion?.toLowerCase() === 'cn' || marketRegion?.toLowerCase() === 'jp' ? '¥' : marketRegion?.toLowerCase() === 'ko' ? '₩' : marketRegion?.toLowerCase() === 'us' ? '$' : marketRegion?.toLowerCase() === 'ae' ? 'AED' : '₹'}0", laborDisplay = "${marketRegion?.toLowerCase() === 'cn' || marketRegion?.toLowerCase() === 'jp' ? '¥' : marketRegion?.toLowerCase() === 'ko' ? '₩' : marketRegion?.toLowerCase() === 'us' ? '$' : marketRegion?.toLowerCase() === 'ae' ? 'AED' : '₹'}0", and reportResult starting with "🟢" followed by the localized performance status text statement written completely in your assigned system language target.
     `;
+
 
     // ... The rest of your existing analysis and API fetch rows remain completely untouched and safe underneath!
 
