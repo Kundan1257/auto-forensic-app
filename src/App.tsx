@@ -359,7 +359,7 @@ const runForensicAnalysis = async (textOverrideParam?: string, audioOverridePara
 
       // Transmit the synchronized data directly over Google's global serverless API channels
       const aiResponseNode = await aiInstance.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-1.5-flash",
         contents: contentsPayload,
       });
 
