@@ -286,14 +286,14 @@ export const InputPanel: React.FC<InputPanelProps> = ({
 
 
 
-                                    {/* PRICE SUMMARY CARD FOOTER MATRIX BLOCKS - 🟢 CASE-INSENSITIVE MULTI-MARKET SYSTEM */}
+                                  {/* PRICE SUMMARY CARD FOOTER MATRIX BLOCKS - 🟢 UNIVERSAL MULTI-MARKET SYSTEM */}
         {(reportResult || userIssue) && (
           <div className="grid grid-cols-2 gap-4 mt-3 pt-3 border-t border-slate-100 flex-shrink-0 bg-slate-50/50 p-2.5 rounded-xl">
             <div className="space-y-0.5">
               <span className="text-slate-500 font-mono text-[9px] block font-extrabold uppercase tracking-wider">Parts Appraisal:</span>
               <div className="text-base font-black text-emerald-600 font-mono tracking-tight flex items-center">
-                {marketRegion?.toLowerCase() === "us" ? "$" : marketRegion?.toLowerCase() === "ae" ? "AED " : marketRegion?.toLowerCase() === "kr" ? "₩" : marketRegion?.toLowerCase() === "cn" ? "¥" : marketRegion?.toLowerCase() === "jp" ? "¥" : "₹"}
-                {/* 🟢 FIXED VARIABLE LINK: Reads directly from your true calculated text value string! */}
+                {/* 🟢 UNIFIED CASE-INSENSITIVE LOOKUP: Matches lowercase country tokens perfectly! */}
+                {String(marketRegion || "").toLowerCase() === "us" ? "$" : String(marketRegion || "").toLowerCase() === "ae" ? "AED " : String(marketRegion || "").toLowerCase() === "kr" ? "₩" : String(marketRegion || "").toLowerCase() === "cn" ? "¥" : String(marketRegion || "").toLowerCase() === "jp" ? "¥" : "₹"}
                 {String(partsDisplay || "")
                   .replace(/[¥₩$₹]|AED|약|約|Approx/gi, "")
                   .trim()}
@@ -302,8 +302,8 @@ export const InputPanel: React.FC<InputPanelProps> = ({
             <div className="space-y-0.5 text-right">
               <span className="text-slate-500 font-mono text-[9px] block font-extrabold uppercase tracking-wider">Labor Fee:</span>
               <div className="text-base font-black text-emerald-600 font-mono tracking-tight flex items-center justify-end">
-                {marketRegion?.toLowerCase() === "us" ? "$" : marketRegion?.toLowerCase() === "ae" ? "AED " : marketRegion?.toLowerCase() === "kr" ? "₩" : marketRegion?.toLowerCase() === "cn" ? "¥" : marketRegion?.toLowerCase() === "jp" ? "¥" : "₹"}
-                {/* 🟢 FIXED VARIABLE LINK: Reads directly from your true calculated text value string! */}
+                {/* 🟢 UNIFIED CASE-INSENSITIVE LOOKUP: Matches lowercase country tokens perfectly! */}
+                {String(marketRegion || "").toLowerCase() === "us" ? "$" : String(marketRegion || "").toLowerCase() === "ae" ? "AED " : String(marketRegion || "").toLowerCase() === "kr" ? "₩" : String(marketRegion || "").toLowerCase() === "cn" ? "¥" : String(marketRegion || "").toLowerCase() === "jp" ? "¥" : "₹"}
                 {String(laborDisplay || "")
                   .replace(/[¥₩$₹]|AED|약|約|Approx/gi, "")
                   .trim()}
@@ -311,6 +311,7 @@ export const InputPanel: React.FC<InputPanelProps> = ({
             </div>
           </div>
         )}
+
 
       </div>
 
