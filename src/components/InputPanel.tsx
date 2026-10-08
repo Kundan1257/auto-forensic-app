@@ -13,6 +13,7 @@ interface InputPanelProps {
   setMessages?: React.Dispatch<React.SetStateAction<Message[]>>;
   reportResult?: any;
   marketRegion?: string;
+  appLanguage?: string;
   handleToggleSpeech?: () => void;
   isRecording?: boolean;
   handleCopyReport?: () => void;
@@ -36,6 +37,7 @@ export const InputPanel: React.FC<InputPanelProps> = ({
   setMessages = () => {},
   reportResult = "",
   marketRegion = "IN",
+  appLanguage = "en",
   handleToggleSpeech,
   isRecording = false,
   handleCopyReport,
@@ -141,21 +143,30 @@ export const InputPanel: React.FC<InputPanelProps> = ({
     return currentRegionData?.currency || "₹";
   };
 
+    // 🟢 CASE-INSENSITIVE MULTI-MARKET APPRAISAL MATRIX ENGINE
   const computeCosts = (text: string, region: string) => {
-    const symbol = getCurrencySymbol(region);
+    // Normalize the region variable code string right at the entry point of the function layer
+    const normalizedRegion = String(region || "in").toLowerCase();
+    const symbol = getCurrencySymbol(normalizedRegion);
+    
     const incomingPayloadString = String(text || reportResult || userIssue || "");
     const isEngineMechanicallyOptimal = 
       incomingPayloadString.includes("🟢") || 
       incomingPayloadString.includes("Optimal") || 
       incomingPayloadString.includes("Healthy") || 
-      incomingPayloadString.includes("safe");
+      incomingPayloadString.includes("safe") ||
+      incomingPayloadString.includes("正常"); // Appends Chinese character checks safely
 
     if (isEngineMechanicallyOptimal) {
-      return { partsDisplay: "₹0", laborDisplay: "₹0" };
+      // 🟢 DYNAMIC SYMBOL MAPPING: Uses the calculated territory symbol instead of a hardcoded Rupee icon!
+      return { partsDisplay: `${symbol}0`, laborDisplay: `${symbol}0` };
     }
 
     let dynamicPartsText = "";
     let dynamicLaborText = "";
+    
+    // ... keep all your existing JSON processing lines exactly as they are written below!
+
 
     if (reportResult && typeof reportResult === "object") {
       dynamicPartsText = reportResult.parts_appraisal || "";
