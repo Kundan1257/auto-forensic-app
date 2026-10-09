@@ -1,215 +1,127 @@
 import React, { useState, useRef, useEffect } from "react";
-import { MessageSquare, Send, ShieldCheck, Sparkles, User, Bot, Camera, VideoOff, Loader2 } from "lucide-react";
+import { Send, Camera, VideoOff, Loader2 } from "lucide-react";
 import { MARKET_REGIONS } from "../presetData";
 
-interface InputPanelProps {
-  vehicleType?: any;
-  appSection?: any;
-  userIssue?: any;
-  isScanning?: any;
-  setUserIssue?: (val: string) => void;
-  runForensicAnalysis?: (textOverrideParam?: string) => void;
-  messages?: Message[];
-  setMessages?: React.Dispatch<React.SetStateAction<Message[]>>;
-  reportResult?: any;
-  marketRegion?: string;
-  appLanguage?: string;
-  handleToggleSpeech?: () => void;
-  isRecording?: boolean;
-  handleCopyReport?: () => void;
-  isSpeaking?: boolean;
-  isCopied?: boolean;
-}
+interface Message { sender: "user" | "ai"; text: string; image?: string; }
 
-interface Message {
-  sender: "user" | "ai";
-  text: string;
-  image?: string;
+interface InputPanelProps {
+  vehicleType?: any; appSection?: any; userIssue?: any; isScanning?: any;
+  setUserIssue?: (val: string) => void;
+  runForensicAnalysis?: (textOverrideParam?: string, audioOverrideParam?: string) => void;
+  messages?: Message[]; setMessages?: React.Dispatch<React.SetStateAction<Message[]>>;
+  reportResult?: any; marketRegion?: string; appLanguage?: string;
+  handleToggleSpeech?: () => void; isRecording?: boolean;
+  handleCopyReport?: () => void; isSpeaking?: boolean; isCopied?: boolean;
 }
 
 export const InputPanel: React.FC<InputPanelProps> = ({
-  vehicleType,
-  userIssue,
-  isScanning,
-  setUserIssue = () => {},
-  runForensicAnalysis = (textOverrideParam?: string) => {},
-  messages = [],
-  setMessages = () => {},
-  reportResult = "",
-  marketRegion = "IN",
-  appLanguage = "en",
-  handleToggleSpeech,
-  isRecording = false,
-  handleCopyReport,
-  isSpeaking = false,
-  isCopied = false
+  vehicleType = "Car", appSection = "Common Symptoms", userIssue = "", isScanning = false,
+  setUserIssue = () => {}, runForensicAnalysis = () => {}, messages = [], setMessages = () => {},
+  reportResult = "", marketRegion = "IN", appLanguage = "en", handleToggleSpeech,
+  isRecording = false, handleCopyReport, isSpeaking = false, isCopied = false
 }) => {
   const [chatInput, setChatInput] = useState("");
   const [isCameraActive, setIsCameraActive] = useState(false);
   const [cameraError, setCameraError] = useState<string | null>(null);
-
-  
   const chatEndRef = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
 
-  useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
-
-  useEffect(() => {
-    return () => { stopCamera(); };
-  }, []);
+  useEffect(() => { chatEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages]);
+  useEffect(() => { return () => { if (streamRef.current) streamRef.current.getTracks().forEach(t => t.stop()); }; }, []);
 
   const startCamera = async () => {
     setCameraError(null);
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "environment", width: { ideal: 640 }, height: { ideal: 480 } },
-        audio: false
-      });
-      streamRef.current = stream;
-      if (videoRef.current) videoRef.current.srcObject = stream;
-      setIsCameraActive(true);
-    } catch (err) {
-      setCameraError("Camera permission blocked or unavailable.");
-    }
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }, audio: false });
+      streamRef.current = stream; if (videoRef.current) videoRef.current.srcObject = stream; setIsCameraActive(true);
+    } catch { setCameraError("Camera blocked."); }
   };
 
-  const stopCamera = () => {
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach(track => track.stop());
-      streamRef.current = null;
-    }
-    setIsCameraActive(false);
-  };
+  const stopCamera = () => { if (streamRef.current) { streamRef.current.getTracks().forEach(t => t.stop()); streamRef.current = null; } setIsCameraActive(false); };
 
   const capturePhoto = () => {
     if (!videoRef.current) return;
-    const canvas = document.createElement("canvas");
-    canvas.width = videoRef.current.videoWidth || 640;
-    canvas.height = videoRef.current.videoHeight || 480;
+    const canvas = document.createElement("canvas"); canvas.width = 640; canvas.height = 480;
     const ctx = canvas.getContext("2d");
     if (ctx) {
-      ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
-      const dataUrl = canvas.toDataURL("image/jpeg", 0.85);
-      
-      const imageMessage: Message = {
-        sender: "user",
-        text: `📸 Attached component frame for mechanical forensic appraisal analysis.`,
-        image: dataUrl
-      };
-      setMessages([...messages, imageMessage]);
-      setUserIssue(`[Image Captured] Inspecting component assets.`);
-      if (runForensicAnalysis) runForensicAnalysis();
-      stopCamera();
-    }
-  };
-        // 🟢 DEADBAND-FREE DISPATCH KERNEL: Guarantees 100% single visual bubble mapping!
-  const handleSendMessage = async (e: React.FormEvent) => {
-    if (e && typeof e.preventDefault === "function") {
-      e.preventDefault();
-    }
-    
-    const textTelemetryInputBuffer = (chatInput || "").trim();
-    if (!textTelemetryInputBuffer || isScanning) return;
-
-    setChatInput("");
-
-    // 📡 Step 1: Functional State Updater Pattern — Bypasses array caching loops completely!
-    if (typeof setMessages === "function") {
-      setMessages(prev => [...prev, { sender: "user", text: textTelemetryInputBuffer }]);
-    }
-
-        // 📡 Step 2: Synchronously update the parent full-stack data ingestion tracker node variable
-    if (typeof setUserIssue === "function") {
-      setUserIssue(textTelemetryInputBuffer);
-    }
-
-    // 🚀 Step 3: Direct microtask execution loop to trigger Gemini's cloud network instantly
-    // 🟢 PASS THE RAW SNAPSHOT BUFFER VARIABLE DIRECTLY TO CLEAR THE ₹0 LATENCY LOOP!
-    if (typeof runForensicAnalysis === "function") {
-      runForensicAnalysis(textTelemetryInputBuffer);
+      ctx.drawImage(videoRef.current, 0, 0, 640, 480); const dataUrl = canvas.toDataURL("image/jpeg"); stopCamera();
+      const snapshotIssueText = "📸 [Camera Snapshot Captured Natively]";
+      if (setUserIssue) setUserIssue(snapshotIssueText);
+      if (setMessages) setMessages(prev => [...prev, { sender: "user", text: snapshotIssueText, image: dataUrl }]);
+      runForensicAnalysis(snapshotIssueText, "");
     }
   };
 
-
-
-
-
-  const getCurrencySymbol = (region: string) => {
-    const r = String(region || "in").toLowerCase();
-    const currentRegionData = MARKET_REGIONS.find(item => item.code === r);
-    return currentRegionData?.currency || "₹";
-  };
-
-    // 🟢 CASE-INSENSITIVE MULTI-MARKET APPRAISAL MATRIX ENGINE
   const computeCosts = (text: string, region: string) => {
-    // Normalize the region variable code string right at the entry point of the function layer
-    const normalizedRegion = String(region || "in").toLowerCase();
-    const symbol = getCurrencySymbol(normalizedRegion);
-    
-    const incomingPayloadString = String(text || reportResult || userIssue || "");
-    const isEngineMechanicallyOptimal = 
-      incomingPayloadString.includes("🟢") || 
-      incomingPayloadString.includes("Optimal") || 
-      incomingPayloadString.includes("Healthy") || 
-      incomingPayloadString.includes("safe") ||
-      incomingPayloadString.includes("正常"); // Appends Chinese character checks safely
+    const r = String(region || "in").toLowerCase().trim();
+    const currentRegionData = MARKET_REGIONS.find(item => item.code === r);
+    const symbol = r === "cn" || r === "ch" ? "¥" : currentRegionData?.currency || "₹";
+    const incoming = String(text || (reportResult && typeof reportResult === "object" ? JSON.stringify(reportResult) : reportResult) || userIssue || "");
 
-    if (isEngineMechanicallyOptimal) {
-      // 🟢 DYNAMIC SYMBOL MAPPING: Uses the calculated territory symbol instead of a hardcoded Rupee icon!
+    if (incoming.includes("🟢") || incoming.includes("Optimal") || incoming.includes("Healthy") || incoming.includes("safe") || incoming.includes("正常") || incoming.includes("良好")) {
       return { partsDisplay: `${symbol}0`, laborDisplay: `${symbol}0` };
     }
 
-    let dynamicPartsText = "";
-    let dynamicLaborText = "";
-    
-    // ... keep all your existing JSON processing lines exactly as they are written below!
+    const formatNumericValue = (value: string | number | undefined) => {
+      if (value === undefined || value === null) return "0";
+      const cleaned = String(value)
+        .replace(/(₹|¥|\$|₩|AED|USD|INR|JPY|KRW)/gi, "")
+        .replace(/[^\d.,\-\s]/g, "")
+        .trim();
+      return cleaned || "0";
+    };
 
-
+    let p = "";
+    let l = "";
     if (reportResult && typeof reportResult === "object") {
-      dynamicPartsText = reportResult.parts_appraisal || "";
-      dynamicLaborText = reportResult.labor_fee || "";
+      p = reportResult.parts_appraisal || "";
+      l = reportResult.labor_fee || "";
     } else if (reportResult) {
-      dynamicPartsText = String(reportResult);
-      dynamicLaborText = String(reportResult);
+      p = String(reportResult);
+      l = String(reportResult);
     }
 
+    const cleanP = formatNumericValue(p);
+    const cleanL = formatNumericValue(l);
+
     return {
-      partsDisplay: dynamicPartsText || "₹0",
-      laborDisplay: dynamicLaborText || "₹0"
+      partsDisplay: `${symbol}${cleanP}`,
+      laborDisplay: `${symbol}${cleanL}`,
     };
   };
 
-  const { partsDisplay, laborDisplay } = computeCosts(reportResult || userIssue || "", marketRegion);
+  const handleSendMessage = (e: React.FormEvent) => {
+    e.preventDefault(); if (!chatInput.trim()) return; const txt = chatInput.trim();
+    if (setUserIssue) setUserIssue(txt); if (setMessages) setMessages(prev => [...prev, { sender: "user", text: txt }]);
+    setChatInput(""); runForensicAnalysis(txt, "");
+  };
 
-  const finalizedPartsText = reportResult && typeof reportResult === "object" ? (reportResult.parts_appraisal || "₹0") : "₹0";
-  const finalizedLaborText = reportResult && typeof reportResult === "object" ? (reportResult.labor_fee || "₹0") : "₹0";
+    const { partsDisplay, laborDisplay } = computeCosts(reportResult && typeof reportResult === "object" ? JSON.stringify(reportResult) : String(reportResult || ""), marketRegion);
+  
+  // 🟢 FOOLPROOF DATA RESILIENCE BRIDGE: Checks region, with a dynamic language fallback fallback indicator
+  let curReg = String(marketRegion || "").toLowerCase().trim();
+  
+  // If region is completely dropped or unassigned, auto-bind it based on selected app language parameters
+  if (!curReg || curReg === "undefined" || curReg === "null" || curReg === "") {
+    const rawLang = String(appLanguage || "").toLowerCase().trim();
+    if (rawLang === "zh" || rawLang === "cn") curReg = "cn";
+    else if (rawLang === "ja" || rawLang === "jp") curReg = "jp";
+    else if (rawLang === "ko" || rawLang === "kr") curReg = "kr";
+    else curReg = "in";
+  }
 
-    return (
-    // 🟢 CRISP HIGH-CONTRAST LIGHT MODE WRAPPER CONTAINER
+  const uiSymbol = curReg === "us" ? "$" : curReg === "ae" ? "AED " : curReg === "kr" ? "₩" : (curReg === "cn" || curReg === "ch" || curReg === "jp") ? "¥" : "₹";
+  
+  return (
     <div className="bg-white border-2 border-slate-200 rounded-3xl p-5 flex flex-col justify-between h-[520px] overflow-hidden w-full shadow-xl">
-      
-      {/* PANEL CONTROL SYSTEM ROW */}
       <div className="flex items-center justify-between border-b border-slate-100 pb-3 flex-shrink-0">
-        <div className="flex items-center gap-2">
-          <span className="text-[11px] bg-slate-100 text-slate-800 font-mono px-3 py-1.5 rounded-lg border border-slate-200 tracking-wider font-black uppercase">
-            Interactive AI Triage Box
-          </span>
-        </div>
-        <button 
-          type="button" 
-          onClick={isCameraActive ? stopCamera : startCamera}
-          className="p-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all cursor-pointer flex items-center justify-center shadow-sm"
-          title={isCameraActive ? "Deactivate Camera Viewfinder" : "Activate Component Camera Snapshot"}
-        >
-          {isCameraActive ? <VideoOff className="w-5 h-5 text-red-500" /> : <Camera className="w-5 h-5 text-slate-700" />}
-        </button>
+        <span className="text-[11px] bg-slate-100 text-slate-800 font-mono px-3 py-1.5 rounded-lg border border-slate-200 font-black uppercase tracking-wider">Interactive AI Triage Box</span>
+        <button type="button" onClick={isCameraActive ? stopCamera : startCamera} className="p-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-600 hover:text-slate-900 shadow-sm transition-all cursor-pointer">{isCameraActive ? <VideoOff className="w-5 h-5 text-red-500" /> : <Camera className="w-5 h-5 text-slate-700" />}</button>
       </div>
 
-      {/* VIEWPORT STREAM FRAME */}
-      {isCameraActive && (
+
+      {isCameraActive ? (
         <div className="flex-grow w-full relative bg-black rounded-2xl overflow-hidden my-3 min-h-0 border border-slate-200 flex flex-col shadow-inner">
           <video ref={videoRef} autoPlay playsInline muted className="absolute inset-0 w-full h-full object-cover opacity-80" />
           <div className="relative mt-auto w-full p-3 bg-gradient-to-t from-black via-black/40 to-transparent flex items-center justify-between gap-2 z-10">
@@ -217,107 +129,49 @@ export const InputPanel: React.FC<InputPanelProps> = ({
             <button type="button" onClick={capturePhoto} className="text-[10px] bg-cyan-500 text-slate-950 font-mono font-bold px-4 py-1.5 rounded-lg hover:bg-cyan-400 uppercase tracking-wide cursor-pointer">Capture Snapshot</button>
           </div>
         </div>
-      )}
-
-      {/* 💬 ACTIVE SCROLL VIEW CONSOLE MAIN SCREEN AREA PANEL */}
-      {!isCameraActive && (
+      ) : (
         <div className="flex-grow overflow-y-auto p-3 space-y-4 bg-slate-50 border border-slate-100 rounded-2xl mb-3 my-3 min-h-0 shadow-inner">
-          {messages.map((msg: any, index: number) => (
+          {messages.map((msg, index) => (
             <div key={index} className={`flex items-start gap-2 ${msg.sender === "user" ? "justify-end" : "justify-start"}`}>
-              <div className={`p-3 rounded-2xl text-[12px] max-w-[85%] leading-relaxed shadow-sm font-medium ${msg.sender === "user" ? "bg-cyan-600 text-white border border-cyan-700 font-sans" : "bg-white border border-slate-200 text-slate-800 font-mono"}`}>
-                {msg.image && <img src={msg.image} alt="Component preview" className="w-full max-w-[200px] h-auto rounded-xl mb-2 object-contain border border-slate-200 shadow-md" />}
+              <div className={`p-3 rounded-2xl text-[12px] max-w-[85%] leading-relaxed shadow-sm font-medium ${msg.sender === "user" ? "bg-cyan-600 text-white border border-cyan-700" : "bg-white border border-slate-200 text-slate-800 font-mono"}`}>
+                {msg.image && <img src={msg.image} alt="Preview" className="w-full max-w-[200px] h-auto rounded-xl mb-2 object-contain border border-slate-200 shadow-md" />}
                 <div className="whitespace-pre-wrap">{msg.text}</div>
               </div>
             </div>
           ))}
-
-          {/* 🧠 DYNAMIC RADAR TRIAGE MOVING BUBBLE COMPONENT INDICATION PIN */}
           {isScanning && (
             <div className="flex items-start gap-2 justify-start animate-pulse my-2">
               <div className="p-3 rounded-2xl text-[11px] max-w-[85%] leading-relaxed bg-cyan-50 border border-cyan-200 text-cyan-800 font-mono shadow-sm flex items-center gap-2 font-bold">
                 <Loader2 className="w-4 h-4 text-cyan-600 animate-spin flex-shrink-0" />
-                <span className="tracking-wide uppercase font-bold text-[9px] tracking-widest block">
-                  AI Analyzing Telemetry Layer...
-                </span>
+                <span className="tracking-wide uppercase font-bold text-[9px] tracking-widest block">AI Analyzing Telemetry Layer...</span>
               </div>
             </div>
           )}
-          <div ref={chatEndRef} />
         </div>
       )}
 
-      {/* FOOTER TRIAGE FORM INPUT BLOCK - 🟢 PURE HIGH-CONTRAST LIGHT THEME */}
       <div className="flex-shrink-0 border-t border-slate-100 pt-3">
-        <form 
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleSendMessage(e);
-          }} 
-          className="flex items-center gap-3 w-full h-14"
-        >
-          <button
-            type="button"
-            onClick={handleToggleSpeech}
-            className={`w-12 h-12 bg-slate-100 border-2 border-slate-200 rounded-2xl transition-all flex items-center justify-center cursor-pointer shrink-0 shadow-sm hover:border-slate-400 hover:bg-slate-200 ${isRecording ? "bg-red-100 border-red-400 text-red-600 animate-pulse" : "text-slate-700"}`}
-            title="Ingest Engine Sound File"
-          >
-            <span className="text-xl shrink-0">🎙️</span>
+        <form onSubmit={handleSendMessage} className="flex items-center gap-3 w-full h-14">
+          <button type="button" onClick={handleToggleSpeech} className={`w-12 h-12 border-2 rounded-2xl transition-all flex items-center justify-center cursor-pointer shrink-0 shadow-lg ${isRecording ? "bg-red-500 border-red-600 text-white animate-pulse" : "bg-slate-100 border-slate-200 text-slate-700 hover:border-slate-400"}`}>
+            {isRecording ? <div className="w-3.5 h-3.5 bg-white rounded-sm shrink-0" /> : <span className="text-xl shrink-0">🎙️</span>}
           </button>
-
-          <input
-            type="text"
-            value={chatInput}
-            onChange={(e) => setChatInput(e.target.value)}
-            disabled={isScanning || isCameraActive}
-            placeholder={`Type custom ${vehicleType.toLowerCase()} symptoms...`}
-            className="flex-grow h-12 bg-white border-2 border-slate-300 focus:border-cyan-500 rounded-2xl px-4 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-500/20 font-semibold transition-all shadow-sm"
-          />
-
-          <button
-            type="submit"
-            disabled={isScanning || !chatInput.trim() || isCameraActive}
-            className="w-12 h-12 rounded-2xl bg-cyan-600 border-2 border-cyan-700 text-white hover:bg-cyan-500 transition-all cursor-pointer disabled:opacity-20 disabled:bg-slate-100 disabled:border-slate-200 disabled:text-slate-400 shrink-0 shadow-md flex items-center justify-center"
-          >
-            <Send className="w-5 h-5 text-white stroke-[2.5px]" />
-          </button>
+          <input type="text" value={chatInput} onChange={(e) => setChatInput(e.target.value)} disabled={isScanning || isCameraActive} placeholder={`Type custom ${vehicleType.toLowerCase()} symptoms...`} className="flex-grow h-12 bg-white border-2 border-slate-300 focus:border-cyan-500 rounded-2xl px-4 text-sm text-slate-900 placeholder-slate-400 focus:outline-none font-semibold transition-all shadow-sm" />
+          <button type="submit" disabled={isScanning || !chatInput.trim() || isCameraActive} className="w-12 h-12 rounded-2xl bg-cyan-600 border-2 border-cyan-700 text-white hover:bg-cyan-500 transition-all cursor-pointer disabled:opacity-20 shrink-0 shadow-md flex items-center justify-center"><Send className="w-5 h-5 text-white stroke-[2.5px]" /></button>
         </form>
-      
 
-
-
-
-                                  {/* PRICE SUMMARY CARD FOOTER MATRIX BLOCKS - 🟢 UNIVERSAL MULTI-MARKET SYSTEM */}
         {(reportResult || userIssue) && (
           <div className="grid grid-cols-2 gap-4 mt-3 pt-3 border-t border-slate-100 flex-shrink-0 bg-slate-50/50 p-2.5 rounded-xl">
             <div className="space-y-0.5">
               <span className="text-slate-500 font-mono text-[9px] block font-extrabold uppercase tracking-wider">Parts Appraisal:</span>
-              <div className="text-base font-black text-emerald-600 font-mono tracking-tight flex items-center">
-                {/* 🟢 UNIFIED CASE-INSENSITIVE LOOKUP: Matches lowercase country tokens perfectly! */}
-                {String(marketRegion || "").toLowerCase() === "us" ? "$" : String(marketRegion || "").toLowerCase() === "ae" ? "AED " : String(marketRegion || "").toLowerCase() === "kr" ? "₩" : String(marketRegion || "").toLowerCase() === "cn" ? "¥" : String(marketRegion || "").toLowerCase() === "jp" ? "¥" : "₹"}
-                {String(partsDisplay || "")
-                  .replace(/[¥₩$₹]|AED|약|約|Approx/gi, "")
-                  .trim()}
-              </div>
+              <div className="text-base font-black text-emerald-600 font-mono tracking-tight flex items-center">{uiSymbol}{partsDisplay.replace(/[¥₩\$₹]|AED/gi, "").trim()}</div>
             </div>
             <div className="space-y-0.5 text-right">
               <span className="text-slate-500 font-mono text-[9px] block font-extrabold uppercase tracking-wider">Labor Fee:</span>
-              <div className="text-base font-black text-emerald-600 font-mono tracking-tight flex items-center justify-end">
-                {/* 🟢 UNIFIED CASE-INSENSITIVE LOOKUP: Matches lowercase country tokens perfectly! */}
-                {String(marketRegion || "").toLowerCase() === "us" ? "$" : String(marketRegion || "").toLowerCase() === "ae" ? "AED " : String(marketRegion || "").toLowerCase() === "kr" ? "₩" : String(marketRegion || "").toLowerCase() === "cn" ? "¥" : String(marketRegion || "").toLowerCase() === "jp" ? "¥" : "₹"}
-                {String(laborDisplay || "")
-                  .replace(/[¥₩$₹]|AED|약|約|Approx/gi, "")
-                  .trim()}
-              </div>
+              <div className="text-base font-black text-emerald-600 font-mono tracking-tight flex items-center justify-end">{uiSymbol}{laborDisplay.replace(/[¥₩\$₹]|AED/gi, "").trim()}</div>
             </div>
           </div>
         )}
-
-
       </div>
-
     </div>
   );
 };
-
-
-

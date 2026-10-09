@@ -1,10 +1,13 @@
 import React from "react";
 
+type VehicleType = "Car" | "Bike" | "Truck" | "EV";
+type AppSection = "Invoice Audit" | "Common Symptoms" | "PDI Checklist" | string;
+
 interface SelectionPanelProps {
-  vehicleType: string;
-  setVehicleType: (val: string) => void;
-  appSection: string;
-  setAppSection: (val: any) => void;
+  vehicleType: VehicleType;
+  setVehicleType: React.Dispatch<React.SetStateAction<VehicleType>>;
+  appSection: AppSection;
+  setAppSection: React.Dispatch<React.SetStateAction<AppSection>>;
 }
 
 export function SelectionPanel({ vehicleType, setVehicleType, appSection, setAppSection }: SelectionPanelProps) {
@@ -18,7 +21,7 @@ export function SelectionPanel({ vehicleType, setVehicleType, appSection, setApp
           <h3 className="text-base font-black font-mono text-slate-400 uppercase tracking-wider">Select Vehicle Classification</h3>
         </div>
         <div className="grid grid-cols-3 gap-3 bg-black/40 border border-white/10 rounded-2xl p-2">
-          {[ "Car", "Bike", "Truck", "EV" ].map((type) => {
+          {(["Car", "Bike", "Truck", "EV"] as const).map((type) => {
             const isActive = vehicleType === type;
             return (
               <button

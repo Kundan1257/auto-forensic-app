@@ -4,12 +4,14 @@ import { ShieldCheck, Car, Bike, Sparkles, X, Clock, RefreshCw } from "lucide-re
 interface SubscriptionModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubscribeSuccess: (tier: "Bike" | "Car" | "AllAccess") => void;
+  marketRegion?: string;
+  onSubscribeSuccess?: (tier: "Bike" | "Car" | "AllAccess") => void;
 }
 
 export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
   isOpen,
   onClose,
+  marketRegion,
   onSubscribeSuccess,
 }) => {
   if (!isOpen) return null;
