@@ -59,6 +59,8 @@ export default function App() {
   const [, setAudioChunks] = useState<Blob[]>([]);
   const [, setBase64AudioData] = useState<string | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioLimitTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const freeAudioLimitReachedRef = useRef(false);
 
   // ⚖️ LEGAL DISCLAIMER MODAL STATE CONTROL LOCK
   const [showLegalModal, setShowLegalModal] = useState(false);
@@ -76,6 +78,10 @@ export default function App() {
   // 🔊 MICROPHONE RECORDING AUDIO ENGINE
   const handleMicAction = async () => {
     if (isRecording) {
+      if (audioLimitTimerRef.current) {
+        clearTimeout(audioLimitTimerRef.current);
+        audioLimitTimerRef.current = null;
+      }
       if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
         mediaRecorderRef.current.stop();
         setIsRecording(false);
@@ -92,6 +98,15 @@ export default function App() {
         };
 
         mediaRecorder.onstop = async () => {
+          const exceededFreeAudioLimit = freeAudioLimitReachedRef.current;
+          freeAudioLimitReachedRef.current = false;
+          if (audioLimitTimerRef.current) {
+            clearTimeout(audioLimitTimerRef.current);
+            audioLimitTimerRef.current = null;
+          }
+          stream.getTracks().forEach(track => track.stop());
+          if (exceededFreeAudioLimit) return;
+
           const audioBlob = new Blob(chunks, { type: 'audio/webm' });
           const reader = new FileReader();
           reader.readAsDataURL(audioBlob);
@@ -107,11 +122,19 @@ export default function App() {
               runForensicAnalysis(rawAudioTelemetryTextString, base64String);
             }, 300);
           };
-          stream.getTracks().forEach(track => track.stop());
         };
 
         mediaRecorder.start();
         setIsRecording(true);
+        if (!isPremium) {
+          freeAudioLimitReachedRef.current = false;
+          audioLimitTimerRef.current = setTimeout(() => {
+            freeAudioLimitReachedRef.current = true;
+            setShowPricingModal(true);
+            if (mediaRecorder.state !== "inactive") mediaRecorder.stop();
+            setIsRecording(false);
+          }, 15_000);
+        }
       } catch (err) {
         console.error("Mic error:", err);
         alert("⚠️ Microphone Access Blocked");
@@ -124,18 +147,64 @@ export default function App() {
   const [isPremium, setIsPremium] = useState(() => {
     return localStorage.getItem("auto_forensic_is_premium") === "true";
   });
-  const [, setIsSubscriptionModalDismissed] = useState(false);
   const [showPricingModal, setShowPricingModal] = useState(false);
 
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('payment') === 'success') {
-      localStorage.setItem('auto_forensic_is_premium', 'true');
-      setIsPremium(true);
-      setIsSubscriptionModalDismissed(true);
-      setShowPricingModal(false);
-      window.history.replaceState({}, document.title, window.location.pathname);
-    }
+    const callbackUrl = new URL(window.location.href);
+    if (callbackUrl.searchParams.get("payment") !== "success") return;
+
+    const paymentProof = {
+      razorpay_order_id: callbackUrl.searchParams.get("razorpay_order_id"),
+      razorpay_payment_id: callbackUrl.searchParams.get("razorpay_payment_id"),
+      razorpay_payment_link_id: callbackUrl.searchParams.get("razorpay_payment_link_id"),
+      razorpay_payment_link_reference_id: callbackUrl.searchParams.get("razorpay_payment_link_reference_id"),
+      razorpay_payment_link_status: callbackUrl.searchParams.get("razorpay_payment_link_status"),
+      razorpay_signature: callbackUrl.searchParams.get("razorpay_signature"),
+    };
+    [
+      "payment",
+      "razorpay_order_id",
+      "razorpay_payment_id",
+      "razorpay_payment_link_id",
+      "razorpay_payment_link_reference_id",
+      "razorpay_payment_link_status",
+      "razorpay_signature",
+    ].forEach((key) => callbackUrl.searchParams.delete(key));
+    window.history.replaceState(
+      window.history.state,
+      document.title,
+      `${callbackUrl.pathname}${callbackUrl.search}${callbackUrl.hash}`
+    );
+
+    let isMounted = true;
+    const verifyPayment = async () => {
+      try {
+        const response = await fetch("/api/payments/razorpay/verify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(paymentProof),
+        });
+        const verification = await response.json();
+        if (!response.ok || verification.verified !== true) {
+          throw new Error("Payment verification failed.");
+        }
+        if (!isMounted) return;
+        localStorage.setItem("auto_forensic_is_premium", "true");
+        setIsPremium(true);
+        setShowPricingModal(false);
+      } catch (error) {
+        console.error("Razorpay payment verification failed:", error);
+        if (isMounted) setShowPricingModal(true);
+      }
+    };
+
+    void verifyPayment();
+    return () => { isMounted = false; };
+  }, []);
+
+  useEffect(() => () => {
+    if (audioLimitTimerRef.current) clearTimeout(audioLimitTimerRef.current);
+    if (mediaRecorderRef.current?.state !== "inactive") mediaRecorderRef.current?.stop();
   }, []);
 
   const [messages, setMessages] = useState<Array<{ sender: "user" | "ai"; text: string; image?: string }>>([]);
@@ -202,11 +271,15 @@ export default function App() {
     try {
       const baseSystemInstruction = `You are an advanced automotive forensic platform. ${systemDiagnosticPrompt}
       OUTPUT FORMAT CONTRACT:
-      You MUST respond strictly with a valid JSON data structure matching this exact shape, without any markdown formatting wrappers, markdown code block markers, or backticks:
+      You MUST respond with a strictly formatted, valid JSON layout shape matching the exact parameters below.
+      You must NEVER return markdown blocks, markdown code block fences (do not let it print \`\`\`json or backticks anywhere in the stream), or raw text anomalies.
+      Even when the structural text narrative in "result" is written in Chinese (中文), Japanese (日本語), or Arabic (العربية), the numerical metrics must be output into the properties "parts_appraisal" and "labor_fee" cleanly as isolated range text strings, entirely preventing text block encapsulation errors.
+      
+      EXACT JSON CONTRACT TARGET:
       {
-        "result": "Your full response narrative text statement string goes here written completely in the target system language.",
-        "parts_appraisal": "Realistic numerical price estimation text range string matching the problem description",
-        "labor_fee": "Realistic numerical labor cost estimation text range string matching the problem description"
+        "result": "Your full comprehensive technical diagnostic triage report narrative text statement string goes here written completely in the target selected system language.",
+        "parts_appraisal": "Realistic numerical price estimation text range matching the symptoms array",
+        "labor_fee": "Realistic numerical labor cost appraisal range matching the vehicle class"
       }`;
 
       const contentsPayload: any[] = [
@@ -229,7 +302,7 @@ export default function App() {
       const aiInstance = new GoogleGenAI({ apiKey: activeEnvKeyToken });
       
       const aiResponseNode = await aiInstance.models.generateContent({
-        model: "gemini-2.5-flash-lite",
+        model: "gemini-3.5-flash-lite",
         contents: contentsPayload,
       });
 
@@ -359,7 +432,7 @@ export default function App() {
               appSection={appSection}
               setAppSection={(val) => setAppSection(val as any)}
             />
-            <InputPanel vehicleType={vehicleType} appSection={appSection} userIssue={userIssue} isScanning={isScanning} setUserIssue={setUserIssue} runForensicAnalysis={runForensicAnalysis} messages={messages} setMessages={setMessages} reportResult={reportResult} marketRegion={marketRegion} appLanguage={appLanguage} handleToggleSpeech={handleMicAction} isRecording={isRecording} handleCopyReport={handleCopyReport} isSpeaking={isSpeaking} isCopied={isCopied} />
+            <InputPanel vehicleType={vehicleType} appSection={appSection} userIssue={userIssue} isScanning={isScanning} setUserIssue={setUserIssue} runForensicAnalysis={runForensicAnalysis} messages={messages} setMessages={setMessages} reportResult={reportResult} marketRegion={marketRegion} appLanguage={appLanguage} handleToggleSpeech={handleMicAction} isRecording={isRecording} isPremium={isPremium} onPremiumRequired={() => setShowPricingModal(true)} handleCopyReport={handleCopyReport} isSpeaking={isSpeaking} isCopied={isCopied} />
             <UserManual />
           </div>
           <div className="w-full lg:flex-grow flex flex-col space-y-4">

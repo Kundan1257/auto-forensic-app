@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { BookOpen, ShieldCheck, Car, Bike, Truck, ArrowRight, Camera, FileText, ChevronLeft, ChevronRight } from "lucide-react";
+import { BookOpen, ShieldCheck, Car, Bike, Truck, ArrowRight, Camera, FileText, ChevronLeft, ChevronRight, Activity } from "lucide-react";
 
 export const UserManual: React.FC = () => {
   const [activeSlide, setActiveSlide] = useState(0);
@@ -135,6 +135,21 @@ export const UserManual: React.FC = () => {
         </div>
       </div>
 
+      {/* 🚀 AUTOMATED TELEMETRY HARDWARE SCAN TRIGGER CONTAINER */}
+      <div className="mt-4 p-4 bg-slate-900/40 border border-white/5 rounded-lg flex flex-col items-center justify-center space-y-2">
+        <button
+          type="button"
+          onClick={() => {}}
+          className="w-full max-w-md py-3 px-6 bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 hover:from-indigo-600 hover:to-blue-600 text-white font-black text-sm rounded-lg shadow-lg shadow-blue-500/10 active:scale-[0.98] transition-all duration-150 flex items-center justify-center gap-2 tracking-wider uppercase font-mono"
+        >
+          <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+          ⚡ Launch Automated OBD-II Smart Scan
+        </button>
+        <span className="text-[11px] font-sans text-slate-400 tracking-wide text-center">
+          Wireless radio bands will automatically pair with your physical ELM327 hardware device.
+        </span>
+      </div>
+
       {/* 📋 FLOW 3: TRIGGERING THE DIAGNOSTIC APPRAISAL REPORT */}
       <div className="p-5 bg-cyan-950/10 border border-cyan-500/20 rounded-xl space-y-4">
         <h3 className="text-sm font-black text-blue-400 uppercase tracking-wide font-mono flex items-center gap-2">
@@ -146,7 +161,7 @@ export const UserManual: React.FC = () => {
         <div className="flex flex-col sm:flex-row items-center justify-around gap-2 p-3 bg-black/40 border border-white/5 rounded-xl text-xs font-mono text-slate-300 tracking-wider font-black uppercase">
           <span>1. Setup Component Data</span>
           <ArrowRight className="w-4 h-4 text-cyan-400 hidden sm:block" />
-          <span>2. Click Submit [{"?"}]</span>
+          <span>2. Click Submit [?]</span>
           <ArrowRight className="w-4 h-4 text-cyan-400 hidden sm:block" />
           <span>3. Fetch Real-Time Report</span>
         </div>

@@ -11,6 +11,7 @@ interface InputPanelProps {
   messages?: Message[]; setMessages?: React.Dispatch<React.SetStateAction<Message[]>>;
   reportResult?: any; marketRegion?: string; appLanguage?: string;
   handleToggleSpeech?: () => void; isRecording?: boolean;
+  isPremium?: boolean; onPremiumRequired?: () => void;
   handleCopyReport?: () => void; isSpeaking?: boolean; isCopied?: boolean;
 }
 
@@ -18,7 +19,7 @@ export const InputPanel: React.FC<InputPanelProps> = ({
   vehicleType = "Car", appSection = "Common Symptoms", userIssue = "", isScanning = false,
   setUserIssue = () => {}, runForensicAnalysis = () => {}, messages = [], setMessages = () => {},
   reportResult = "", marketRegion = "IN", appLanguage = "en", handleToggleSpeech,
-  isRecording = false, handleCopyReport, isSpeaking = false, isCopied = false
+  isRecording = false, isPremium = false, onPremiumRequired, handleCopyReport, isSpeaking = false, isCopied = false
 }) => {
   const [chatInput, setChatInput] = useState("");
   const [isCameraActive, setIsCameraActive] = useState(false);
@@ -31,6 +32,10 @@ export const InputPanel: React.FC<InputPanelProps> = ({
   useEffect(() => { return () => { if (streamRef.current) streamRef.current.getTracks().forEach(t => t.stop()); }; }, []);
 
   const startCamera = async () => {
+    if (!isPremium) {
+      onPremiumRequired?.();
+      return;
+    }
     setCameraError(null);
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }, audio: false });
@@ -41,6 +46,11 @@ export const InputPanel: React.FC<InputPanelProps> = ({
   const stopCamera = () => { if (streamRef.current) { streamRef.current.getTracks().forEach(t => t.stop()); streamRef.current = null; } setIsCameraActive(false); };
 
   const capturePhoto = () => {
+    if (!isPremium) {
+      stopCamera();
+      onPremiumRequired?.();
+      return;
+    }
     if (!videoRef.current) return;
     const canvas = document.createElement("canvas"); canvas.width = 640; canvas.height = 480;
     const ctx = canvas.getContext("2d");
@@ -55,8 +65,9 @@ export const InputPanel: React.FC<InputPanelProps> = ({
 
   const computeCosts = (text: string, region: string) => {
     const r = String(region || "in").toLowerCase().trim();
-    const currentRegionData = MARKET_REGIONS.find(item => item.code === r);
-    const symbol = r === "cn" || r === "ch" ? "¥" : currentRegionData?.currency || "₹";
+    const currentRegionData = MARKET_REGIONS.find(item => item.code === r)
+      ?? (r === "cn" ? MARKET_REGIONS.find(item => item.code === "ch") : undefined);
+    const symbol = currentRegionData?.currency || "₹";
     const incoming = String(text || (reportResult && typeof reportResult === "object" ? JSON.stringify(reportResult) : reportResult) || userIssue || "");
 
     if (incoming.includes("🟢") || incoming.includes("Optimal") || incoming.includes("Healthy") || incoming.includes("safe") || incoming.includes("正常") || incoming.includes("良好")) {
@@ -111,7 +122,9 @@ export const InputPanel: React.FC<InputPanelProps> = ({
     else curReg = "in";
   }
 
-  const uiSymbol = curReg === "us" ? "$" : curReg === "ae" ? "AED " : curReg === "kr" ? "₩" : (curReg === "cn" || curReg === "ch" || curReg === "jp") ? "¥" : "₹";
+  const uiRegionData = MARKET_REGIONS.find(item => item.code === curReg)
+    ?? (curReg === "cn" ? MARKET_REGIONS.find(item => item.code === "ch") : undefined);
+  const uiSymbol = uiRegionData?.currency || "₹";
   
   return (
     <div className="bg-white border-2 border-slate-200 rounded-3xl p-5 flex flex-col justify-between h-[520px] overflow-hidden w-full shadow-xl">

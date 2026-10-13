@@ -24,7 +24,7 @@
   "appVersionCode": 1,
   "shortcuts": [],
   "generatorApp": "bubblewrap-cli",
-  "webManifestUrl": "http://localhost:10000/manifest.json",
+  "webManifestUrl": "https://auto-forensic.com/manifest.json",
   "fallbackType": "customtabs",
   "features": {},
   "alphaDependencies": {
@@ -33,7 +33,7 @@
   "enableSiteSettingsShortcut": true,
   "isChromeOSOnly": false,
   "isMetaQuest": false,
-  "fullScopeUrl": "http://localhost:10000/",
+  "fullScopeUrl": "https://auto-forensic.com/",
   "minSdkVersion": 21,
   "orientation": "portrait-primary",
   "fingerprints": [],

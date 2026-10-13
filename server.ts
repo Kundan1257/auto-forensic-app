@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import path from "path";
+import { createHmac, timingSafeEqual } from "crypto";
 import { createServer as createViteServer } from "vite";
 import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
@@ -19,11 +20,59 @@ app.use(cors({
 }));
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const RAZORPAY_KEY_SECRET = process.env.RAZORPAY_KEY_SECRET;
 if (!GEMINI_API_KEY) {
   console.error("CRITICAL CONFIGURATION ERROR: GEMINI_API_KEY environment variable is not defined.");
 }
 
 export const aiClient = new GoogleGenAI({ apiKey: GEMINI_API_KEY || "" });
+
+app.post("/api/payments/razorpay/verify", (req: express.Request, res: express.Response): any => {
+  if (!RAZORPAY_KEY_SECRET) {
+    return res.status(503).json({ verified: false, error: "Payment verification is not configured." });
+  }
+
+  const {
+    razorpay_order_id,
+    razorpay_payment_id,
+    razorpay_payment_link_id,
+    razorpay_payment_link_reference_id,
+    razorpay_payment_link_status,
+    razorpay_signature,
+  } = req.body || {};
+  if (typeof razorpay_payment_id !== "string" || typeof razorpay_signature !== "string") {
+    return res.status(400).json({ verified: false, error: "Missing payment proof." });
+  }
+  if (!/^[a-f\d]{64}$/i.test(razorpay_signature)) {
+    return res.status(400).json({ verified: false, error: "Invalid payment signature." });
+  }
+
+  let signedPayload: string;
+  if (typeof razorpay_order_id === "string" && razorpay_order_id) {
+    signedPayload = `${razorpay_order_id}|${razorpay_payment_id}`;
+  } else if (
+    typeof razorpay_payment_link_id === "string" && razorpay_payment_link_id &&
+    typeof razorpay_payment_link_reference_id === "string" && razorpay_payment_link_reference_id &&
+    razorpay_payment_link_status === "paid"
+  ) {
+    signedPayload = `${razorpay_payment_link_id}|${razorpay_payment_link_reference_id}|${razorpay_payment_link_status}|${razorpay_payment_id}`;
+  } else {
+    return res.status(400).json({ verified: false, error: "Missing signed order or paid-link details." });
+  }
+
+  const expectedSignature = createHmac("sha256", RAZORPAY_KEY_SECRET).update(signedPayload).digest();
+  let suppliedSignature: Buffer;
+  try {
+    suppliedSignature = Buffer.from(razorpay_signature, "hex");
+  } catch {
+    return res.status(400).json({ verified: false, error: "Invalid payment signature." });
+  }
+  if (suppliedSignature.length !== expectedSignature.length || !timingSafeEqual(suppliedSignature, expectedSignature)) {
+    return res.status(401).json({ verified: false, error: "Payment signature mismatch." });
+  }
+
+  return res.json({ verified: true });
+});
 
 app.post("/api/evaluate", async (req: express.Request, res: express.Response): Promise<any> => {
   try {
