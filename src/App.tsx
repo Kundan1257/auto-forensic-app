@@ -23,10 +23,11 @@ import { DiagnosticReport } from "./components/DiagnosticReport";
 import { UserManual } from "./components/UserManual";
 import { SubscriptionModal } from "./components/SubscriptionModal";
 
-// 🧠 IMPORT GLOBAL UTILITY ASSETS
-import { GLOBAL_LANGUAGES, MARKET_REGIONS, PRESETS } from "./presetData";
+// 🧠 IMPORT GLOBAL UTILITY ASSETS (Updated with TriagePresets!)
+import { GLOBAL_LANGUAGES, MARKET_REGIONS, PRESETS, TriagePresets } from "./presetData";
 import { useAutoLocation } from "./useAutoLocation";
 import { useTrialGate } from "./useTrialGate";
+
 
 export default function App() {
   // 📱 SMART MOBILE HANDSHAKE TRACK FOR DRIVERS
@@ -48,9 +49,52 @@ export default function App() {
   const [image, setImage] = useState<string | null>(null);
   const [audio, setAudio] = useState<string | null>(null);
   const [appLanguage, setAppLanguage] = useState("en");
-  const [isSystemUnlocked, setIsSystemUnlocked] = useState(() => {
+    const [isSystemUnlocked, setIsSystemUnlocked] = useState(() => {
     return localStorage.getItem("auto_forensic_stealth_unlocked") === "true";
   });
+
+    // 🛡️ BRAND-NEW EMOTIONAL "GUARDIAN ANGEL" TRIAGE STATES
+  const [selectedTriage, setSelectedTriage] = useState<any>(null);
+
+  // 📡 TARGETED SEARCH INGESTION ENGINE (Production Refined)
+  const handleObdCodeScan = (incomingCode: string) => {
+    if (!incomingCode) return;
+    const txt = incomingCode.trim().toUpperCase();
+    let target = "";
+
+    // 1. Exact string dictionary lookup pass
+    if (txt in TriagePresets) {
+      target = txt;
+    }
+    // 2. Comprehensive multi-parameter mapping for preset buttons, IDs, and label text substrings
+    else if (txt === "C2" || txt.includes("MISFIRE") || txt.includes("OBD2")) {
+      target = "P0300";
+    }
+    else if (txt === "C1" || txt.includes("VALVE") || txt.includes("TICK")) {
+      target = "P0128";
+    }
+    else if (txt === "B1" || txt.includes("STALL") || txt.includes("E20")) {
+      target = "P0442";
+    }
+
+    // 3. Mount locally right now to shield line 344 from execution blocks completely
+    if (target && target in TriagePresets) {
+      setSelectedTriage(TriagePresets[target as keyof typeof TriagePresets]);
+      return;
+    }
+
+    // 4. Reset screen display layout cells for non-preset custom strings
+    setSelectedTriage(null);
+
+    // 5. Preserved untouched default fallback track for complex queries
+    if (typeof runForensicAnalysis === "function") {
+      runForensicAnalysis(incomingCode);
+    }
+  };
+
+
+  // 📱 REST OF YOUR APP CODE AND EVENT HANDLERS CONTINUE DOWN BELOW...
+
   const [systemPassword, setSystemPassword] = useState("");
   const [isPasswordInvalid, setIsPasswordInvalid] = useState(false);
 
