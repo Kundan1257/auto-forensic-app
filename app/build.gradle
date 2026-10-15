@@ -55,10 +55,10 @@ android {
     namespace "com.autoforensic.triage"
     defaultConfig {
         applicationId "com.autoforensic.triage"
-        minSdkVersion 21
+        minSdkVersion 24
         targetSdkVersion 36
-        versionCode 1
-        versionName "1"
+        versionCode 4
+        versionName "4"
 
         // The name for the application
         resValue "string", "appName", twaManifest.name
@@ -76,12 +76,12 @@ android {
             // The URL the Web Manifest for the Progressive Web App that the TWA points to. This
             // is used by Chrome OS and Meta Quest to open the Web version of the PWA instead of
             // the TWA, as it will probably give a better user experience for non-mobile devices.
-            resValue "string", "webManifestUrl", 'https://' + twaManifest.hostName + '/manifest.json'
+            resValue "string", "webManifestUrl", 'https://auto-forensic.com/manifest.json'
         
 
         
             // This is used by Meta Quest.
-            resValue "string", "fullScopeUrl", 'https://' + twaManifest.hostName + '/'
+            resValue "string", "fullScopeUrl", 'https://auto-forensic.com/'
         
 
         
@@ -208,6 +208,6 @@ repositories {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     
-        implementation 'com.google.androidbrowserhelper:androidbrowserhelper:2.6.2'
+        implementation 'com.google.androidbrowserhelper:androidbrowserhelper:2.7.4'
     
 }

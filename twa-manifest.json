@@ -18,10 +18,12 @@
   "splashScreenFadeOutDuration": 300,
   "signingKey": {
     "path": "/Users/kundankumar/auto-forensic-app-1/android.keystore",
-    "alias": "android"
+    "alias": "android",
+    "password": "ForensicGuard2026",
+    "keyPassword": "ForensicGuard2026"
   },
-  "appVersionName": "1",
-  "appVersionCode": 1,
+  "appVersionName": "4",
+  "appVersionCode": 4,
   "shortcuts": [],
   "generatorApp": "bubblewrap-cli",
   "webManifestUrl": "https://auto-forensic.com/manifest.json",
@@ -34,7 +36,7 @@
   "isChromeOSOnly": false,
   "isMetaQuest": false,
   "fullScopeUrl": "https://auto-forensic.com/",
-  "minSdkVersion": 21,
+  "minSdkVersion": 24,
   "orientation": "portrait-primary",
   "fingerprints": [],
   "additionalTrustedOrigins": [],
@@ -43,5 +45,5 @@
   "fileHandlers": [],
   "launchHandlerClientMode": "",
   "displayOverride": [],
-  "appVersion": "1"
+  "appVersion": "4"
 }
