@@ -14,6 +14,27 @@ if (sentryDsn) {
   // Cloud tracking configurations optimized for production
 }
 
+interface BoundaryProps { children: React.ReactNode; }
+interface BoundaryState { hasError: boolean; }
+class DiagnosticErrorBoundary extends React.Component<BoundaryProps, BoundaryState> {
+  public state: BoundaryState = { hasError: false };
+  public static getDerivedStateFromError() { return { hasError: true }; }
+  public componentDidCatch(err: Error, info: React.ErrorInfo) { console.error("Isolated device bug:", err, info); }
+  public render() {
+    if (this.state.hasError) {
+      return (
+        <div className="p-6 rounded-2xl bg-slate-900 border border-amber-500/40 text-center shadow-2xl mt-4">
+          <span className="text-2xl">🛡️</span>
+          <h3 className="text-lg font-bold text-white mt-2">Guardian Shield Active</h3>
+          <p className="text-slate-300 text-xs mt-1 leading-relaxed">Your device interface handled the layout metrics uniquely. We have safely isolated this panel layout drawer.</p>
+          <button onClick={() => this.setState({ hasError: false })} className="mt-4 px-4 py-2 rounded-xl bg-slate-950 text-amber-400 border border-slate-800 text-xs uppercase font-semibold">Reboot Workspace Panel</button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 // 📦 IMPORT YOUR COMPLETE PRISTINE SPLIT COMPONENTS
 import { SelectionPanel } from "./components/SelectionPanel";
 import { InputPanel } from "./components/InputPanel";
@@ -470,13 +491,15 @@ export default function App() {
         </section>
         <div className="w-full flex flex-col lg:flex-row gap-6 items-start">
           <div className="w-full lg:w-[38%] flex flex-col space-y-6 flex-shrink-0">
-            <SelectionPanel
-              vehicleType={vehicleType}
-              setVehicleType={(val) => setVehicleType(val as any)}
-              appSection={appSection}
-              setAppSection={(val) => setAppSection(val as any)}
-            />
-            <InputPanel vehicleType={vehicleType} appSection={appSection} userIssue={userIssue} isScanning={isScanning} setUserIssue={setUserIssue} runForensicAnalysis={runForensicAnalysis} messages={messages} setMessages={setMessages} reportResult={reportResult} marketRegion={marketRegion} appLanguage={appLanguage} handleToggleSpeech={handleMicAction} isRecording={isRecording} isPremium={isPremium} onPremiumRequired={() => setShowPricingModal(true)} handleCopyReport={handleCopyReport} isSpeaking={isSpeaking} isCopied={isCopied} />
+            <DiagnosticErrorBoundary>
+              <SelectionPanel
+                vehicleType={vehicleType}
+                setVehicleType={(val) => setVehicleType(val as any)}
+                appSection={appSection}
+                setAppSection={(val) => setAppSection(val as any)}
+              />
+              <InputPanel vehicleType={vehicleType} appSection={appSection} userIssue={userIssue} isScanning={isScanning} setUserIssue={setUserIssue} runForensicAnalysis={runForensicAnalysis} messages={messages} setMessages={setMessages} reportResult={reportResult} marketRegion={marketRegion} appLanguage={appLanguage} handleToggleSpeech={handleMicAction} isRecording={isRecording} isPremium={isPremium} onPremiumRequired={() => setShowPricingModal(true)} handleCopyReport={handleCopyReport} isSpeaking={isSpeaking} isCopied={isCopied} />
+            </DiagnosticErrorBoundary>
             <UserManual />
           </div>
           <div className="w-full lg:flex-grow flex flex-col space-y-4">
