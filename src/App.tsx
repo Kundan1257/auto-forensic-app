@@ -70,6 +70,10 @@ export default function App() {
   const [image, setImage] = useState<string | null>(null);
   const [audio, setAudio] = useState<string | null>(null);
   const [appLanguage, setAppLanguage] = useState("en");
+  const [showInspectionMenu, setShowInspectionMenu] = useState(false);
+  const [selectedInspectionMode, setSelectedInspectionMode] = useState<
+    "📡 Physical Bluetooth ELM327 Link" | "🌐 Local Wi-Fi Hardware Port" | "🧪 Manual Engine Code Emulation Mode" | null
+  >(null);
     const [isSystemUnlocked, setIsSystemUnlocked] = useState(() => {
     return localStorage.getItem("auto_forensic_stealth_unlocked") === "true";
   });
@@ -500,7 +504,12 @@ export default function App() {
               />
               <InputPanel vehicleType={vehicleType} appSection={appSection} userIssue={userIssue} isScanning={isScanning} setUserIssue={setUserIssue} runForensicAnalysis={runForensicAnalysis} messages={messages} setMessages={setMessages} reportResult={reportResult} marketRegion={marketRegion} appLanguage={appLanguage} handleToggleSpeech={handleMicAction} isRecording={isRecording} isPremium={isPremium} onPremiumRequired={() => setShowPricingModal(true)} handleCopyReport={handleCopyReport} isSpeaking={isSpeaking} isCopied={isCopied} />
             </DiagnosticErrorBoundary>
-            <UserManual />
+            <UserManual
+              showInspectionMenu={showInspectionMenu}
+              setShowInspectionMenu={setShowInspectionMenu}
+              selectedInspectionMode={selectedInspectionMode}
+              setSelectedInspectionMode={setSelectedInspectionMode}
+            />
           </div>
           <div className="w-full lg:flex-grow flex flex-col space-y-4">
             <DiagnosticReport isScanning={isScanning} errorMessage={errorMessage} reportResult={reportResult} scanStep={scanStep} activeHighlight={activeHighlight} activeRegionSymbol={resolvedSymbol} runForensicAnalysis={runForensicAnalysis} handleToggleSpeech={handleToggleSpeech} handleCopyReport={handleCopyReport} isSpeaking={isSpeaking} isCopied={isCopied} />

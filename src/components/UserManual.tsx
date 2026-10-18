@@ -1,8 +1,31 @@
 import React, { useState } from "react";
 import { BookOpen, ShieldCheck, Car, Bike, Truck, ArrowRight, Camera, FileText, ChevronLeft, ChevronRight, Activity } from "lucide-react";
 
-export const UserManual: React.FC = () => {
+type InspectionMode =
+  | "📡 Physical Bluetooth ELM327 Link"
+  | "🌐 Local Wi-Fi Hardware Port"
+  | "🧪 Manual Engine Code Emulation Mode";
+
+interface UserManualProps {
+  showInspectionMenu: boolean;
+  setShowInspectionMenu: React.Dispatch<React.SetStateAction<boolean>>;
+  selectedInspectionMode: InspectionMode | null;
+  setSelectedInspectionMode: React.Dispatch<React.SetStateAction<InspectionMode | null>>;
+}
+
+export const UserManual: React.FC<UserManualProps> = ({
+  showInspectionMenu,
+  setShowInspectionMenu,
+  selectedInspectionMode,
+  setSelectedInspectionMode,
+}) => {
   const [activeSlide, setActiveSlide] = useState(0);
+
+  const inspectionModes: InspectionMode[] = [
+    "📡 Physical Bluetooth ELM327 Link",
+    "🌐 Local Wi-Fi Hardware Port",
+    "🧪 Manual Engine Code Emulation Mode",
+  ];
 
   const slides = [
     {
@@ -139,12 +162,44 @@ export const UserManual: React.FC = () => {
       <div className="mt-4 p-4 bg-slate-900/40 border border-white/5 rounded-lg flex flex-col items-center justify-center space-y-2">
         <button
           type="button"
-          onClick={() => {}}
+          onClick={() => setShowInspectionMenu(true)}
           className="w-full max-w-md py-3 px-6 bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 hover:from-indigo-600 hover:to-blue-600 text-white font-black text-sm rounded-lg shadow-lg shadow-blue-500/10 active:scale-[0.98] transition-all duration-150 flex items-center justify-center gap-2 tracking-wider uppercase font-mono"
         >
           <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
           ⚡ Launch Automated OBD-II Smart Scan
         </button>
+        {showInspectionMenu && (
+          <div
+            role="dialog"
+            aria-label="Select inspection mode"
+            className="w-full max-w-md rounded-xl border border-cyan-400/30 bg-slate-950 p-4 shadow-xl shadow-cyan-950/30 space-y-2"
+          >
+            <p className="text-xs font-mono font-bold uppercase tracking-wider text-cyan-300">
+              Choose your inspection mode
+            </p>
+            {inspectionModes.map((mode) => (
+              <button
+                key={mode}
+                type="button"
+                onClick={() => {
+                  setSelectedInspectionMode(mode);
+                  setShowInspectionMenu(false);
+                }}
+                className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-left text-sm font-semibold text-slate-100 transition-colors hover:border-cyan-400/50 hover:bg-cyan-500/10"
+              >
+                {mode}
+              </button>
+            ))}
+          </div>
+        )}
+        {selectedInspectionMode && (
+          <span
+            role="status"
+            className="rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1 text-xs font-semibold text-emerald-300"
+          >
+            Inspection mode selected: {selectedInspectionMode}
+          </span>
+        )}
         <span className="text-[11px] font-sans text-slate-400 tracking-wide text-center">
           Wireless radio bands will automatically pair with your physical ELM327 hardware device.
         </span>
