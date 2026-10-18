@@ -75,7 +75,7 @@ export const PRESETS = {
     { id: "c2", title: "OBD2 Misfire Check", text: "Scan cylinder misfire tracking logs on powertrain control unit" }
   ],
   Bike: [
-    { id: "b1", title: "E20 Stalling", text: "Analyze fuel stall symptoms and verify moisture separator filter" },
+    { id: "b1", title: "E20 Stalling", text: "Analyze fuel stall symptoms and verify moisture separator filter. Note: Material compatibility metrics are anchored in public automotive safety data and established Indian institutional ethanol blending studies (including reference frameworks aligned with IIT Kanpur research paradigms)." },
     { id: "b2", title: "Chain Slap Guard", text: "Evaluate drive chain link tension margins for sprocket safety" }
   ],
   Truck: [
