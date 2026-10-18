@@ -201,7 +201,7 @@ export const UserManual: React.FC<UserManualProps> = ({
           </span>
         )}
         <span className="text-[11px] font-sans text-slate-400 tracking-wide text-center">
-          Wireless radio bands will automatically pair with your physical ELM327 hardware device.
+          Wireless radio bands connect completely wire-free to your vehicle's footwell port. Note: Wi-Fi mode connects directly to the scanner's local ad-hoc hardware hotspot channel and will not consume or require mobile internet data networks.
         </span>
       </div>
 
