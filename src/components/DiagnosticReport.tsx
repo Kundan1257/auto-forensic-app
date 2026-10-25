@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Sparkles, AlertCircle, RefreshCw, Gauge, Copy, Check } from "lucide-react";
+import { AlertCircle, RefreshCw, Gauge, Copy, Check } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface ReportProps {
@@ -90,12 +90,9 @@ export const DiagnosticReport: React.FC<ReportProps> = ({
     <motion.div key="reportScreen" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className={`space-y-4 select-text text-sm transition-all pb-4 ${activeHighlight ? "bg-cyan-950/10 p-2 rounded-xl border border-cyan-500/10" : ""}`}>
       
       {/* 🔮 MASTER DISPLAY CARD CONTAINER */}
-      <div className="p-4 bg-cyan-950/30 border border-cyan-800/20 rounded-xl relative overflow-hidden">
+      <div className="bg-transparent border-none p-0 rounded-xl relative overflow-hidden">
         <div className="flex items-start gap-2.5">
-          <Sparkles className="w-5 h-5 text-cyan-400 shrink-0 mt-0.5" />
           <div className="space-y-3 w-full pr-8">
-            <span className="text-[10px] font-mono text-cyan-400 uppercase tracking-widest block mb-0.5">Gemini Intelligence Stream</span>
-            
             {/* 📡 Renders Gemini's actual conversational narrative text directly! */}
             <div className="text-slate-100 text-sm leading-relaxed whitespace-pre-wrap font-sans font-medium">
               {displayContentText}

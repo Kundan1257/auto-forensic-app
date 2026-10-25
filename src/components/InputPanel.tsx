@@ -173,16 +173,24 @@ export const InputPanel: React.FC<InputPanelProps> = ({
         </form>
 
         {(reportResult || userIssue) && (
-          <div className="grid grid-cols-2 gap-4 mt-3 pt-3 border-t border-slate-100 flex-shrink-0 bg-slate-50/50 p-2.5 rounded-xl">
-            <div className="space-y-0.5">
-              <span className="text-slate-500 font-mono text-[9px] block font-extrabold uppercase tracking-wider">Parts Appraisal:</span>
-              <div className="text-base font-black text-emerald-600 font-mono tracking-tight flex items-center">{uiSymbol}{partsDisplay.replace(/[¥₩\$₹]|AED/gi, "").trim()}</div>
+          <>
+            {reportResult && (
+              <div className="text-slate-900 text-sm bg-slate-50 border border-slate-200 p-4 rounded-xl font-medium leading-relaxed font-sans mb-3 max-h-60 overflow-y-auto select-text">
+                {typeof reportResult === 'object' ? (reportResult.result || '') : String(reportResult)}
+              </div>
+            )}
+            <button onClick={() => window.location.reload()} className="w-full my-3 rounded-lg bg-cyan-500 hover:bg-cyan-400 px-4 py-3 text-xs font-bold uppercase tracking-wider text-black transition-all">Clear & Reset Diagnostics</button>
+            <div className="grid grid-cols-2 gap-4 mt-3 pt-3 border-t border-slate-100 flex-shrink-0 bg-slate-50/50 p-2.5 rounded-xl">
+              <div className="space-y-0.5">
+                <span className="text-slate-500 font-mono text-[9px] block font-extrabold uppercase tracking-wider">Parts Appraisal:</span>
+                <div className="text-base font-black text-emerald-600 font-mono tracking-tight flex items-center">{uiSymbol}{partsDisplay.replace(/[¥₩\$₹]|AED/gi, "").trim()}</div>
+              </div>
+              <div className="space-y-0.5 text-right">
+                <span className="text-slate-500 font-mono text-[9px] block font-extrabold uppercase tracking-wider">Labor Fee:</span>
+                <div className="text-base font-black text-emerald-600 font-mono tracking-tight flex items-center justify-end">{uiSymbol}{laborDisplay.replace(/[¥₩\$₹]|AED/gi, "").trim()}</div>
+              </div>
             </div>
-            <div className="space-y-0.5 text-right">
-              <span className="text-slate-500 font-mono text-[9px] block font-extrabold uppercase tracking-wider">Labor Fee:</span>
-              <div className="text-base font-black text-emerald-600 font-mono tracking-tight flex items-center justify-end">{uiSymbol}{laborDisplay.replace(/[¥₩\$₹]|AED/gi, "").trim()}</div>
-            </div>
-          </div>
+          </>
         )}
       </div>
     </div>

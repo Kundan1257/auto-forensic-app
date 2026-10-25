@@ -40,12 +40,11 @@ import { SelectionPanel } from "./components/SelectionPanel";
 import { InputPanel } from "./components/InputPanel";
 import { ViewfinderCard } from "./components/ViewfinderCard";
 import { RightOutputPanel } from "./components/RightOutputPanel";
-import { DiagnosticReport } from "./components/DiagnosticReport"; 
 import { UserManual } from "./components/UserManual";
 import { SubscriptionModal } from "./components/SubscriptionModal";
 
 // 🧠 IMPORT GLOBAL UTILITY ASSETS (Updated with TriagePresets!)
-import { GLOBAL_LANGUAGES, MARKET_REGIONS, PRESETS, TriagePresets } from "./presetData";
+import { GLOBAL_LANGUAGES, MARKET_REGIONS, TriagePresets } from "./presetData";
 import { useAutoLocation } from "./useAutoLocation";
 import { useTrialGate } from "./useTrialGate";
 
@@ -81,7 +80,14 @@ export default function App() {
     // 🛡️ BRAND-NEW EMOTIONAL "GUARDIAN ANGEL" TRIAGE STATES
   const [selectedTriage, setSelectedTriage] = useState<any>(null);
 
-  // 📡 TARGETED SEARCH INGESTION ENGINE (Production Refined)
+    const handleResetEngine = () => {
+      if (typeof setReportResult === 'function') setReportResult(null);
+      if (typeof setSelectedTriage === 'function') setSelectedTriage(null);
+      if (typeof setSystemPassword === 'function') setSystemPassword('');
+      if (typeof setIsPasswordInvalid === 'function') setIsPasswordInvalid(false);
+    };
+
+    // 📡 TARGETED SEARCH INGESTION ENGINE (Production Refined)
   const handleObdCodeScan = (incomingCode: string) => {
     if (!incomingCode) return;
     const txt = incomingCode.trim().toUpperCase();
@@ -430,10 +436,12 @@ export default function App() {
   const resolvedSymbol = currentRegionCode === "cn" || currentRegionCode === "ch"
     ? "¥"
     : activeRegionDatasetObject?.currency || "₹";
-  const masterDiagnosticPresets = [
-    ...PRESETS.Car,
-    ...PRESETS.Bike,
-  ];
+  const selectedClassification = vehicleType.toUpperCase();
+  const runDiagnosticPreset = (issue: string) => {
+    setUserIssue(issue);
+    setMessages((previous) => [...previous, { sender: "user", text: issue }]);
+    runForensicAnalysis(issue, "");
+  };
 
   return (
     <div className="w-full min-h-screen bg-[#050608] text-slate-100 flex flex-col justify-between font-sans overflow-x-hidden relative">
@@ -443,7 +451,7 @@ export default function App() {
             <h1 className="text-xl font-black tracking-tight uppercase italic text-white">AUTO FORENSIC APP</h1>
           </div>
           <div className="flex flex-wrap items-center gap-3">
-            <button onClick={() => setShowPricingModal(true)} className="text-[10px] font-mono px-3 py-1.5 bg-cyan-500 text-black border border-cyan-400 font-bold rounded-full hover:bg-cyan-400 transition-all cursor-pointer uppercase tracking-wider">✨ Upgrade Master Pass</button>
+            <button onClick={() => setShowPricingModal(true)} style={{ backgroundImage: "linear-gradient(to right, #22d3ee, #34d399, #22d3ee)", backgroundSize: "200% auto", textShadow: "0 0 12px rgba(34, 211, 238, 0.8)", animation: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite" }} className="text-[10px] font-mono px-3 py-1.5 text-black border border-cyan-400 font-bold rounded-full hover:bg-cyan-400 transition-all cursor-pointer uppercase tracking-wider">✨ Upgrade Master Pass</button>
             <div className="flex items-center gap-1.5 bg-black/40 border border-white/10 rounded-full px-3 py-1.5">
               <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider mr-1">Language:</span>
               <select value={appLanguage} onChange={(e) => setAppLanguage(e.target.value)} className="bg-transparent text-xs font-bold text-white focus:outline-none cursor-pointer">
@@ -467,34 +475,26 @@ export default function App() {
       <main className="max-w-7xl mx-auto w-full flex-grow p-4 flex flex-col gap-6 items-start overflow-x-hidden">
         <section className="w-full space-y-3" aria-label="Diagnostic presets">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {masterDiagnosticPresets.map((preset, index) => {
-              const presetColors = [
-                "border-cyan-400/40 bg-cyan-400/10 hover:bg-cyan-400/20 text-cyan-100",
-                "border-amber-400/40 bg-amber-400/10 hover:bg-amber-400/20 text-amber-100",
-                "border-emerald-400/40 bg-emerald-400/10 hover:bg-emerald-400/20 text-emerald-100",
-                "border-rose-400/40 bg-rose-400/10 hover:bg-rose-400/20 text-rose-100",
-              ];
-
-              return (
-                <button
-                  key={preset.id}
-                  type="button"
-                  disabled={isScanning}
-                  onClick={() => {
-                    setUserIssue(preset.text);
-                    setMessages((previous) => [...previous, { sender: "user", text: preset.text }]);
-                    runForensicAnalysis(preset.text, "");
-                  }}
-                  className={`min-h-16 rounded-xl border px-4 py-3 text-left text-sm font-bold transition-colors disabled:opacity-50 ${presetColors[index]}`}
-                >
-                  {preset.title}
-                </button>
-              );
-            })}
+            {selectedClassification === "CAR" && (
+              <>
+                <button type="button" disabled={isScanning} onClick={() => runDiagnosticPreset("Isolate ticking sound near top cylinder valve cover area")} className="min-h-16 rounded-xl border border-cyan-400/40 bg-cyan-400/10 px-4 py-3 text-left text-sm font-bold text-cyan-100 transition-colors hover:bg-cyan-400/20 disabled:opacity-50">Engine Valve Tick</button>
+                <button type="button" disabled={isScanning} onClick={() => runDiagnosticPreset("Scan cylinder misfire tracking logs on powertrain control unit")} className="min-h-16 rounded-xl border border-amber-400/40 bg-amber-400/10 px-4 py-3 text-left text-sm font-bold text-amber-100 transition-colors hover:bg-amber-400/20 disabled:opacity-50">OBD2 Misfire Check</button>
+                <button type="button" disabled={isScanning} onClick={() => runDiagnosticPreset("Analyze E20 fuel stalling symptoms and fuel system compatibility")} className="min-h-16 rounded-xl border border-emerald-400/40 bg-emerald-400/10 px-4 py-3 text-left text-sm font-bold text-emerald-100 transition-colors hover:bg-emerald-400/20 disabled:opacity-50">E20 Stalling</button>
+              </>
+            )}
+            {selectedClassification === "BIKE" && (
+              <button type="button" disabled={isScanning} onClick={() => runDiagnosticPreset("Evaluate drive chain link tension margins for sprocket safety")} className="min-h-16 rounded-xl border border-rose-400/40 bg-rose-400/10 px-4 py-3 text-left text-sm font-bold text-rose-100 transition-colors hover:bg-rose-400/20 disabled:opacity-50">Chain Slap Guard</button>
+            )}
+            {selectedClassification === "TRUCK" && (
+              <button type="button" disabled={isScanning} onClick={() => runDiagnosticPreset("Diagnose air brake booster pressure loss")} className="min-h-16 rounded-xl border border-purple-400/40 bg-purple-400/10 px-4 py-3 text-left text-sm font-bold text-purple-100 transition-colors hover:bg-purple-400/20 disabled:opacity-50">Air Brake Booster Loss</button>
+            )}
+            {selectedClassification === "EV" && (
+              <button type="button" disabled={isScanning} onClick={() => runDiagnosticPreset("Measure battery cell degradation delta")} className="min-h-16 rounded-xl border border-lime-400/40 bg-lime-400/10 px-4 py-3 text-left text-sm font-bold text-lime-100 transition-colors hover:bg-lime-400/20 disabled:opacity-50">Cell Degradation Delta</button>
+            )}
           </div>
         </section>
         <div className="w-full flex flex-col lg:flex-row gap-6 items-start">
-          <div className="w-full lg:w-[38%] flex flex-col space-y-6 flex-shrink-0">
+          <div className="w-full max-w-4xl mx-auto flex flex-col space-y-6 flex-shrink-0">
             <DiagnosticErrorBoundary>
               <SelectionPanel
                 vehicleType={vehicleType}
@@ -510,10 +510,6 @@ export default function App() {
               selectedInspectionMode={selectedInspectionMode}
               setSelectedInspectionMode={setSelectedInspectionMode}
             />
-          </div>
-          <div className="w-full lg:flex-grow flex flex-col space-y-4">
-            <DiagnosticReport isScanning={isScanning} errorMessage={errorMessage} reportResult={reportResult} scanStep={scanStep} activeHighlight={activeHighlight} activeRegionSymbol={resolvedSymbol} runForensicAnalysis={runForensicAnalysis} handleToggleSpeech={handleToggleSpeech} handleCopyReport={handleCopyReport} isSpeaking={isSpeaking} isCopied={isCopied} />
-            {/* 🔴 REDUNDANT DUPLICATE CARDS CLEANED OUT PERMANENTLY: The raw layout output container has been safely unmounted to resolve screen clutter layout splits */}
           </div>
         </div>
       </main>
