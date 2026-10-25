@@ -127,7 +127,7 @@ export const InputPanel: React.FC<InputPanelProps> = ({
   const uiSymbol = uiRegionData?.currency || "₹";
   
   return (
-    <div className="bg-white border-2 border-slate-200 rounded-3xl p-5 flex flex-col justify-between h-[520px] overflow-hidden w-full shadow-xl">
+    <div className="bg-white border-2 border-slate-200 rounded-3xl p-5 flex flex-col justify-between h-[600px] overflow-hidden w-full shadow-xl">
       <div className="flex items-center justify-between border-b border-slate-100 pb-3 flex-shrink-0">
         <span className="text-[11px] bg-slate-100 text-slate-800 font-mono px-3 py-1.5 rounded-lg border border-slate-200 font-black uppercase tracking-wider">Interactive AI Triage Box</span>
         <button type="button" onClick={isCameraActive ? stopCamera : startCamera} className="p-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-600 hover:text-slate-900 shadow-sm transition-all cursor-pointer">{isCameraActive ? <VideoOff className="w-5 h-5 text-red-500" /> : <Camera className="w-5 h-5 text-slate-700" />}</button>
@@ -143,7 +143,7 @@ export const InputPanel: React.FC<InputPanelProps> = ({
           </div>
         </div>
       ) : (
-        <div className="flex-grow overflow-y-auto p-3 space-y-4 bg-slate-50 border border-slate-100 rounded-2xl mb-3 my-3 min-h-0 shadow-inner">
+        <div className="flex-grow max-h-48 overflow-y-auto block w-full p-3 space-y-4 bg-slate-50 border border-slate-100 rounded-2xl mt-3 min-h-0 shadow-inner mb-4 pb-2">
           {messages.map((msg, index) => (
             <div key={index} className={`flex items-start gap-2 ${msg.sender === "user" ? "justify-end" : "justify-start"}`}>
               <div className={`p-3 rounded-2xl text-[12px] max-w-[85%] leading-relaxed shadow-sm font-medium ${msg.sender === "user" ? "bg-cyan-600 text-white border border-cyan-700" : "bg-white border border-slate-200 text-slate-800 font-mono"}`}>
@@ -163,7 +163,7 @@ export const InputPanel: React.FC<InputPanelProps> = ({
         </div>
       )}
 
-      <div className="flex-shrink-0 border-t border-slate-100 pt-3">
+      <div className="flex-shrink-0 border-t border-slate-100 mt-4 pt-3">
         <form onSubmit={handleSendMessage} className="flex items-center gap-3 w-full h-14">
           <button type="button" onClick={handleToggleSpeech} className={`w-12 h-12 border-2 rounded-2xl transition-all flex items-center justify-center cursor-pointer shrink-0 shadow-lg ${isRecording ? "bg-red-500 border-red-600 text-white animate-pulse" : "bg-slate-100 border-slate-200 text-slate-700 hover:border-slate-400"}`}>
             {isRecording ? <div className="w-3.5 h-3.5 bg-white rounded-sm shrink-0" /> : <span className="text-xl shrink-0">🎙️</span>}
