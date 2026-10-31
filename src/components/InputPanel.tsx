@@ -11,7 +11,7 @@ interface InputPanelProps {
   messages?: Message[]; setMessages?: React.Dispatch<React.SetStateAction<Message[]>>;
   reportResult?: any; marketRegion?: string; appLanguage?: string;
   handleToggleSpeech?: () => void; isRecording?: boolean;
-  isPremium?: boolean; onPremiumRequired?: () => void;
+  isPremium?: boolean; isTrialExpired?: boolean; onPremiumRequired?: () => void;
   handleCopyReport?: () => void; isSpeaking?: boolean; isCopied?: boolean;
 }
 
@@ -19,7 +19,7 @@ export const InputPanel: React.FC<InputPanelProps> = ({
   vehicleType = "Car", appSection = "Common Symptoms", userIssue = "", isScanning = false,
   setUserIssue = () => {}, runForensicAnalysis = () => {}, messages = [], setMessages = () => {},
   reportResult = "", marketRegion = "IN", appLanguage = "en", handleToggleSpeech,
-  isRecording = false, isPremium = false, onPremiumRequired, handleCopyReport, isSpeaking = false, isCopied = false
+  isRecording = false, isPremium = true, isTrialExpired = false, onPremiumRequired, handleCopyReport, isSpeaking = false, isCopied = false
 }) => {
   const [chatInput, setChatInput] = useState("");
   const [isCameraActive, setIsCameraActive] = useState(false);
@@ -103,7 +103,12 @@ export const InputPanel: React.FC<InputPanelProps> = ({
   };
 
   const handleSendMessage = (e: React.FormEvent) => {
-    e.preventDefault(); if (!chatInput.trim()) return; const txt = chatInput.trim();
+    e.preventDefault();
+    if (isTrialExpired && !isPremium) {
+      if (onPremiumRequired) onPremiumRequired();
+      return;
+    }
+    if (!chatInput.trim()) return; const txt = chatInput.trim();
     if (setUserIssue) setUserIssue(txt); if (setMessages) setMessages(prev => [...prev, { sender: "user", text: txt }]);
     setChatInput(""); runForensicAnalysis(txt, "");
   };
