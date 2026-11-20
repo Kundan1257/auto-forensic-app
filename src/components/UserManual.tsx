@@ -11,6 +11,7 @@ interface UserManualProps {
   setShowInspectionMenu: React.Dispatch<React.SetStateAction<boolean>>;
   selectedInspectionMode: InspectionMode | null;
   setSelectedInspectionMode: React.Dispatch<React.SetStateAction<InspectionMode | null>>;
+  onRunObdScan?: (promptText: string) => void;
 }
 
 export const UserManual: React.FC<UserManualProps> = ({
@@ -18,7 +19,9 @@ export const UserManual: React.FC<UserManualProps> = ({
   setShowInspectionMenu,
   selectedInspectionMode,
   setSelectedInspectionMode,
+  onRunObdScan,
 }) => {
+
   const [activeSlide, setActiveSlide] = useState(0);
 
   const inspectionModes: InspectionMode[] = [
@@ -181,10 +184,17 @@ export const UserManual: React.FC<UserManualProps> = ({
               <button
                 key={mode}
                 type="button"
-                onClick={() => {
+                                onClick={() => {
                   setSelectedInspectionMode(mode);
                   setShowInspectionMenu(false);
+                  if (mode.includes("Emulation")) {
+                    onRunObdScan?.("OBD-II Emulation Telemetry Scan: Code P0300 (Random/Multiple Cylinder Misfire Detected) & P0171 (System Too Lean Bank 1)");
+                  } else {
+                    onRunObdScan?.(`OBD-II Hardware Bridge (${mode}): Check active powertrain sensor telemetry and isolate fault codes`);
+                  }
+                  window.scrollTo({ top: 0, behavior: "smooth" });
                 }}
+
                 className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-left text-sm font-semibold text-slate-100 transition-colors hover:border-cyan-400/50 hover:bg-cyan-500/10"
               >
                 {mode}

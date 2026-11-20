@@ -39,7 +39,6 @@ class DiagnosticErrorBoundary extends React.Component<BoundaryProps, BoundarySta
 import { SelectionPanel } from "./components/SelectionPanel";
 import { InputPanel } from "./components/InputPanel";
 import { ViewfinderCard } from "./components/ViewfinderCard";
-import { RightOutputPanel } from "./components/RightOutputPanel";
 import { UserManual } from "./components/UserManual";
 import { SubscriptionModal } from "./components/SubscriptionModal";
 
@@ -73,9 +72,8 @@ export default function App() {
   const [selectedInspectionMode, setSelectedInspectionMode] = useState<
     "📡 Physical Bluetooth ELM327 Link" | "🌐 Local Wi-Fi Hardware Port" | "🧪 Manual Engine Code Emulation Mode" | null
   >(null);
-    const [isSystemUnlocked, setIsSystemUnlocked] = useState(() => {
-    return localStorage.getItem("auto_forensic_stealth_unlocked") === "true";
-  });
+      const [isSystemUnlocked, setIsSystemUnlocked] = useState(true);
+
 
     // 🛡️ BRAND-NEW EMOTIONAL "GUARDIAN ANGEL" TRIAGE STATES
   const [selectedTriage, setSelectedTriage] = useState<any>(null);
@@ -217,8 +215,8 @@ export default function App() {
     }
   };
 
-  useTrialGate();
-  const isTrialExpired = false;
+    const { isTrialExpired } = useTrialGate();
+
   const [isPremium, setIsPremium] = useState(() => {
     return localStorage.getItem("auto_forensic_is_premium") === "true";
   });
@@ -321,19 +319,23 @@ export default function App() {
       setIsCopied(true); setTimeout(() => setIsCopied(false), 2000);
     }
   };
-  const runForensicAnalysis = async (textOverrideParam?: string, audioOverrideParam?: string) => {
+    const runForensicAnalysis = async (
+    textOverrideParam?: string,
+    audioOverrideParam?: string,
+    imageOverrideParam?: string
+  ) => {
     const activeTelemetryQueryText = (textOverrideParam ?? userIssue).trim();
     if (!activeTelemetryQueryText) return;
     
     setIsScanning(true); setErrorMessage(null); setScanStep("⚡ AI CORE: Connecting...");
 
-    const targetRegionCode = String(marketRegion || "in").toLowerCase().trim();
+    const targetRegionCode = String(marketRegion || "na").toLowerCase().trim();
     const matchingRegionDataRow = MARKET_REGIONS.find(
       (item) => String(item.code || "").toLowerCase().trim() === targetRegionCode
     );
     const targetSymbol = targetRegionCode === "cn" || targetRegionCode === "ch"
       ? "¥"
-      : matchingRegionDataRow?.currency || "₹";
+      : matchingRegionDataRow?.currency || "$";
 
     const systemDiagnosticPrompt = `
       You are an expert full-stack automotive forensic analysis engine.
@@ -360,13 +362,23 @@ export default function App() {
       const contentsPayload: any[] = [
         baseSystemInstruction,
         `User Input Issue: ${activeTelemetryQueryText}`,
-        `Context Parameters -> Region: ${marketRegion || "in"}, Vehicle Profile: ${vehicleType || "Car"}, App Section: ${appSection || "Common Symptoms"}, System Language: ${appLanguage || "en"}`
+        `Context Parameters -> Region: ${marketRegion || "na"}, Vehicle Profile: ${vehicleType || "Car"}, App Section: ${appSection || "Common Symptoms"}, System Language: ${appLanguage || "en"}`
       ];
 
       const activeAudioDataStream = audioOverrideParam !== undefined ? audioOverrideParam : audio;
       if (activeAudioDataStream) {
-        const cleanedAudioBase64 = activeAudioDataStream.includes(",") ? activeAudioDataStream.split(",")[1] : activeAudioDataStream;
+        const cleanedAudioBase64 = activeAudioDataStream.includes(",")
+          ? activeAudioDataStream.split(",").pop() || ""
+          : activeAudioDataStream;
         contentsPayload.push({ inlineData: { data: cleanedAudioBase64, mimeType: "audio/mp3" } });
+      }
+
+      const activeImageDataStream = imageOverrideParam !== undefined ? imageOverrideParam : image;
+      if (activeImageDataStream) {
+        const cleanedImageBase64 = activeImageDataStream.includes(",")
+          ? activeImageDataStream.split(",").pop() || ""
+          : activeImageDataStream;
+        contentsPayload.push({ inlineData: { data: cleanedImageBase64, mimeType: "image/jpeg" } });
       }
 
       const activeEnvKeyToken = 
@@ -380,6 +392,7 @@ export default function App() {
         model: "gemini-3.5-flash-lite",
         contents: contentsPayload,
       });
+
 
       const responseTextString = aiResponseNode.text || "";
       const cleanJsonContent = responseTextString.replace(/```json/g, "").replace(/```/g, "").trim();
@@ -502,19 +515,36 @@ export default function App() {
                 appSection={appSection}
                 setAppSection={(val) => setAppSection(val as any)}
               />
-              <InputPanel vehicleType={vehicleType} appSection={appSection} userIssue={userIssue} isScanning={isScanning} setUserIssue={setUserIssue} runForensicAnalysis={runForensicAnalysis} messages={messages} setMessages={setMessages} reportResult={reportResult} marketRegion={marketRegion} appLanguage={appLanguage} handleToggleSpeech={handleMicAction} isRecording={isRecording} isPremium={isPremium} onPremiumRequired={() => setShowPricingModal(true)} handleCopyReport={handleCopyReport} isSpeaking={isSpeaking} isCopied={isCopied} />
+              <InputPanel vehicleType={vehicleType} appSection={appSection} userIssue={userIssue} isScanning={isScanning} setUserIssue={setUserIssue} runForensicAnalysis={runForensicAnalysis} messages={messages} setMessages={setMessages} reportResult={reportResult} marketRegion={marketRegion} appLanguage={appLanguage} handleToggleSpeech={handleMicAction} isRecording={isRecording} isPremium={isPremium} isTrialExpired={isTrialExpired} onPremiumRequired={() => setShowPricingModal(true)} handleCopyReport={handleCopyReport} isSpeaking={isSpeaking} isCopied={isCopied} />
             </DiagnosticErrorBoundary>
-            <UserManual
+                        <UserManual
               showInspectionMenu={showInspectionMenu}
               setShowInspectionMenu={setShowInspectionMenu}
               selectedInspectionMode={selectedInspectionMode}
               setSelectedInspectionMode={setSelectedInspectionMode}
+              onRunObdScan={(promptText) => {
+                setUserIssue(promptText);
+                setMessages((prev) => [...prev, { sender: "user", text: promptText }]);
+                runForensicAnalysis(promptText, "");
+              }}
             />
+
           </div>
         </div>
       </main>
 
-      {showPricingModal && <SubscriptionModal isOpen={showPricingModal} onClose={() => setShowPricingModal(false)} marketRegion={marketRegion} />}
+            {showPricingModal && (
+        <SubscriptionModal
+          isOpen={showPricingModal}
+          onClose={() => setShowPricingModal(false)}
+          marketRegion={marketRegion}
+          onAppSumoUnlock={() => {
+            setIsPremium(true);
+            setShowPricingModal(false);
+          }}
+        />
+      )}
+
       <footer className="w-full border-t border-white/5 bg-[#0a0c10] p-4 text-center text-xs text-slate-500 font-mono">
         © 2026 Auto Forensic Analysis Engine. All rights reserved.
       </footer>

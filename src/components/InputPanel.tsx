@@ -7,7 +7,8 @@ interface Message { sender: "user" | "ai"; text: string; image?: string; }
 interface InputPanelProps {
   vehicleType?: any; appSection?: any; userIssue?: any; isScanning?: any;
   setUserIssue?: (val: string) => void;
-  runForensicAnalysis?: (textOverrideParam?: string, audioOverrideParam?: string) => void;
+  runForensicAnalysis?: (textOverrideParam?: string, audioOverrideParam?: string, imageOverrideParam?: string) => void;
+
   messages?: Message[]; setMessages?: React.Dispatch<React.SetStateAction<Message[]>>;
   reportResult?: any; marketRegion?: string; appLanguage?: string;
   handleToggleSpeech?: () => void; isRecording?: boolean;
@@ -59,7 +60,8 @@ export const InputPanel: React.FC<InputPanelProps> = ({
       const snapshotIssueText = "📸 [Camera Snapshot Captured Natively]";
       if (setUserIssue) setUserIssue(snapshotIssueText);
       if (setMessages) setMessages(prev => [...prev, { sender: "user", text: snapshotIssueText, image: dataUrl }]);
-      runForensicAnalysis(snapshotIssueText, "");
+      runForensicAnalysis(snapshotIssueText, "", dataUrl);
+
     }
   };
 
@@ -67,7 +69,8 @@ export const InputPanel: React.FC<InputPanelProps> = ({
     const r = String(region || "in").toLowerCase().trim();
     const currentRegionData = MARKET_REGIONS.find(item => item.code === r)
       ?? (r === "cn" ? MARKET_REGIONS.find(item => item.code === "ch") : undefined);
-    const symbol = currentRegionData?.currency || "₹";
+    const symbol = currentRegionData?.currency || "$";
+
     const incoming = String(text || (reportResult && typeof reportResult === "object" ? JSON.stringify(reportResult) : reportResult) || userIssue || "");
 
     if (incoming.includes("🟢") || incoming.includes("Optimal") || incoming.includes("Healthy") || incoming.includes("safe") || incoming.includes("正常") || incoming.includes("良好")) {
@@ -84,14 +87,15 @@ export const InputPanel: React.FC<InputPanelProps> = ({
     };
 
     let p = "";
-    let l = "";
-    if (reportResult && typeof reportResult === "object") {
-      p = reportResult.parts_appraisal || "";
-      l = reportResult.labor_fee || "";
-    } else if (reportResult) {
-      p = String(reportResult);
-      l = String(reportResult);
-    }
+let l = "";
+if (reportResult && typeof reportResult === "object") {
+  p = reportResult.parts_appraisal || "0";
+  l = reportResult.labor_fee || "0";
+} else {
+  p = "0";
+  l = "0";
+}
+
 
     const cleanP = formatNumericValue(p);
     const cleanL = formatNumericValue(l);
@@ -129,7 +133,8 @@ export const InputPanel: React.FC<InputPanelProps> = ({
 
   const uiRegionData = MARKET_REGIONS.find(item => item.code === curReg)
     ?? (curReg === "cn" ? MARKET_REGIONS.find(item => item.code === "ch") : undefined);
-  const uiSymbol = uiRegionData?.currency || "₹";
+  const uiSymbol = uiRegionData?.currency || "$";
+
   
   return (
     <div className="bg-white border-2 border-slate-200 rounded-3xl p-5 flex flex-col justify-between h-[600px] overflow-hidden w-full shadow-xl">
