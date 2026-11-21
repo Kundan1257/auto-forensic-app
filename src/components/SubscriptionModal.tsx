@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { ShieldCheck, Car, Bike, Sparkles, X, Clock, RefreshCw, KeyRound } from "lucide-react";
+import React from "react";
+import { ShieldCheck, Car, Bike, Sparkles, X, Clock, RefreshCw } from "lucide-react";
 
 interface SubscriptionModalProps {
   isOpen: boolean;
@@ -9,41 +9,18 @@ interface SubscriptionModalProps {
   onAppSumoUnlock?: () => void;
 }
 
-const VALID_APPSUMO_PREFIX = "SUMO-";
-const TEST_REVIEW_CODES = ["SUMO-TEST2026", "SUMO-REVIEW01", "SUMO-FOUNDER"];
-
 export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
   isOpen,
   onClose,
   marketRegion,
-  onAppSumoUnlock,
 }) => {
-  const [promoCode, setPromoCode] = useState("");
-  const [codeError, setCodeError] = useState("");
-
   if (!isOpen) return null;
 
   const isIndia = String(marketRegion || "").toLowerCase().trim() === "in";
   const bikePrice = isIndia ? "₹100" : "$1.99";
   const carPrice = isIndia ? "₹200" : "$2.99";
   const dayPassPrice = isIndia ? "₹500" : "$6.99";
-
-  const handleRedeemCode = (e: React.FormEvent) => {
-    e.preventDefault();
-    const cleaned = promoCode.trim().toUpperCase();
-    if (
-      TEST_REVIEW_CODES.includes(cleaned) ||
-      (cleaned.startsWith(VALID_APPSUMO_PREFIX) && cleaned.length >= 9)
-    ) {
-      setCodeError("");
-      localStorage.setItem("auto_forensic_is_premium", "true");
-      localStorage.setItem("auto_forensic_appsumo_code", cleaned);
-      onAppSumoUnlock?.();
-      onClose();
-      return;
-    }
-    setCodeError("Invalid AppSumo voucher code. Format: SUMO-XXXX");
-  };
+  const lifetimePrice = isIndia ? "₹2,499" : "$29";
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
@@ -96,7 +73,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
               <button
                 type="button"
                 onClick={() => {
-                  window.location.href = "https://rzp.io/rzp/CiL76Lk";
+                  window.location.href = "https://rzp.io";
                 }}
                 className="w-full py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white font-mono font-bold text-[10px] uppercase border border-white/10 transition-all cursor-pointer"
               >
@@ -119,7 +96,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
               <button
                 type="button"
                 onClick={() => {
-                  window.location.href = "https://rzp.io/rzp/g3eDX6Hz";
+                  window.location.href = "https://rzp.io";
                 }}
                 className="w-full py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white font-mono font-bold text-[10px] uppercase border border-white/10 transition-all cursor-pointer"
               >
@@ -145,7 +122,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
               <button
                 type="button"
                 onClick={() => {
-                  window.location.href = "https://rzp.io/rzp/O80vi5f";
+                  window.location.href = "https://rzp.io";
                 }}
                 className="w-full py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-mono font-black text-[10px] uppercase tracking-wider transition-all cursor-pointer shadow-md"
               >
@@ -155,37 +132,25 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
           </div>
         </div>
 
-        {/* APPSUMO LIFETIME DEAL REDEMPTION BAR */}
-        <form
-          onSubmit={handleRedeemCode}
-          className="pt-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 relative z-10"
-        >
-          <div className="flex items-center gap-2 text-xs font-mono text-slate-300">
-            <KeyRound className="w-4 h-4 text-amber-400 shrink-0" />
-            <span>Have an <strong className="text-amber-300">AppSumo Lifetime Deal</strong> voucher?</span>
+        {/* LIFETIME MASTER PASS ($29 / ₹2,499 ONE-TIME) */}
+        <div className="pt-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 relative z-10">
+          <div className="flex items-center gap-2.5 text-xs font-mono text-slate-300">
+            <Sparkles className="w-4 h-4 text-amber-400 shrink-0" />
+            <span>
+              Want permanent unlimited access? Get the{" "}
+              <strong className="text-amber-300">Lifetime Master Pass ({lifetimePrice} one-time)</strong>.
+            </span>
           </div>
-          <div className="flex w-full sm:w-auto items-center gap-2">
-            <input
-              type="text"
-              value={promoCode}
-              onChange={(e) => {
-                setPromoCode(e.target.value);
-                setCodeError("");
-              }}
-              placeholder="Enter SUMO-XXXX"
-              className="flex-1 sm:w-48 px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-xs font-mono text-white placeholder:text-slate-500 focus:outline-none focus:border-amber-400"
-            />
-            <button
-              type="submit"
-              className="px-4 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-mono font-black text-[10px] uppercase tracking-wider cursor-pointer transition-all shrink-0"
-            >
-              Redeem Lifetime
-            </button>
-          </div>
-        </form>
-        {codeError && (
-          <p className="text-[11px] font-mono text-rose-400 text-right -mt-3">{codeError}</p>
-        )}
+          <button
+            type="button"
+            onClick={() => {
+              window.location.href = "https://rzp.io";
+            }}
+            className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-mono font-black text-[10px] uppercase tracking-wider cursor-pointer transition-all shrink-0 shadow-md"
+          >
+            Get Lifetime Pass ({lifetimePrice})
+          </button>
+        </div>
       </div>
     </div>
   );
