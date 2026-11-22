@@ -69,6 +69,8 @@ export default function App() {
   const [audio, setAudio] = useState<string | null>(null);
   const [appLanguage, setAppLanguage] = useState("en");
   const [showInspectionMenu, setShowInspectionMenu] = useState(false);
+  const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
+
   const [selectedInspectionMode, setSelectedInspectionMode] = useState<
     "📡 Physical Bluetooth ELM327 Link" | "🌐 Local Wi-Fi Hardware Port" | "🧪 Manual Engine Code Emulation Mode" | null
   >(null);
