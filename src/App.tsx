@@ -545,9 +545,18 @@ export default function App() {
         />
       )}
 
-      <footer className="w-full border-t border-white/5 bg-[#0a0c10] p-4 text-center text-xs text-slate-500 font-mono">
-        © 2026 Auto Forensic Analysis Engine. All rights reserved.
+            <footer className="w-full border-t border-white/5 bg-[#0a0c10] p-4 text-center text-xs text-slate-500 font-mono">
+        © 2026 Auto Forensic Analysis Engine. All rights reserved. •{" "}
+        <a
+          href="/privacy.html"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline hover:text-cyan-400 transition-colors"
+        >
+          Privacy Policy
+        </a>
       </footer>
     </div>
   );
 }
+
