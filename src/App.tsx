@@ -547,18 +547,58 @@ export default function App() {
         />
       )}
 
-            <footer className="w-full border-t border-white/5 bg-[#0a0c10] p-4 text-center text-xs text-slate-500 font-mono">
+                  <footer className="w-full border-t border-white/5 bg-[#0a0c10] p-4 text-center text-xs text-slate-500 font-mono">
         © 2026 Auto Forensic Analysis Engine. All rights reserved. •{" "}
-        <a
-          href="/privacy.html"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="underline hover:text-cyan-400 transition-colors"
+        <button
+          type="button"
+          onClick={() => setShowPrivacyPolicy(true)}
+          className="underline hover:text-cyan-400 transition-colors cursor-pointer"
         >
           Privacy Policy
-        </a>
+        </button>
       </footer>
+
+      {showPrivacyPolicy && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Privacy Policy"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+        >
+          <div className="bg-[#0a0c10] border border-cyan-500/30 rounded-2xl max-w-2xl w-full max-h-[85vh] overflow-y-auto p-6 text-left text-slate-300 space-y-4 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-white/10 pb-3">
+              <h2 className="text-lg font-bold text-cyan-400">Privacy Policy — Auto Forensic Triage</h2>
+              <button
+                type="button"
+                onClick={() => setShowPrivacyPolicy(false)}
+                className="px-3 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-mono cursor-pointer"
+              >
+                ✕ Close
+              </button>
+            </div>
+            <p className="text-xs text-slate-400">
+              <strong>Developer:</strong> Auto Forensic Diagnostics • <strong>Package:</strong> com.autoforensic.triage • <strong>Effective Date:</strong> November 22, 2026
+            </p>
+            <p className="text-sm leading-relaxed">
+              Auto Forensic Diagnostics operates the <strong>Auto Forensic Triage</strong> application. This policy discloses how we access, collect, use, and protect user data:
+            </p>
+            <ul className="list-disc pl-5 space-y-2 text-sm">
+              <li><strong>Camera &amp; Photos (Optional):</strong> Photos of vehicle components or repair invoices are transmitted securely solely to generate real-time AI diagnostic and parts appraisal reports. We do not sell or permanently store personal photos.</li>
+              <li><strong>Microphone &amp; Audio (Optional):</strong> Audio recordings of engine or exhaust sounds are processed solely to detect mechanical acoustic patterns.</li>
+              <li><strong>Diagnostic Text &amp; OBD-II Codes:</strong> Symptom descriptions and OBD-II fault codes are processed ephemerally to generate localized repair estimates.</li>
+              <li><strong>Payments &amp; Vouchers:</strong> Transactions are processed securely via authorized payment gateways (such as Razorpay) or lifetime voucher codes (such as AppSumo). We never store raw card details.</li>
+            </ul>
+            <p className="text-sm">
+              <strong>Contact:</strong> For privacy inquiries or data requests, email{" "}
+              <a href="mailto:kk0555265@gmail.com" className="text-cyan-400 underline">
+                kk0555265@gmail.com
+              </a>.
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
+
 
