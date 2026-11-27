@@ -220,9 +220,47 @@ export default function App() {
     const { isTrialExpired } = useTrialGate();
 
   const [isPremium, setIsPremium] = useState(() => {
-    return localStorage.getItem("auto_forensic_is_premium") === "true";
+      return Boolean(localStorage.getItem("auto_forensic_access_token"));
   });
   const [showPricingModal, setShowPricingModal] = useState(false);
+
+    useEffect(() => {
+      const callbackUrl = new URL(window.location.href);
+      const betaCode = callbackUrl.searchParams.get("beta");
+      if (betaCode === null) return;
+
+      callbackUrl.searchParams.delete("beta");
+      window.history.replaceState(
+        window.history.state,
+        document.title,
+        `${callbackUrl.pathname}${callbackUrl.search}${callbackUrl.hash}`
+      );
+
+      let isMounted = true;
+      const unlockBetaAccess = async () => {
+        try {
+          const response = await fetch("/api/unlock", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ password: betaCode }),
+          });
+          const result = await response.json();
+          if (!response.ok || result.unlocked !== true || typeof result.token !== "string") {
+            throw new Error(result.error || "Beta access verification failed.");
+        }
+          if (!isMounted) return;
+          localStorage.setItem("auto_forensic_access_token", result.token);
+          setIsPremium(true);
+          setIsSystemUnlocked(true);
+          setShowPricingModal(false);
+        } catch (error) {
+          console.error("Beta access verification failed:", error);
+        }
+      };
+
+      void unlockBetaAccess();
+      return () => { isMounted = false; };
+    }, []);
 
   useEffect(() => {
     const callbackUrl = new URL(window.location.href);
@@ -263,8 +301,11 @@ export default function App() {
         if (!response.ok || verification.verified !== true) {
           throw new Error("Payment verification failed.");
         }
+        if (typeof verification.token !== "string") {
+          throw new Error("Payment verification did not return an access token.");
+        }
         if (!isMounted) return;
-        localStorage.setItem("auto_forensic_is_premium", "true");
+        localStorage.setItem("auto_forensic_access_token", verification.token);
         setIsPremium(true);
         setShowPricingModal(false);
       } catch (error) {
@@ -305,14 +346,30 @@ export default function App() {
     setIsCameraActive(false); if (videoRef.current) videoRef.current.srcObject = null;
   };
 
-  const handleSystemUnlock = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSystemUnlock = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (systemPassword === "ForensicGuard2026") {
+    setIsPasswordInvalid(false);
+    try {
+      const response = await fetch("/api/unlock", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password: systemPassword }),
+      });
+      const result = await response.json();
+      if (!response.ok || result.unlocked !== true || typeof result.token !== "string") {
+        setIsPasswordInvalid(true);
+        return;
+      }
+      localStorage.setItem("auto_forensic_access_token", result.token);
       localStorage.setItem("auto_forensic_stealth_unlocked", "true");
-      setIsSystemUnlocked(true); setSystemPassword(""); setIsPasswordInvalid(false);
-      return;
+      setIsPremium(true);
+      setIsSystemUnlocked(true);
+      setShowPricingModal(false);
+      setSystemPassword("");
+    } catch (error) {
+      console.error("System unlock verification failed:", error);
+      setIsPasswordInvalid(true);
     }
-    setIsPasswordInvalid(true);
   };
 
   const handleCopyReport = () => {
@@ -339,60 +396,35 @@ export default function App() {
       ? "¥"
       : matchingRegionDataRow?.currency || "$";
 
-    const systemDiagnosticPrompt = `
-      You are an expert full-stack automotive forensic analysis engine.
-      ⚠️ MANDATORY MULTI-MARKET TRANSLATION AND LOCALIZATION RULES:
-      - System Language: You MUST write the final text content of the "result" commentary natively inside the language matching this code variable token: "${appLanguage || 'en'}". If "zh", return fluent Chinese. If "ja", return clean Japanese. If "ko", return native Korean. If "ar", return clear Arabic text.
-      - Dynamic Target Symbol: Format all price strings inside "parts_appraisal" and "labor_fee" using exclusively this currency symbol: "${targetSymbol}".
-      - Optimal cadences: If safe, return parts_appraisal as "${targetSymbol}0" and labor_fee as "${targetSymbol}0".
-    `;
-
     try {
-      const baseSystemInstruction = `You are an advanced automotive forensic platform. ${systemDiagnosticPrompt}
-      OUTPUT FORMAT CONTRACT:
-      You MUST respond with a strictly formatted, valid JSON layout shape matching the exact parameters below.
-      You must NEVER return markdown blocks, markdown code block fences (do not let it print \`\`\`json or backticks anywhere in the stream), or raw text anomalies.
-      Even when the structural text narrative in "result" is written in Chinese (中文), Japanese (日本語), or Arabic (العربية), the numerical metrics must be output into the properties "parts_appraisal" and "labor_fee" cleanly as isolated range text strings, entirely preventing text block encapsulation errors.
-      
-      EXACT JSON CONTRACT TARGET:
-      {
-        "result": "Your full comprehensive technical diagnostic triage report narrative text statement string goes here written completely in the target selected system language.",
-        "parts_appraisal": "Realistic numerical price estimation text range matching the symptoms array",
-        "labor_fee": "Realistic numerical labor cost appraisal range matching the vehicle class"
-      }`;
-
-      const contentsPayload: any[] = [
-        baseSystemInstruction,
-        `User Input Issue: ${activeTelemetryQueryText}`,
-        `Context Parameters -> Region: ${marketRegion || "na"}, Vehicle Profile: ${vehicleType || "Car"}, App Section: ${appSection || "Common Symptoms"}, System Language: ${appLanguage || "en"}`
-      ];
-
       const activeAudioDataStream = audioOverrideParam !== undefined ? audioOverrideParam : audio;
-      if (activeAudioDataStream) {
-        const cleanedAudioBase64 = activeAudioDataStream.includes(",")
-          ? activeAudioDataStream.split(",").pop() || ""
-          : activeAudioDataStream;
-        contentsPayload.push({ inlineData: { data: cleanedAudioBase64, mimeType: "audio/mp3" } });
-      }
-
       const activeImageDataStream = imageOverrideParam !== undefined ? imageOverrideParam : image;
-      if (activeImageDataStream) {
-        const cleanedImageBase64 = activeImageDataStream.includes(",")
-          ? activeImageDataStream.split(",").pop() || ""
-          : activeImageDataStream;
-        contentsPayload.push({ inlineData: { data: cleanedImageBase64, mimeType: "image/jpeg" } });
-      }
 
-            const apiRes = await fetch("/api/diagnose", {
+      const apiRes = await fetch("/api/diagnose", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem("auto_forensic_access_token") || ""}`,
+        },
         body: JSON.stringify({
-          model: "gemini-3.5-flash-lite",
-          contents: contentsPayload,
+          issue: activeTelemetryQueryText,
+          marketRegion,
+          currencySymbol: targetSymbol,
+          vehicleType,
+          appSection,
+          appLanguage,
+          audioBase64: activeAudioDataStream,
+          imageBase64: activeImageDataStream,
         }),
       });
 
       const aiResponseNode = await apiRes.json();
+      if (apiRes.status === 401) {
+        localStorage.removeItem("auto_forensic_access_token");
+        setIsPremium(false);
+        setShowPricingModal(true);
+        return;
+      }
       if (!apiRes.ok) {
         throw new Error(aiResponseNode.error || "Diagnosis request failed");
       }
