@@ -1,5 +1,5 @@
 import { GoogleGenAI } from "@google/genai";
-import { verifyAccessToken } from "./_auth";
+import { verifyAccessToken } from "./_auth.js";
 
 function getInlineData(value: unknown, fallbackMimeType: string) {
   if (typeof value !== "string" || !value) {

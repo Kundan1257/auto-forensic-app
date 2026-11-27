@@ -1,5 +1,5 @@
 import { createHmac, timingSafeEqual } from "crypto";
-import { signAccessToken } from "../../_auth";
+import { signAccessToken } from "../../_auth.js";
 
 export default function handler(req: any, res: any) {
   if (req.method !== "POST") {
