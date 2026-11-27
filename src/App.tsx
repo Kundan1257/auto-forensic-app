@@ -383,17 +383,20 @@ export default function App() {
         contentsPayload.push({ inlineData: { data: cleanedImageBase64, mimeType: "image/jpeg" } });
       }
 
-      const activeEnvKeyToken = 
-        (typeof process !== "undefined" && process.env ? (process.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY) : null) ||
-        (import.meta.env ? (import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.GEMINI_API_KEY) : null) || "";
-
-      const { GoogleGenAI } = await import("@google/genai");
-      const aiInstance = new GoogleGenAI({ apiKey: activeEnvKeyToken });
-      
-      const aiResponseNode = await aiInstance.models.generateContent({
-        model: "gemini-3.5-flash-lite",
-        contents: contentsPayload,
+            const apiRes = await fetch("/api/diagnose", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "gemini-3.5-flash-lite",
+          contents: contentsPayload,
+        }),
       });
+
+      const aiResponseNode = await apiRes.json();
+      if (!apiRes.ok) {
+        throw new Error(aiResponseNode.error || "Diagnosis request failed");
+      }
+
 
 
       const responseTextString = aiResponseNode.text || "";
