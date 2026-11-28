@@ -24,6 +24,12 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
 
+  // Beta links must reach the app with their query intact, never a cached shell.
+  if (event.request.mode === "navigate" && url.searchParams.has("beta")) {
+    event.respondWith(fetch(event.request, { cache: "no-store" }));
+    return;
+  }
+
   // CRITICAL BYPASS: If the request is an internal API route or payment gateway hook, 
   // skip the cache entirely and pass it straight through to the live network!
   if (event.request.method !== "GET" || url.pathname.startsWith("/api/") || url.hostname.includes("stripe") || url.hostname.includes("razorpay")) {

@@ -10,7 +10,10 @@ export default defineConfig({
     VitePWA({
       registerType: "autoUpdate",
       includeAssets: ["favicon.svg"],
-      manifest: false // Tells Vite to look directly at our root manifest.json file
+      manifest: false, // Tells Vite to look directly at our root manifest.json file
+      workbox: {
+        navigateFallbackDenylist: [/[?&]beta(?:=|&|$)/]
+      }
     })
   ],
   build: {

@@ -223,20 +223,14 @@ export default function App() {
       return Boolean(localStorage.getItem("auto_forensic_access_token"));
   });
   const [showPricingModal, setShowPricingModal] = useState(false);
+  const betaUnlockStartedRef = useRef(false);
 
     useEffect(() => {
       const callbackUrl = new URL(window.location.href);
       const betaCode = callbackUrl.searchParams.get("beta");
-      if (betaCode === null) return;
+      if (betaCode === null || betaUnlockStartedRef.current) return;
+      betaUnlockStartedRef.current = true;
 
-      callbackUrl.searchParams.delete("beta");
-      window.history.replaceState(
-        window.history.state,
-        document.title,
-        `${callbackUrl.pathname}${callbackUrl.search}${callbackUrl.hash}`
-      );
-
-      let isMounted = true;
       const unlockBetaAccess = async () => {
         try {
           const response = await fetch("/api/unlock", {
@@ -247,9 +241,14 @@ export default function App() {
           const result = await response.json();
           if (!response.ok || result.unlocked !== true || typeof result.token !== "string") {
             throw new Error(result.error || "Beta access verification failed.");
-        }
-          if (!isMounted) return;
+          }
           localStorage.setItem("auto_forensic_access_token", result.token);
+          callbackUrl.searchParams.delete("beta");
+          window.history.replaceState(
+            window.history.state,
+            document.title,
+            `${callbackUrl.pathname}${callbackUrl.search}${callbackUrl.hash}`
+          );
           setIsPremium(true);
           setIsSystemUnlocked(true);
           setShowPricingModal(false);
@@ -259,7 +258,6 @@ export default function App() {
       };
 
       void unlockBetaAccess();
-      return () => { isMounted = false; };
     }, []);
 
   useEffect(() => {
